@@ -1,0 +1,15 @@
+* {
+    font-family: Aviano 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+.footer {
+    position: fixed;
+    width: 100%;
+    background-color: dimgray;
+    color: white;
+    text-align: center;
+    height: 210px;
+    padding: 10px;
+}
+h3 {
+    color: lightgray;
+}
