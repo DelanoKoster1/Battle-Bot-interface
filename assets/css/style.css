@@ -51,3 +51,20 @@ header .img-fluid.logo {
   padding: 15px;
 }
 
+#events .calanderbox {
+  background-image: url("../img/Calendar.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  text-align: center;
+  height: 150px;
+}
+#events .calanderbox span {
+  color: white;
+  line-height: 48px;
+}
+#events .calanderbox span.calanderDay {
+  font-size: 3.5rem;
+}
+#events .calanderbox span.clanderMonth {
+  font-size: 2rem;
+}

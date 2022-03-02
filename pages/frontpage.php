@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <?php include_once('../components/head.html') ?>
+
 <title>Voorpagina</title>
 </head>
 
 <body>
     <section id="header">
+
         <?php include_once('../components/header.php') ?>
     </section>
     <section id="content">
@@ -35,31 +37,31 @@
                         <div class="card">
                             <img src="../assets/img/bots/BB_sawblaze-beauty.jpg" class="img-fluid card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title text-center">Card title</h5>
+                                <h5 class="card-title text-center"><a href="#" class="stretched-link">Card title</a></h5>
                             </div>
                         </div>
                         <div class="card">
                             <img src="../assets/img/bots/BB_sawblaze-beauty.jpg" class="img-fluid card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title text-center">Card title</h5>
+                                <h5 class="card-title text-center"><a href="#" class="stretched-link">Card title</a></h5>
                             </div>
                         </div>
                         <div class="card">
                             <img src="../assets/img/bots/BB_sawblaze-beauty.jpg" class="img-fluid card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title text-center">Card title</h5>
+                                <h5 class="card-title text-center"><a href="#" class="stretched-link">Card title</a></h5>
                             </div>
                         </div>
                         <div class="card">
                             <img src="../assets/img/bots/BB_sawblaze-beauty.jpg" class="img-fluid card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title text-center">Card title</h5>
+                                <h5 class="card-title text-center"><a href="#" class="stretched-link">Card title</a></h5>
                             </div>
                         </div>
                         <div class="card">
                             <img src="../assets/img/bots/BB_sawblaze-beauty.jpg" class="img-fluid card-img-top" alt="...">
                             <div class="card-body">
-                                <h5 class="card-title text-center">Card title</h5>
+                                <h5 class="card-title text-center"><a href="#" class="stretched-link">Card title</a></h5>
                             </div>
                         </div>
                     </div>
@@ -76,27 +78,24 @@
                 </div>
                 <div class="col-lg-12 d-flex justify-content-center">
                     <div class="card mx-2 event">
-                        <img src="../assets/img/Calendar.svg" class="img-fluid card-img-top" alt="...">
-                        <div class="card-body">
-                            <h6 class="card-title text-center">Evenement locatie</h6>
+                        <div class="calanderbox d-flex justify-content-center align-items-center">
+                            <div>
+                                <span class="calanderDay d-block">25</span>
+                                <span class="clanderMonth">Feb.</span>
+                            </div>
                         </div>
-                    </div>
-                    <div class="card mx-2 event">
-                        <img src="../assets/img/Calendar.svg" class="img-fluid card-img-top" alt="...">
                         <div class="card-body">
-                            <h6 class="card-title text-center">Evenement locatie</h6>
-                        </div>
-                    </div>
-                    <div class="card mx-2 event">
-                        <img src="../assets/img/Calendar.svg" class="img-fluid card-img-top" alt="...">
-                        <div class="card-body">
-                            <h6 class="card-title text-center">Evenement locatie</h6>
+                            <h6 class="card-title text-center">Evenement naam</h6>
+                            <div class="time">
+                                <span>20:00 t/m 00:00</span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <?php include_once('../components/footer.php') ?>
 </body>
 
 </html>
