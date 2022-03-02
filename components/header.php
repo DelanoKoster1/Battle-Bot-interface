@@ -2,9 +2,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <img src="../assest/img/logo.svg" alt="logo">
+                <img class="img-fluid logo" src="../assets/img/logo/logo.png" alt="logo">
             </div>
-            <div class="col-lg-8">
+            <div class="col-lg-8 my-auto">
                 <nav class="navbar">
                     <ul class="nav w-100 nav-fill">
                         <li class="nav-item">
