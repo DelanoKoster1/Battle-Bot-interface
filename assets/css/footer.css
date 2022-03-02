@@ -9,6 +9,7 @@
     text-align: center;
     height: 210px;
     padding: 10px;
+    bottom: 0;
 }
 h3 {
     color: lightgray;
