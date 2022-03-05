@@ -78,16 +78,16 @@
                 </div>
                 <div class="col-lg-12 d-flex justify-content-center">
                     <div class="card mx-2 event">
-                        <div class="calanderbox d-flex justify-content-center align-items-center">
+                        <div class="calendarbox d-flex justify-content-center align-items-center">
                             <div>
-                                <span class="calanderDay d-block">25</span>
-                                <span class="clanderMonth">Feb.</span>
+                                <span class="calendarDay d-block">25</span>
+                                <span class="calendarMonth">Maart</span>
                             </div>
                         </div>
                         <div class="card-body">
-                            <h6 class="card-title text-center">Evenement naam</h6>
+                            <h6 class="card-title text-center">Test dag</h6>
                             <div class="time">
-                                <span>20:00 t/m 00:00</span>
+                                <span>20:00 - 00:00</span>
                             </div>
                         </div>
                     </div>

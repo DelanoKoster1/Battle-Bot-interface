@@ -18,7 +18,13 @@
 body {
   font-size: 16px;
 }
-h1,h2,h3,h4,h5,h6,header {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+header {
   font-family: "Aviano Future Bold";
 }
 
@@ -48,23 +54,32 @@ header .img-fluid.logo {
 }
 #events .card.event {
   max-width: 175px;
+  width: 175px;
   padding: 15px;
+  height: 350px;
+  border: 3px solid blue;
+  border-radius: 0%;
 }
 
-#events .calanderbox {
+#events .calendarbox {
   background-image: url("../img/Calendar.svg");
   background-size: contain;
   background-repeat: no-repeat;
   text-align: center;
   height: 150px;
 }
-#events .calanderbox span {
+#events .calendarbox span {
   color: white;
   line-height: 48px;
 }
-#events .calanderbox span.calanderDay {
+#events .calendarbox span.calendarDay {
   font-size: 3.5rem;
 }
-#events .calanderbox span.clanderMonth {
+#events .calendarbox span.calendarMonth {
   font-size: 2rem;
+}
+
+#events .time {
+  font-weight: bold;
+  color: gray;
 }
