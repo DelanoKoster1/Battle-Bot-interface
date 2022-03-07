@@ -8,7 +8,7 @@
                 <nav class="navbar">
                     <ul class="nav w-100 nav-fill">
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Home</a>
+                            <a class="nav-link text-white" href="/index.php">Home</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="#">Robots</a>
@@ -20,7 +20,10 @@
                             <a class="nav-link text-white" href="#">Livestream</a>
                         </li>
                         <li class="nav-item text-right">
-                            <a class="nav-link text-danger" href="#">Login / Registeren</a>
+                            <a class="nav-link text-danger" href="pages/login.php">Login</a>
+                        </li>
+                        <li class="nav-item text-right">
+                              <a class="nav-link text-danger" href="#">/ Registeren</a>
                         </li>
                     </ul>
                 </nav>
