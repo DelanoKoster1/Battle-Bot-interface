@@ -2,7 +2,7 @@
 <div class="footer">
     <div class="row">
         <div class="col-6">
-            <p>THIS EVENT IS SPONSORED BY</p>
+            <h6>THIS EVENT IS SPONSORED BY</h6>
         </div>
         <div class="col-3">
             <h3>MAIN</h3>
