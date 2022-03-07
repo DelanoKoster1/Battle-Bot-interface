@@ -22,6 +22,9 @@
                         <li class="nav-item text-right">
                             <a class="nav-link text-danger" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/register.php';} else {echo 'pages/register.php';}?>">Login / Registeren</a>
                         </li>
+                        <li class="nav-item text-right">
+                              <a class="nav-link text-danger" href="#">/ Registeren</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
