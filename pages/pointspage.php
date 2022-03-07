@@ -1,9 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php include_once("../components/head.html"); ?>
-<title>Punten Pagina</title>
+<head>
+    <?php
+        include_once('../components/head.html');
+        include_once('../functions/function.php');
+    ?>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+
+    <title>Punten Pagina</title>
+</head>
+
 
 <body>
+    <section id="header">
+        <?php includeHeader('page'); ?>
+    </section>
+
     <div class="container">
         <div class="row">
             <div class="col-12 text-center pt-3">

@@ -2,14 +2,21 @@
 <html lang="en">
 
 <head>
-    <?php include_once('../components/head.html') ?>
+    <?php 
+        include_once('../components/head.html');
+        include_once('../functions/function.php');
+    ?>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+
     <title>Calendar</title>
 </head>
 
 <body>
-    <header>
-        <?php include_once('../components/header.php') ?>
-    </header>
+    <section id="header">
+        <?php includeHeader('page'); ?>
+    </section>
 
     <main id='events'>
         <div class='containter py-4'>

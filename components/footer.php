@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="assets/css/footer.css">
 <div class="footer">
     <div class="row">
         <div class="col-6">

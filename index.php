@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php include_once('./components/head.html') ?>
 
-<title>Voorpagina</title>
+<head>
+    <?php 
+        include_once('components/head.html');
+        include_once('functions/function.php');
+    ?>
+    
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/footer.css">
+
+    <title>Voorpagina</title>
 </head>
 
 <body>
     <section id="header">
-
-        <?php include_once('./components/header.php') ?>
+        <?php includeHeader('index'); ?>
     </section>
     <section id="content">
         <div class="container">
@@ -95,7 +102,7 @@
             </div>
         </div>
     </section>
-    <?php include_once('./components/footer.php') ?>
+    <?php include_once('components/footer.php') ?>
 </body>
 
 </html>

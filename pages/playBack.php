@@ -2,13 +2,23 @@
 <html lang="en">
 
 <head>
-    <?php include_once('../components/head.html') ?>
-    <?php include_once('../components/header.php') ?>
+    <?php
+        include_once('../components/head.html');
+        include_once('../functions/function.php');
+    ?>
+    
     <link rel="stylesheet" href="../assets/css/playback.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+
     <title>playBack pagina</title>
 </head>
 
 <body>
+    <section id="header">
+        <?php includeHeader('page'); ?>
+    </section>
+    
     <div class="container">
         <div class="row">
             <div class="col-md-10">
