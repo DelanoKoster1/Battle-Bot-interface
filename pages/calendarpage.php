@@ -52,10 +52,12 @@
                             </div>
                         </div>
                     </div>
-                </div>                 
+                </div>
+
             </div>
         </div>
     </main>
+
     <footer>
         <?php include_once('../components/footer.php') ?>
     </footer>
