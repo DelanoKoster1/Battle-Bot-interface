@@ -11,7 +11,7 @@
                             <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../index.php';} else {echo 'index.php';}?>">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/robots.php';} else {echo 'pages/robots.php';}?>">Robots</a>
+                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/pointspage.php';} else {echo 'pages/pointspage.php';}?>">Robots</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/calendarpage.php';} else {echo 'pages/calendarpage.php';}?>">Kalender</a>
