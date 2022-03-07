@@ -6,10 +6,8 @@
         include_once('components/head.html');
         include_once('functions/function.php');
     ?>
-    
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/footer.css">
-
     <title>Voorpagina</title>
 </head>
 

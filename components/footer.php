@@ -1,24 +1,28 @@
-<footer>
-    <div class="footer text-uppercase">
+<footer class="footer py-4">
+    <div class="container text-uppercase">
         <div class="row">
             <div class="col-6">
                 <h6>Dit evenement is gesponsord door:</h6>
             </div>
-            <div class="col-3">
-                <h3>Battlebot</h3>
-                <ul class="list-unstyled">
-                    <li>Voorpagina</li>
-                    <li>Robots</li>
-                    <li>Kalender</li>
-                    <li>Livestream</li>
-                </ul>
-            </div>
-            <div class="col-3">
-                <h3>Acount</h3>
-                <ul class="list-unstyled">
-                    <li>Profiel</li>
-                    <li>Login/Registeren</li>
-                </ul>
+            <div class="col-6 text-center">
+                <div class="row">
+                    <div class="col-6">
+                        <h3>Battlebot</h3>
+                        <ul class="list-unstyled">
+                            <li>Voorpagina</li>
+                            <li>Robots</li>
+                            <li>Kalender</li>
+                            <li>Livestream</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <h3>Acount</h3>
+                        <ul class="list-unstyled">
+                            <li>Profiel</li>
+                            <li>Login/Registeren</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
