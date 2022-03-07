@@ -1,12 +1,12 @@
 .footer {
-    width: 100%;
-    background-color: dimgray;
-    color: white;
-    text-align: center;
-    height: 210px;
-    padding: 10px;
-    bottom: 0;
+  width: 100%;
+  background-color: dimgray;
+  color: white;
+  text-align: center;
+  height: 210px;
+  padding: 10px;
+  bottom: 0;
 }
 h3 {
-    color: lightgray;
+  color: lightgray;
 }
