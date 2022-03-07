@@ -10,7 +10,10 @@
     <header>
         <?php include_once('../components/header.php') ?>
     </header>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 7a13dbdd1772da29e119cf16a5d597889c1d7451
     <main id='events'>
         <div class='containter py-4'>
             <div class="row">
