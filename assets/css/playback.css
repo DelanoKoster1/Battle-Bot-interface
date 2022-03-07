@@ -1,4 +1,33 @@
 .playVideo {
-  margin-top: 40px;
-  margin-left: 20px;
+    margin-top: 40px;
+    margin-left: 20px;
+}
+
+#liveChat {
+    padding: 10px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.chatBox {
+    margin-top: 40px;
+    margin-left: 75px;
+    border: 3px solid blue;
+}
+
+.chat {
+    padding: 10px;
+    height: 433px;
+}
+
+.chatField {
+    border-top: 1px solid lightgrey;
+    padding: 10px;
+}
+
+#chatMessage {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid lightgrey;
+    color: lightgrey;
 }
