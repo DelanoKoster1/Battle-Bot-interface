@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-4">
-                <img class="img-fluid logo" src="<?php if ($_SESSION['sort'] == 'page') {echo '../assets/img/logo/logo.png';} else {echo 'assets/img/logo/logo.png';}?>" alt="logo">
+                <img class="img-fluid logo" src="<?php if ($_SESSION['sort'] == 'page') {echo '../assets/img/logo/logoW.svg';} else {echo 'assets/img/logo/logoW.svg';}?>" alt="logo">
             </div>
             <div class="col-lg-8 my-auto">
                 <nav class="navbar">
