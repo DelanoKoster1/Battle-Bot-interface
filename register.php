@@ -6,7 +6,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registreren</title>
-
 </head>
 
 <body>
@@ -20,7 +19,6 @@
         <input type="submit" name="submit" value="submit">
         <a href="Login.php">Login now</a>
     </form>
-
 </body>
 
 </html>
