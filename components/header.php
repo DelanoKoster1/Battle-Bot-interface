@@ -22,7 +22,7 @@
                             <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/calendarpage.php';} else {echo 'pages/calendarpage.php';}?>">Kalender</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/playBack.php';} else {echo 'pages/playBack.php';}?>">Livestream</a>
+                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/livestream.php';} else {echo 'pages/livestream.php';}?>">Livestream</a>
                         </li>
                         <li class="nav-item text-right">
                             <a class="nav-link text-danger" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/register.php';} else {echo 'pages/register.php';}?>">Login / Registeren</a>
