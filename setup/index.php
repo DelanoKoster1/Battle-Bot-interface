@@ -1,22 +1,30 @@
 <?php
-require_once "../functions/class.database.php";
-$db = new Database();
+require_once "../functions/database.php";
 
-if(isset($_GET['database']) && $_GET['database'] === "refresh") {
-    $setupdir = array_diff(scandir("./"), array('..', '.'));
+if(isset($_GET['database'])) {
+    if($_GET['database'] === "refresh") {
+        $setupdir = array_diff(scandir("./"), array('..', '.'));
 
-    foreach($setupdir as $file) {
-        if(is_file($file) && $file == "database.sql") {
-            $sqlFile = $file;
+        foreach($setupdir as $file) {
+            if(is_file($file) && $file == "database.sql") {
+                $sqlFile = $file;
+            }
         }
+
+        $sqlFileContent = file_get_contents($sqlFile);
+
+        $sqlFileArray = explode(";", $sqlFileContent);
+        $sqlFileArray = array_diff($sqlFileArray, array(""));
+
+        foreach($sqlFileArray as $sql) {
+            if(!str_contains($sql, "USE")) {
+                stmtExec($sql);
+            }
+        }
+    } else if($_GET['database'] === "delete") {
+        $sql = "DROP DATABASE battlebot";
+        stmtExec($sql);
     }
-
-    $sqlFileContent = file_get_contents($sqlFile);
-
-    $sqlFileArray = explode(";", $sqlFileContent);
-    $sqlFileArray = array_diff($sqlFileArray, array(""));
-
-    $db->createDatabase($sqlFileArray);
 }
 
 ?>
@@ -36,6 +44,7 @@ if(isset($_GET['database']) && $_GET['database'] === "refresh") {
         <div class="database">
             <h2>Database</h2>
             <a href="?database=refresh">Import / Refresh</a>
+            <a href="?database=delete">Delete</a>
         </div>
     </main>
 </body>
