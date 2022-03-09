@@ -13,10 +13,10 @@
     <main id='events'>
         <div class='containter py-4'>
             <div class="row">
-                <div class="col-12 mb-2 text-left">
+                <div class="col-12 mb-2 text-center">
                     <h3>Komende evenementen</h3>
                 </div>
-                <div class="col-lg-12 d-flex justify-content-left">
+                <div class="col-lg-12 d-flex justify-content-center">
                     <div class="card mx-3 event">
                         <div class="d-flex justify-content-left align-items-center">
                             <div>
