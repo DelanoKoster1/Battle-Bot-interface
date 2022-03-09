@@ -2,19 +2,27 @@
 <html lang="en">
 
 <head>
-    <?php include_once('../components/head.html') ?>
+    <?php 
+        include_once('../components/head.html');
+        include_once('../functions/function.php');
+    ?>
+
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+
     <title>Calendar</title>
 </head>
 
 <body>
-    <header>
-        <?php include_once('../components/header.php') ?>
-    </header>
+    <section id="header">
+        <?php includeHeader('page'); ?>
+    </section>
+    
     <main id='events'>
         <div class='containter py-4'>
             <div class="row">
                 <div class="col-12 mb-2 text-center">
-                    <h3>Komende evenementen</h3>
+                    <h3>Evenementen</h3>
                 </div>
                 <div class="col-lg-12 d-flex justify-content-center">
                     <div class="card mx-3 event">
@@ -40,6 +48,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </main>

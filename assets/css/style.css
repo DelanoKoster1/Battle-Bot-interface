@@ -1,22 +1,11 @@
-@font-face {
-  font-family: "Aviano Future Bold";
-  src: url("//db.onlinewebfonts.com/t/0e878319254bdc420c23eea065933d15.eot");
-  src: url("//db.onlinewebfonts.com/t/0e878319254bdc420c23eea065933d15.eot?#iefix")
-      format("embedded-opentype"),
-    url("//db.onlinewebfonts.com/t/0e878319254bdc420c23eea065933d15.woff2")
-      format("woff2"),
-    url("//db.onlinewebfonts.com/t/0e878319254bdc420c23eea065933d15.woff")
-      format("woff"),
-    url("//db.onlinewebfonts.com/t/0e878319254bdc420c23eea065933d15.ttf")
-      format("truetype"),
-    url("//db.onlinewebfonts.com/t/0e878319254bdc420c23eea065933d15.svg#Aviano Future Bold")
-      format("svg");
-}
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 body {
   font-size: 16px;
+  font-family: "PT Serif", serif;
 }
 h1,
 h2,
@@ -25,11 +14,12 @@ h4,
 h5,
 h6,
 header {
-  font-family: "Aviano Future Bold";
+  font-family: "Roboto", sans-serif;
 }
 
 header .img-fluid.logo {
   height: 75px;
+  padding: 16px 0;
 }
 .frontpageIMG {
   height: 250px;
@@ -58,7 +48,8 @@ header .img-fluid.logo {
   padding: 15px;
   height: 150px;
   border-radius: 0%;
-  background-color: rgba(0, 0, 0, 0.87);
+  background-color: black;
+  opacity: 80%;
 }
 
 #events .calendarbox {
