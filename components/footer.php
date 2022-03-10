@@ -1,4 +1,4 @@
-<footer class="footer py-4">
+<footer class="footer pt-4">
     <div class="container text-uppercase">
         <div class="row">
             <div class="col-6">
@@ -8,19 +8,15 @@
                 <div class="row">
                     <div class="col-6">
                         <h3>Battlebot</h3>
-                        <ul class="list-unstyled">
-                            <li>Voorpagina</li>
-                            <li>Robots</li>
-                            <li>Kalender</li>
-                            <li>Livestream</li>
-                        </ul>
+                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../index.php';} else {echo 'index.php';}?>">Voorpagina</a>
+                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/robots.php';} else {echo 'pages/robots.php';}?>">Robots</a>
+                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/calendarpage.php';} else {echo 'pages/calendarpage.php';}?>">Kalender</a>
+                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/playBack.php';} else {echo 'pages/playBack.php';}?>">Livestream</a>
                     </div>
                     <div class="col-6">
                         <h3>Acount</h3>
-                        <ul class="list-unstyled">
-                            <li>Profiel</li>
-                            <li>Login/Registeren</li>
-                        </ul>
+                            <a class="nav-link text-white" href="">Profiel</a>
+                            <a class="nav-link text-white" href="<?php if ($_SESSION['sort'] == 'page') {echo '../pages/register.php';} else {echo 'pages/register.php';}?>">Login/Registeren</a>
                     </div>
                 </div>
             </div>

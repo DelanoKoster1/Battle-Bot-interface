@@ -17,11 +17,11 @@
         <?php includeHeader('page'); ?>
     </section>
     <div class="container">
-        <div class="row">
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+        <div class="row my-5">
+            <div class="col-lg-2 col-sm-4 col-6">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
-                        <div class="col-12 my-auto">
+                        <div class="col-12 pt-1">
                             <img src="../assets/img/bot.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
@@ -32,10 +32,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
-                        <div class="col-12 my-auto">
+                        <div class="col-12 pt-1">
                             <img src="../assets/img/botsetting.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
@@ -46,10 +46,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
-                        <div class="col-12 my-auto">
+                        <div class="col-12 pt-1">
                             <img src="../assets/img/botsetting.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
@@ -60,10 +60,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
-                        <div class="col-12 my-auto">
+                        <div class="col-12 pt-1">
                             <img src="../assets/img/botsetting.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
@@ -74,10 +74,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
-                        <div class="col-12 my-auto">
+                        <div class="col-12 pt-1">
                             <img src="../assets/img/botsetting.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
@@ -88,10 +88,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
-                        <div class="col-12 my-auto">
+                        <div class="col-12 pt-1">
                             <img src="../assets/img/botsetting.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
@@ -106,7 +106,7 @@
         </div>
 
         <div class="row">
-            <h1>Teams</h1>
+            <h1>Team</h1>
         </div>
 
         <div class="row">
@@ -194,7 +194,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6 mt-3 mb-5">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 my-auto">
@@ -208,7 +208,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6 mt-3 mb-5">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 my-auto">
@@ -222,7 +222,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6 mt-3 mb-5">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 my-auto">
@@ -236,7 +236,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6 mt-3 mb-5">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 my-auto">
@@ -250,7 +250,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6 mt-3 mb-5">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 my-auto">
@@ -264,7 +264,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-2 col-sm-4 col-6 my-3">
+            <div class="col-lg-2 col-sm-4 col-6 mt-3 mb-5">
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 my-auto">
