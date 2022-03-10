@@ -54,7 +54,7 @@ function fail(?string $code = NULL, ?string $info = NULL) {
 // By:          Joris Hummel                                                                            //
 //                                                                                                      //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-function stmtExec(string $sql, int $failCode = 0, ?string $ParamChars = NULL, ...$BindParamVars) : array| bool {
+function stmtExec(string $sql, int $failCode = 0, ?string $paramChars = NULL, ...$bindParamVars) : array| bool {
 
     $host = "localhost";
     $user = "root";
@@ -75,8 +75,8 @@ function stmtExec(string $sql, int $failCode = 0, ?string $ParamChars = NULL, ..
                     if(!empty($ParamChars)) {
 
                         // Check if the given chars are valid
-                        for ($i=0; $i<strlen($ParamChars); $i++) {
-                            switch($ParamChars[$i]) {
+                        for ($i=0; $i<strlen($paramChars); $i++) {
+                            switch($paramChars[$i]) {
                                 case 's':
                                 case 'i':
                                 case 'd':
@@ -96,19 +96,19 @@ function stmtExec(string $sql, int $failCode = 0, ?string $ParamChars = NULL, ..
                         if($continue) {
                             // If true
                             // Check if the length of the chars is the same as the total bind requests in the statement
-                            if(strlen($ParamChars) == substr_count($sql, "?")) {
+                            if(strlen($paramChars) == substr_count($sql, "?")) {
 
                                 // If true
                                 // Check if there are variable names given in the parameters
-                                if(!empty($BindParamVars)) {
+                                if(!empty($bindParamVars)) {
 
                                     // If true
                                     // Check if the amount of variables is the same as the bind request in the statement
-                                    if(count($BindParamVars) == substr_count($sql, "?")) {
+                                    if(count($bindParamVars) == substr_count($sql, "?")) {
                                         
                                         // If true
                                         // Check if it's possible to bind and continue the function
-                                        if(!mysqli_stmt_bind_param($stmt, $ParamChars, ...$BindParamVars)) {
+                                        if(!mysqli_stmt_bind_param($stmt, $paramChars, ...$bindParamVars)) {
                                             fail("DB".$failCode."4", mysqli_error($conn));
                                             return false;
                                         } 
@@ -139,63 +139,63 @@ function stmtExec(string $sql, int $failCode = 0, ?string $ParamChars = NULL, ..
                     if(mysqli_stmt_num_rows($stmt) > 0) {
 
                         $sql = str_replace("DISTINCT ", "", $sql);
-                        $totalFROMKey = substr_count($sql, "FROM");
-                        $totalENDKey = substr_count($sql, ")");
-                        $totalOPENKey = substr_count($sql, "(");
+                        $totalFromKey = substr_count($sql, "FROM");
+                        $totalEndKey = substr_count($sql, ")");
+                        $totalOpenKey = substr_count($sql, "(");
                         
                         // Check FROM
-                        for($i = 0; $i < $totalFROMKey; $i++) {
+                        for($i = 0; $i < $totalFromKey; $i++) {
                             if($i === 0) {
-                                $posFROMKey[$i] = strpos($sql, "FROM");
+                                $posFromKey[$i] = strpos($sql, "FROM");
                             } else {
-                                $posFROMKey[$i] = strpos($sql, "FROM", $posFROMKey[$i - 1] + 1);
-                                if($i - 1 >= 0 && $posFROMKey[$i] == $posFROMKey[$i - 1]) {
-                                    $posFROMKey[$i] = strpos($sql, "FROM", $posFROMKey[$i - 1] + 1);
+                                $posFromKey[$i] = strpos($sql, "FROM", $posFromKey[$i - 1] + 1);
+                                if($i - 1 >= 0 && $posFromKey[$i] == $posFromKey[$i - 1]) {
+                                    $posFromKey[$i] = strpos($sql, "FROM", $posFromKey[$i - 1] + 1);
                                 }
                             }
                         }
 
                         // Check nested query open sign
-                        for($i = 0; $i < $totalOPENKey; $i++) {
+                        for($i = 0; $i < $totalOpenKey; $i++) {
                             if($i === 0) {
-                                $posOPENKey[$i] = strpos($sql, "(");
+                                $posOpenKey[$i] = strpos($sql, "(");
                             } else {
-                                $posOPENKey[$i] = strpos($sql, "(", $posOPENKey[$i - 1] + 1);
-                                if($i - 1 >= 0 && $posOPENKey[$i] == $posOPENKey[$i - 1]) {
-                                    $posOPENKey[$i] = strpos($sql, "(", $posOPENKey[$i - 1] + 1);
+                                $posOpenKey[$i] = strpos($sql, "(", $posOpenKey[$i - 1] + 1);
+                                if($i - 1 >= 0 && $posOpenKey[$i] == $posOpenKey[$i - 1]) {
+                                    $posOpenKey[$i] = strpos($sql, "(", $posOpenKey[$i - 1] + 1);
                                 }
                             }
                         }
 
                         // Check nested query end sign
-                        for($i = 0; $i < $totalENDKey; $i++) {
+                        for($i = 0; $i < $totalEndKey; $i++) {
                             if($i === 0) {
-                                $posENDKey[$i] = strpos($sql, ")");
+                                $posEndKey[$i] = strpos($sql, ")");
                             } else {
-                                $posENDKey[$i] = strpos($sql, ")", $posENDKey[$i - 1] + 1);
-                                if($i - 1 >= 0 && $posENDKey[$i] == $posENDKey[$i - 1]) {
-                                    $posENDKey[$i] = strpos($sql, ")", $posENDKey[$i - 1] + 1);
+                                $posEndKey[$i] = strpos($sql, ")", $posEndKey[$i - 1] + 1);
+                                if($i - 1 >= 0 && $posEndKey[$i] == $posEndKey[$i - 1]) {
+                                    $posEndKey[$i] = strpos($sql, ")", $posEndKey[$i - 1] + 1);
                                 }
                             }
                         }
                         
                         // Get Right positions in nested queries and form for array values
-                        for($k = 0; $k < count($posFROMKey); $k++) {
-                            $posFrom = $posFROMKey[$k];
-                            if(!empty($posENDKey) && !empty($posOPENKey)) {
+                        for($k = 0; $k < count($posFromKey); $k++) {
+                            $posFrom = $posFromKey[$k];
+                            if(!empty($posEndKey) && !empty($posOpenKey)) {
 
-                                if($posOPENKey[0] > $posFROMKey[0]) {
+                                if($posOpenKey[0] > $posFromKey[0]) {
                                     goto finish;
                                 }
                             
-                                for($i = 0; $i < count($posOPENKey); $i++) {
-                                    $posOpen = $posOPENKey[$i];
-                                    $posEnd = $posENDKey[$i];
+                                for($i = 0; $i < count($posOpenKey); $i++) {
+                                    $posOpen = $posOpenKey[$i];
+                                    $posEnd = $posEndKey[$i];
                                     
                                     if($posFrom > $posEnd && $posEnd > $posOpen) {
-                                        if($i + 1 < $totalOPENKey && $posOPENKey[$i + 1] > $posFrom && $posENDKey[$i + 1] > $posOPENKey[$i + 1]) {
+                                        if($i + 1 < $totalOpenKey && $posOpenKey[$i + 1] > $posFrom && $posEndKey[$i + 1] > $posOpenKey[$i + 1]) {
                                             goto finish;
-                                        } else if($i + 1 == $totalOPENKey) {
+                                        } else if($i + 1 == $totalOpenKey) {
                                             goto finish;
                                         }
                                     } else {
@@ -206,28 +206,28 @@ function stmtExec(string $sql, int $failCode = 0, ?string $ParamChars = NULL, ..
                         }
                         finish:
                         if($posFrom != 0) {
-                            $SelectResults = substr($sql, 7, $posFrom - 8);
+                            $selectResults = substr($sql, 7, $posFrom - 8);
                         } else {
-                            $SelectResults = substr($sql, 7);
+                            $selectResults = substr($sql, 7);
                         }
                         
-                        $SelectResults = explode(",", $SelectResults);
+                        $selectResults = explode(",", $selectResults);
 
-                        for($i = 0; $i < count($SelectResults); $i++) {
-                            if(str_contains($SelectResults[$i], " AS ")) {
-                                $SelectResults[$i] = substr($SelectResults[$i], strpos($SelectResults[$i], " AS ") + 4);
+                        for($i = 0; $i < count($selectResults); $i++) {
+                            if(str_contains($selectResults[$i], " AS ")) {
+                                $selectResults[$i] = substr($selectResults[$i], strpos($selectResults[$i], " AS ") + 4);
                             }
-                            $SelectResults[$i] = str_replace('\s', '', $SelectResults[$i]);
-                            $SelectResults[$i] = trim($SelectResults[$i]);
-                            $BindResults[] = $SelectResults[$i];
+                            $selectResults[$i] = str_replace('\s', '', $selectResults[$i]);
+                            $selectResults[$i] = trim($selectResults[$i]);
+                            $bindResults[] = $selectResults[$i];
                         }
 
-                        if(mysqli_stmt_bind_result($stmt, ...$BindResults)) {
+                        if(mysqli_stmt_bind_result($stmt, ...$bindResults)) {
                             $i = 0;
                             while(mysqli_stmt_fetch($stmt)) {
                                 $j = 0;
-                                foreach($BindResults as $Result) {
-                                    $results[$SelectResults[$j]][] = $Result;
+                                foreach($bindResults as $result) {
+                                    $results[$selectResults[$j]][] = $result;
                                     $j++;
                                 }
                                 $i++;
