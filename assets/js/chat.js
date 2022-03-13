@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://localhost:3001")
+const ws = new WebSocket("ws://localhost:3002/websocket/chat")
 let chatInput = document.getElementById('chatMessage');
 ws.addEventListener("open", () => {
     
@@ -14,7 +14,7 @@ ws.addEventListener("open", () => {
             let date = new Date();
             body.msg = chatInput.value;
             body.time = date.getTime();
-            
+
             ws.send(JSON.stringify(body));
         }
 
