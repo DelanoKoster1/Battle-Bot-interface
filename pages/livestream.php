@@ -46,9 +46,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="chatField">
-                            <form method="post" action="">
-                                <input type="text" name="chatMessage" id="chatMessage" placeholder="text here..."/>
-                            </form>
+                            <input type="text" name="chatMessage" id="chatMessage" placeholder="text here..."/>
                         </div>
                     </div>
                 </div>
@@ -59,6 +57,8 @@
 <footer>
     <?php include_once('../components/footer.php') ?>
 </footer>
+
+<script src="../assets/js/chat.js"></script>
 </body>
 
 </html>
