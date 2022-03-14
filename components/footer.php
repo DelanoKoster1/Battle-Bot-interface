@@ -1,4 +1,4 @@
-<footer class="footer py-4">
+<footer class="footer pt-4">
     <div class="container text-uppercase">
         <div class="row text-center">
             <div class="col-md-6 col-12">
