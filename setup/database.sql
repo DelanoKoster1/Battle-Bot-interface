@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `team` (
 
 CREATE TABLE IF NOT EXISTS `account` (
     id INT NOT NULL AUTO_INCREMENT,
-    teamId INT NOT NULL,
+    teamId INT,
     roleId INT NOT NULL,
     username VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
