@@ -24,9 +24,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/livestream.php' : 'pages/livestream.php'?>">Livestream</a>
                         </li>
+                        <?php if (!isset($_SESSION['email'])) { ?>
                         <li class="nav-item text-right">
                             <a class="nav-link text-danger" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/login.php' : 'pages/login.php'?>">Login / Registeren</a>
                         </li>
+                        <?php } ?>
+                        <?php if (isset($_SESSION['email'])) { ?>
+                            <li class="nav-item text-right">
+                                <a class="nav-link text-danger" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/logout.php' : 'pages/logout.php'?>">Uitloggen</a>
+                            </li>
+                        <?php } ?>
                     </ul>
                 </nav>
             </div>

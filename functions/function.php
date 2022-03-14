@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-function connectDB()
-{
+function connectDB() {
     //Require ENV
     require_once('env.php');
 
@@ -18,8 +17,7 @@ function connectDB()
     return $conn;
 }
 
-function includeHeader(String $sort)
-{
+function includeHeader(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');

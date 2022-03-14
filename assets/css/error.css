@@ -1,0 +1,11 @@
+#error {
+    background: #dedede;
+}
+
+.page-wrap {
+    min-height: 100vh;
+}
+
+.fs10em {
+    font-size: 10em;
+}

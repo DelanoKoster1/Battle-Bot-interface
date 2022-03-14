@@ -24,8 +24,7 @@ $error = array();
  * @param array $error Array with errors
  * @return String/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password)
-{
+function checkLoginFields(String $username, String $password) {
     //Call global variable(s)
     global $error;
 
@@ -81,7 +80,7 @@ if (isset($_POST['login'])) {
         }
 
         //Bind the STMT results(sql statement) to variables
-        mysqli_stmt_bind_result($stmt, $ID, $teamID, $role, $username, $email, $password2);
+        mysqli_stmt_bind_result($stmt, $ID, $teamID, $role, $username, $password2, $email);
 
         //Fetch STMT data
         while (mysqli_stmt_fetch($stmt)) {
@@ -124,14 +123,13 @@ if (isset($_POST['login'])) {
  * @param array     $error  Array with errors
  * @return string/boolean  $error  False or error message
  */
-function checkRegisterFields(string $username, string $email, string $password, string $password2)
-{
+function checkRegisterFields(string $username, string $email, string $password, string $password2) {
     //Call global variable(s)
     global $error;
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'Username mag niet leeg zijn!';
+        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
     }
     if (!$email && empty($email)) {
         $error[] = 'Email is onjuist!';
@@ -149,7 +147,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
         $error[] = 'E-mail is te lang!';
     }
     if (strlen($username) > 255) {
-        $error[] = 'Username is te lang!';
+        $error[] = 'Gebruikersnaam is te lang!';
     }
     if (strlen($password) > 255) {
         $error[] = 'Wachtwoord is te lang!';
@@ -169,8 +167,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
  * @param   string          $username  Filled in username
  * @return  string/boolean  $error  False or error message
  */
-function checkUserInDataBase(mysqli $conn, string $username)
-{
+function checkUserInDataBase(mysqli $conn, string $username) {
     //Call global variable(s)
     global $error;
 
@@ -237,34 +234,27 @@ if (isset($_POST['register'])) {
             //Prpeparing SQL Query with database connection
             $stmt = mysqli_prepare($conn, $query);
             if (!$stmt) {
-                $_SESSION['error'] = "database_error1";
+                $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
-
-
             //Binding params into ? fields
             if (!mysqli_stmt_bind_param($stmt, "sssss", $teamid, $role, $username, $password, $email)) {
-                $_SESSION['error'] = "database_error2";
+                $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
             //Executing statement
             if (!mysqli_stmt_execute($stmt)) {
                 mysqli_stmt_error($stmt);
-                $_SESSION['error'] = "database_error3";
+                $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
-
-            mysqli_stmt_close($stmt);
-            mysqli_close($conn);
-
             // log user in
             $_SESSION['username'] = $username;
-            // $_SESSION['email'] = $email;
+            $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
-            // $_SESSION['id'] = $ID;
 
             //Close the statement and connection
             mysqli_stmt_close($stmt);
@@ -298,7 +288,7 @@ if (isset($_POST['register'])) {
         <?php includeHeader('page'); ?>
     </section>
 
-    <section id="content" class="container">
+    <section id="content" class="container mb-3">
         <div class="row">
             <div class="col-md-12 text-center mt-2">
                 <h1>Login/Register</h1>
@@ -381,7 +371,7 @@ if (isset($_POST['register'])) {
     </section>
 
     <section id="footer">
-        <!-- include footer -->
+        <?php include_once('../components/footer.php') ?>
     </section>
 </body>
 

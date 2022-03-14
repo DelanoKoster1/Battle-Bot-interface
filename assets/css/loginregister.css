@@ -2,11 +2,6 @@
     --grayBackground: #F7F7F7;
 }
 
-ul {
-    margin-bottom: 0rem;
-    text-align: left;
-}
-
 /* Boxes around form */
 .box {
     background-color: white;
@@ -30,6 +25,10 @@ ul {
     .alert {
         max-width: 94%;
     }
+}
+ul {
+    margin-bottom: 0rem;
+    text-align: left;
 }
 
 /* Form input fields */
