@@ -237,7 +237,7 @@ if (isset($_POST['register'])) {
             //Prpeparing SQL Query with database connection
             $stmt = mysqli_prepare($conn, $query);
             if (!$stmt) {
-                $_SESSION['error'] = "database_error";
+                $_SESSION['error'] = "database_error1";
                 header("location: ../components/error.php");
             }
 
@@ -245,25 +245,25 @@ if (isset($_POST['register'])) {
 
             //Binding params into ? fields
             if (!mysqli_stmt_bind_param($stmt, "sssss", $teamid, $role, $username, $password, $email)) {
-                $_SESSION['error'] = "database_error";
+                $_SESSION['error'] = "database_error2";
                 header("location: ../components/error.php");
             }
 
             //Executing statement
             if (!mysqli_stmt_execute($stmt)) {
-                $_SESSION['error'] = "database_error";
+                mysqli_stmt_error($stmt);
+                $_SESSION['error'] = "database_error3";
                 header("location: ../components/error.php");
             }
 
-            echo 'komt hier gwn?';
+
             mysqli_stmt_close($stmt);
             mysqli_close($conn);
-            exit();
 
-            //log user in
-            // $_SESSION['username'] = $username;
+            // log user in
+            $_SESSION['username'] = $username;
             // $_SESSION['email'] = $email;
-            // $_SESSION['role'] = $role;
+            $_SESSION['role'] = $role;
             // $_SESSION['id'] = $ID;
 
             //Close the statement and connection
