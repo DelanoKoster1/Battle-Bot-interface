@@ -1,0 +1,13 @@
+.game {
+    height: 200px;
+    width: 200px;
+    margin: 10px;
+    padding: 10px;
+    background-color: lightgrey;
+    border-radius: 20px;
+}
+
+.underText {
+    background-color: grey;
+    border-radius: 10px;
+}
