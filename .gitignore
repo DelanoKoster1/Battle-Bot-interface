@@ -86,3 +86,4 @@ $RECYCLE.BIN/
 config.php
 connection.php
 connection.php
+functions/env.php
