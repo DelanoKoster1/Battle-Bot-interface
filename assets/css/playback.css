@@ -5,7 +5,10 @@
 .chatbox .card-header {
     line-height: 34px;
 }
-
+.chatmessage-container {
+    max-height: 75vw;
+    overflow-y: auto;
+}
 @media only screen and (max-width: 990px) {
     .chatbox {
         height: 450px!important;

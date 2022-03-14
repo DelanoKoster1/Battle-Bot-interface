@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-4">
                 <a href="<?=($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php';?>">
-                    <img class="img-fluid logo" src="<?=($_SESSION['sort'] == 'page')? '../assets/img/logo/logoW.svg' : 'assets/img/logo/logoW.svg'?>" alt="logo">
+                    <img class="img-fluid logo" src="<?=($_SESSION['sort'] == 'page')? '..\assets\img\logo\logo(1).svg' : 'assets\img\logo\logo(1).svg'?>" alt="logo">
                 </a>
             </div>
             <div class="col-lg-8 my-auto">
