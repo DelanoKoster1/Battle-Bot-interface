@@ -24,7 +24,8 @@ $error = array();
  * @param array $error Array with errors
  * @return String/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password) {
+function checkLoginFields(String $username, String $password)
+{
     //Call global variable(s)
     global $error;
 
@@ -58,7 +59,7 @@ if (isset($_POST['login'])) {
     //Check form data fields
     if (!checkLoginFields($username, $password)) {
         //SQL query to select all from user where the username is ...
-        $query = "SELECT * FROM user WHERE username = ?";
+        $query = "SELECT * FROM account WHERE username = ?";
 
         //Prpeparing SQL Query with database connection
         $stmt = mysqli_prepare($conn, $query);
@@ -80,7 +81,7 @@ if (isset($_POST['login'])) {
         }
 
         //Bind the STMT results(sql statement) to variables
-        mysqli_stmt_bind_result($stmt, $ID, $username, $email, $password2, $role);
+        mysqli_stmt_bind_result($stmt, $ID, $teamID, $role, $username, $email, $password2);
 
         //Fetch STMT data
         while (mysqli_stmt_fetch($stmt)) {
@@ -123,7 +124,8 @@ if (isset($_POST['login'])) {
  * @param array     $error  Array with errors
  * @return string/boolean  $error  False or error message
  */
-function checkRegisterFields(string $username, string $email, string $password, string $password2) {
+function checkRegisterFields(string $username, string $email, string $password, string $password2)
+{
     //Call global variable(s)
     global $error;
 
@@ -160,6 +162,57 @@ function checkRegisterFields(string $username, string $email, string $password, 
     }
 }
 
+/**
+ * Function checkUserInDatabase
+ * Function to check if user already exists in database
+ * Return Error message if needed.
+ * @param   string          $username  Filled in username
+ * @return  string/boolean  $error  False or error message
+ */
+function checkUserInDataBase(mysqli $conn, string $username)
+{
+    //Call global variable(s)
+    global $error;
+
+    //SQL Query for selecting all users where an email is in DB
+    $query = "SELECT * FROM account WHERE username = ?";
+
+    //Prpeparing SQL Query with database connection
+    $stmt = mysqli_prepare($conn, $query);
+    if (!$stmt) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    }
+
+    //Binding params into ? fields
+    if (!mysqli_stmt_bind_param($stmt, "s", $username)) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    }
+
+    //Executing statement
+    if (!mysqli_stmt_execute($stmt)) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    };
+
+    //Bind the STMT results(sql statement) to variables
+    mysqli_stmt_bind_result($stmt, $ID, $teamid, $roleid, $username, $password, $email);
+
+    //Store STMT data
+    mysqli_stmt_store_result($stmt);
+
+    //Check if a result has been found with number of rows
+    if (mysqli_stmt_num_rows($stmt) > 0) {
+        mysqli_stmt_close($stmt);
+        $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
+        return $error;
+    } else {
+        mysqli_stmt_close($stmt);
+        return false;
+    }
+}
+
 //Check if submitted
 if (isset($_POST['register'])) {
     //Submitted form data validation
@@ -170,40 +223,48 @@ if (isset($_POST['register'])) {
 
     //Check form data fields
     if (!checkRegisterFields($username, $email, $password, $password2)) {
-        if (!checkUserInDataBase($username)) {
+        if (!checkUserInDataBase($conn, $username)) {
             //Hash the password before putting in database
             $password = password_hash($password, PASSWORD_DEFAULT);
 
             //Define standard role, user
-            $role = 'user';
+            $role = 0;
+            $teamid = 0;
 
             //SQL Query for inserting into user table
-            $query = "INSERT INTO user (username, email, password, role) VALUES (?,?,?,?,?)";
+            $query = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
 
             //Prpeparing SQL Query with database connection
             $stmt = mysqli_prepare($conn, $query);
-            if(!$stmt){
+            if (!$stmt) {
                 $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
+
+
             //Binding params into ? fields
-            if(!mysqli_stmt_bind_param($stmt, "sssss", $username, $email, $password, $role)){
+            if (!mysqli_stmt_bind_param($stmt, "sssss", $teamid, $role, $username, $password, $email)) {
                 $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
             //Executing statement
-            if(!mysqli_stmt_execute($stmt)){
+            if (!mysqli_stmt_execute($stmt)) {
                 $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
+            echo 'komt hier gwn?';
+            mysqli_stmt_close($stmt);
+            mysqli_close($conn);
+            exit();
+
             //log user in
-            $_SESSION['username'] = $username;
-            $_SESSION['email'] = $email;
-            $_SESSION['role'] = $role;
-            $_SESSION['id'] = $ID;
+            // $_SESSION['username'] = $username;
+            // $_SESSION['email'] = $email;
+            // $_SESSION['role'] = $role;
+            // $_SESSION['id'] = $ID;
 
             //Close the statement and connection
             mysqli_stmt_close($stmt);
