@@ -4,12 +4,12 @@ include_once('../functions/function.php');
 switch (isset($_SESSION['error'])) {
     case 'database_error':
         $errormessage = 'Database error';
-        $_SESSION['error'] = null;
+        unset($_SESSION['error']);
         break;
 
     case 'database_connect_error':
         $errormessage = 'Database connection error';
-        $_SESSION['error'] = null;
+        unset($_SESSION['error']);
         break;
 
     default:
