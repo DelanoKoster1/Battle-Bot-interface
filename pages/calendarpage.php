@@ -18,7 +18,7 @@
         <?php includeHeader('page'); ?>
     </section>
     
-    <main id='events'>
+    <section id='events'>
         <div class='containter py-4'>
             <div class="row">
                 <div class="col-12 mb-2 text-center">
@@ -51,11 +51,11 @@
 
             </div>
         </div>
-    </main>
+    </section>
 
-    <footer>
+    <section class="navbar fixed-bottom">
         <?php include_once('../components/footer.php') ?>
-    </footer>
+    </section>
 </body>
 
 </html>
