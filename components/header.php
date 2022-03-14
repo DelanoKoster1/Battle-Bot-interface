@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-4">
                 <a href="<?=($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php';?>">
-                    <img class="img-fluid logo" src="<?=($_SESSION['sort'] == 'page')? '../assets/img/logo/logoW.svg' : 'assets/img/logo/logoW.svg'?>" alt="logo">
+                    <img class="img-fluid logo" src="<?=($_SESSION['sort'] == 'page')? '..\assets\img\logo\logo(1).svg' : 'assets\img\logo\logo(1).svg'?>" alt="logo">
                 </a>
             </div>
             <div class="col-lg-8 my-auto">
@@ -25,7 +25,7 @@
                             <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/livestream.php' : 'pages/livestream.php'?>">Livestream</a>
                         </li>
                         <li class="nav-item text-right">
-                            <a class="nav-link text-danger" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/register.php' : 'pages/register.php'?>">Login / Registeren</a>
+                            <a class="nav-link text-danger" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/login.php' : 'pages/login.php'?>">Login / Registeren</a>
                         </li>
                     </ul>
                 </nav>
