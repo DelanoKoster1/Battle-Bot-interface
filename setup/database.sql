@@ -31,6 +31,8 @@ CREATE TABLE IF NOT EXISTS `bot` (
     statsId INT NOT NULL,
     specsId INT NOT NULL,
     name VARCHAR(50) NOT NULL,
+    description VARCHAR(999),
+    imagePath VARCHAR(50),
 
     CONSTRAINT pk_bot PRIMARY KEY (id)
     
@@ -67,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `event` (
 CREATE TABLE IF NOT EXISTS `team-event` (
     eventId INT NOT NULL,
     teamId INT NOT NULL,
+    points INT DEFAULT 0,
 
     CONSTRAINT pk_team_event PRIMARY KEY (eventId, teamId)
     );
