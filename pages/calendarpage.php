@@ -53,7 +53,7 @@
         </div>
     </main>
 
-    <footer>
+    <footer class="navbar fixed-bottom">
         <?php include_once('../components/footer.php') ?>
     </footer>
 </body>
