@@ -85,3 +85,10 @@ header .img-fluid.logo {
   color: white;
   font-size: 1rem;
 }
+@media (min-width : 992px) {
+  .input-group.w-lg-50 {
+    width: 50%;
+    margin: 0 auto;
+  }
+  
+}
