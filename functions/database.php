@@ -60,7 +60,7 @@ function stmtExec(string $sql, int $failCode = 0, ?string $paramChars = NULL, ..
     //Require function.php
     require_once('function.php');
 
-    if($conn = connectDB();) {
+    if($conn = connectDB()) {
         if(mysqli_select_db($conn, $db)) {
             // Check if the statement can be prepared
             if($stmt = mysqli_prepare($conn, $sql)) {
