@@ -8,19 +8,19 @@
                 </div>
             </div>
             <div class="col-md-3 col-12">
-                <h3>Battlebot</h3>
+                <h4>Battlebot</h4>
                 <ul class="list-unstyled">
                     <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php'?>">Voorpagina</a></li>
-                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php'?>">Robots</a></li>
-                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php'?>">Kalender</a></li>
-                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php'?>">Livestream</a></li>
+                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? 'robots.php' : 'pages/robots.php'?>">Robots</a></li>
+                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? 'calendarpage.php' : 'pages/calendarpage.php'?>">Kalender</a></li>
+                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? 'livestream.php' : 'pages/livestream.php'?>">Livestream</a></li>
                 </ul>
             </div>
             <div class="col-md-3 col-12">
-                <h3>Acount</h3>
+                <h4>Account</h4>
                 <ul class="list-unstyled">
-                    <li>Profiel</li>
-                    <li>Login/Registeren</li>
+                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? 'profile.php' : 'pages/profile.php'?>">Profiel</a></li>
+                    <li><a class="text-white text-decoration-none" href="<?= ($_SESSION['sort'] == 'page') ? 'login.php' : 'pages/login.php'?>">Login/Registeren</a></li>
                 </ul>
             </div>
         </div>
