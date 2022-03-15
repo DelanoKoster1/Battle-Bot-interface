@@ -48,6 +48,7 @@
                                             <div class="col-12">
                                                 <div class="input-group mb-3">
                                                     <input type="text" class="form-control" placeholder="Type uw bericht" aria-label="Type uw bericht" id="chatMessage" aria-describedby="button-addon2">
+                                                    <input type="hidden" id="username" value="<?= $_SESSION['username']?>">
                                                     <button class="btn btn-outline-secondary" type="button" id="button-addon2"><span class="material-icons align-middle">send</span></button>
                                                 </div>
                                             </div>

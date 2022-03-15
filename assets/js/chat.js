@@ -1,37 +1,60 @@
 const ws = new WebSocket("ws://localhost:3002/websocket/chat");
 let chatInput = document.getElementById('chatMessage');
+let chatButton = document.getElementById('button-addon2');
+let username = document.getElementById('username').value;
 
 ws.addEventListener("open", () => {
-    
-    let body = { 
-        "username": "JohnDoe",
-        "msg": ""
-    }
+
+   
 
     chatInput.addEventListener("keyup", (e) => {
         e.preventDefault();
         if (e.keyCode === 13) {
-            let date = new Date();
-            body.msg = chatInput.value;
-            chatInput.value = "";
-            showMessage(body);
-            ws.send(JSON.stringify(body));
+            sendMsgToWS();
         }
 
     })
 
-    ws.addEventListener("message", ({ data }) => {
+    chatButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        sendMsgToWS();
+    })
+
+    ws.addEventListener("message", ({
+        data
+    }) => {
         let res = JSON.parse(data);
 
-        if(res.msg){
+        if (res.msg) {
             showMessage(res);
+        } else if (res.amountOfWatchers) {
+            showAmoutnOfWatchers(res.amountOfWatchers);
         }
     })
-  
+
 })
 
 
-function showMessage(data){
+function sendMsgToWS() {
+    if (chatInput.value.trim() != "") {
+        let body = {
+            "username": username,
+            "msg": ""
+        }
+
+        body.msg = chatInput.value;
+        chatInput.value = "";
+        showMessage(body);
+        ws.send(JSON.stringify(body));
+    }
+}
+
+
+function showAmoutnOfWatchers(watchers) {
+
+}
+
+function showMessage(data) {
     let chatLine = document.querySelector('.chatmessage-container');
 
     let div = document.createElement('div');
@@ -42,9 +65,9 @@ function showMessage(data){
     spanUsername.setAttribute('class', 'fw-bold');
     spanMessage.setAttribute('class', 'message');
 
-    spanUsername.innerHTML=data.username + ": ";
-    spanMessage.innerHTML=data.msg;
-    
+    spanUsername.innerHTML = data.username + ": ";
+    spanMessage.innerHTML = data.msg;
+
     chatLine.appendChild(div);
     div.appendChild(spanUsername);
     div.appendChild(spanMessage);
