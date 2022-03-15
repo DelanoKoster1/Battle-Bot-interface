@@ -11,3 +11,21 @@
     background-color: grey;
     border-radius: 10px;
 }
+
+.box {
+    height: 150px;
+
+    border-radius: 18px;
+    background-color: gray;
+}
+
+.box img {
+    padding-top: 5px;
+}
+
+.botName {
+    border-radius: 18px;
+    background-color: #bfc9d3;
+    height: 35px;
+    line-height: 35px;
+}
