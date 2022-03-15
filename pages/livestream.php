@@ -41,28 +41,13 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="chatmessage-container h-75">
-                                        <div class="chatLine my-2">
-                                            <span class="fw-bold">Username: </span>
-                                            <span class="message">Lorem ipsum dolor sit </span>
-                                        </div>
-                                        <div class="chatLine my-2">
-                                            <span class="fw-bold">Username: </span>
-                                            <span class="message">Lorem ipsum dolor sit </span>
-                                        </div>
-                                        <div class="chatLine my-2">
-                                            <span class="fw-bold">Username: </span>
-                                            <span class="message">Lorem ipsum dolor sit </span>
-                                        </div>
-                                        <div class="chatLine my-2">
-                                            <span class="fw-bold">Username: </span>
-                                            <span class="message">Lorem ipsum dolor sit </span>
-                                        </div>
+                                       
                                     </div>
                                     <div class="commandLine position-absolute bottom-0 start-0">
                                         <div class="row">
                                             <div class="col-12">
                                                 <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" placeholder="Type uw bericht" aria-label="Type uw bericht" aria-describedby="button-addon2">
+                                                    <input type="text" class="form-control" placeholder="Type uw bericht" aria-label="Type uw bericht" id="chatMessage" aria-describedby="button-addon2">
                                                     <button class="btn btn-outline-secondary" type="button" id="button-addon2"><span class="material-icons align-middle">send</span></button>
                                                 </div>
                                             </div>
@@ -115,6 +100,7 @@
             openChatBtn.classList.add("d-none");
         })
     </script>
+    <script src="../assets/js/chat.js"></script>
 </body>
 
 </html>
