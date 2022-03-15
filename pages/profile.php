@@ -62,7 +62,7 @@ if (isset($_POST['save'])) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12  bg-white">
+                        <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">email</span></span>
                                 <input type="text" class="form-control bg-light" placeholder="Email"  value="<?php //echo $_SESSION['email']?>" aria-label="Email" aria-describedby="basic-addon1">
@@ -104,8 +104,8 @@ if (isset($_POST['save'])) {
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-12 bg-white">
-                            <div class="input-group justify-content-center w-lg-50">
+                        <div class="bg-white">
+                            <div class="col-lg-9 col-12 w-lg-50">
                                 <input class="bg-danger border-0 rounded text-light p-1 mb-3 float-end" name="save" type="submit" value="Opslaan">
                             </div>
                         </div>

@@ -33,3 +33,10 @@ a:hover {
     border: 3px solid transparent;
     cursor: pointer;
 }
+@media (min-width : 992px) {
+    .input-group.w-lg-50 {
+      width: 50%;
+      margin: 0 auto;
+    }
+    
+  }
