@@ -44,24 +44,23 @@ function fail(?string $code = NULL, ?string $info = NULL) {
 }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                      //
-// @Param $failCode: Use a code for fail messages, You can easily create 1 above                            //
-// @Param $Paramchars: Use this when need to use WHERE conditions -> Use given type: s, i, d or b       //
-// @Param $BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables          //
-// @Param $sql: Give the sql query to execute                                                           //
-//                                                                                                      //
-// By:          Joris Hummel                                                                            //
-//                                                                                                      //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ *                         
+ * @param string $sql: Give the sql query to execute                                                                                    
+ * @param int $failCode: Use a code for fail messages, You can easily create 1 above                        
+ * @param ?string $paramchars: Use this when need to use WHERE conditions -> Use given type: s, i, d or b       
+ * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                           
+ *                                                                                                  
+ * By:          Joris Hummel                                                                         
+ *                                                                                                   
+ */
 function stmtExec(string $sql, int $failCode = 0, ?string $paramChars = NULL, ...$bindParamVars) : array| bool {
 
-    $host = "localhost";
-    $user = "root";
-    $pwd = "";
-    $db = "battlebot";
 
-    if($conn = mysqli_connect($host, $user, $pwd)) {
+    //Require function.php
+    require_once('function.php');
+
+    if($conn = connectDB();) {
         if(mysqli_select_db($conn, $db)) {
             // Check if the statement can be prepared
             if($stmt = mysqli_prepare($conn, $sql)) {
