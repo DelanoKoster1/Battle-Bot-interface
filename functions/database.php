@@ -72,7 +72,7 @@ function stmtExec(string $sql, int $failCode = 0, ?string $paramChars = NULL, ..
                     
                     // If true
                     // Check if the bind param chars are set
-                    if(!empty($ParamChars)) {
+                    if(!empty($paramChars)) {
 
                         // Check if the given chars are valid
                         for ($i=0; $i<strlen($paramChars); $i++) {
