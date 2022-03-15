@@ -1,8 +1,9 @@
-<footer class="footer py-4">
+<footer class="footer pt-4">
     <div class="container text-uppercase">
         <div class="row text-center">
             <div class="col-md-6 col-12">
                 <h6>Dit evenement is gesponsord door:</h6>
+                <img class="footerIMG" src="../assets/img/logo-nhl-stenden.png" alt="StendenLogo">
             </div>
             <div class="col-md-3 col-12">
                 <h3>Battlebot</h3>

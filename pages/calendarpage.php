@@ -22,41 +22,29 @@
         <div class='containter py-4'>
             <div class="row">
                 <div class="col-12 mb-2 text-center">
-                    <h3>Komende evenementen</h3>
+                    <h3>Evenementen</h3>
                 </div>
                 <div class="col-lg-12 d-flex justify-content-center">
                     <div class="card mx-3 event">
-                        <div class="calendarbox d-flex justify-content-center align-items-center">
+                        <div class="d-flex justify-content-left align-items-center">
                             <div>
-                                <span class="calendarDay d-block">25</span>
-                                <span class="calendarMonth">Maart</span>
+                                <span class="calendarDate d-block">25 Maart 2022</span>
+                                <span class="calendarTitle">Testdag</span>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <h6 class="card-title text-center">Test dag</h6>
-                            <div class="text-center">
-                                <span>The testing date for the official event</span>
-                            </div>
-                            <div class="time text-center">
-                                <span>08:30 - 12:15</span>
-                            </div>
+                        <div class="d-flex justify-content-left">
+                            <span class="calendarInfo mt-4">De officiële testdag van het evenement</span>
                         </div>
                     </div>
                     <div class="card mx-3 event">
-                        <div class="calendarbox d-flex justify-content-center align-items-center">
+                        <div class="d-flex justify-content-left align-items-center">
                             <div>
-                                <span class="calendarDay d-block">14</span>
-                                <span class="calendarMonth">April</span>
+                                <span class="calendarDate d-block">14 April 2022</span>
+                                <span class="calendarTitle">Race dag</span>
                             </div>
                         </div>
-                        <div class="card-body">
-                            <h6 class="card-title text-center">Race dag</h6>
-                            <div class="text-center">
-                                <span>Official BattleBots event date</span>
-                            </div>
-                            <div class="time text-center text-bottom">
-                                <span>08:30 - 12:15</span>
-                            </div>
+                        <div class="d-flex justify-content-left">
+                            <span class="calendarInfo mt-4">De officiële race dag van het evenement</span>
                         </div>
                     </div>
                 </div>
@@ -65,7 +53,7 @@
         </div>
     </main>
 
-    <footer>
+    <footer class="navbar fixed-bottom">
         <?php include_once('../components/footer.php') ?>
     </footer>
 </body>

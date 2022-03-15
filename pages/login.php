@@ -58,7 +58,7 @@ if (isset($_POST['login'])) {
     //Check form data fields
     if (!checkLoginFields($username, $password)) {
         //SQL query to select all from user where the username is ...
-        $query = "SELECT * FROM user WHERE username = ?";
+        $query = "SELECT * FROM account WHERE username = ?";
 
         //Prpeparing SQL Query with database connection
         $stmt = mysqli_prepare($conn, $query);
@@ -80,7 +80,7 @@ if (isset($_POST['login'])) {
         }
 
         //Bind the STMT results(sql statement) to variables
-        mysqli_stmt_bind_result($stmt, $ID, $username, $email, $password2, $role);
+        mysqli_stmt_bind_result($stmt, $ID, $teamID, $role, $username, $password2, $email);
 
         //Fetch STMT data
         while (mysqli_stmt_fetch($stmt)) {
@@ -129,7 +129,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'Username mag niet leeg zijn!';
+        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
     }
     if (!$email && empty($email)) {
         $error[] = 'Email is onjuist!';
@@ -147,7 +147,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
         $error[] = 'E-mail is te lang!';
     }
     if (strlen($username) > 255) {
-        $error[] = 'Username is te lang!';
+        $error[] = 'Gebruikersnaam is te lang!';
     }
     if (strlen($password) > 255) {
         $error[] = 'Wachtwoord is te lang!';
@@ -157,6 +157,56 @@ function checkRegisterFields(string $username, string $email, string $password, 
         return false;
     } else {
         return $error;
+    }
+}
+
+/**
+ * Function checkUserInDatabase
+ * Function to check if user already exists in database
+ * Return Error message if needed.
+ * @param   string          $username  Filled in username
+ * @return  string/boolean  $error  False or error message
+ */
+function checkUserInDataBase(mysqli $conn, string $username) {
+    //Call global variable(s)
+    global $error;
+
+    //SQL Query for selecting all users where an email is in DB
+    $query = "SELECT * FROM account WHERE username = ?";
+
+    //Prpeparing SQL Query with database connection
+    $stmt = mysqli_prepare($conn, $query);
+    if (!$stmt) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    }
+
+    //Binding params into ? fields
+    if (!mysqli_stmt_bind_param($stmt, "s", $username)) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    }
+
+    //Executing statement
+    if (!mysqli_stmt_execute($stmt)) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    };
+
+    //Bind the STMT results(sql statement) to variables
+    mysqli_stmt_bind_result($stmt, $ID, $teamid, $roleid, $username, $password, $email);
+
+    //Store STMT data
+    mysqli_stmt_store_result($stmt);
+
+    //Check if a result has been found with number of rows
+    if (mysqli_stmt_num_rows($stmt) > 0) {
+        mysqli_stmt_close($stmt);
+        $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
+        return $error;
+    } else {
+        mysqli_stmt_close($stmt);
+        return false;
     }
 }
 
@@ -170,40 +220,41 @@ if (isset($_POST['register'])) {
 
     //Check form data fields
     if (!checkRegisterFields($username, $email, $password, $password2)) {
-        if (!checkUserInDataBase($username)) {
+        if (!checkUserInDataBase($conn, $username)) {
             //Hash the password before putting in database
             $password = password_hash($password, PASSWORD_DEFAULT);
 
             //Define standard role, user
-            $role = 'user';
+            $role = 0;
+            $teamid = 0;
 
             //SQL Query for inserting into user table
-            $query = "INSERT INTO user (username, email, password, role) VALUES (?,?,?,?,?)";
+            $query = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
 
             //Prpeparing SQL Query with database connection
             $stmt = mysqli_prepare($conn, $query);
-            if(!$stmt){
+            if (!$stmt) {
                 $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
             //Binding params into ? fields
-            if(!mysqli_stmt_bind_param($stmt, "sssss", $username, $email, $password, $role)){
+            if (!mysqli_stmt_bind_param($stmt, "sssss", $teamid, $role, $username, $password, $email)) {
                 $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
             //Executing statement
-            if(!mysqli_stmt_execute($stmt)){
+            if (!mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_error($stmt);
                 $_SESSION['error'] = "database_error";
                 header("location: ../components/error.php");
             }
 
-            //log user in
+            // log user in
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
-            $_SESSION['id'] = $ID;
 
             //Close the statement and connection
             mysqli_stmt_close($stmt);
@@ -237,7 +288,7 @@ if (isset($_POST['register'])) {
         <?php includeHeader('page'); ?>
     </section>
 
-    <section id="content" class="container">
+    <section id="content" class="container mb-3">
         <div class="row">
             <div class="col-md-12 text-center mt-2">
                 <h1>Login/Register</h1>
@@ -320,7 +371,7 @@ if (isset($_POST['register'])) {
     </section>
 
     <section id="footer">
-        <!-- include footer -->
+        <?php include_once('../components/footer.php') ?>
     </section>
 </body>
 
