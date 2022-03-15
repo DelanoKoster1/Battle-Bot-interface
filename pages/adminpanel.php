@@ -42,7 +42,7 @@
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 pt-1">
-                            <img src="../assets/img/botsetting.svg" alt="Logo of a bot">
+                            <img src="../assets/img/game.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
                             <div class="botName position-absolute w-100 bottom-0">
@@ -77,7 +77,7 @@
                 <div class="box bg-secondary d-flex justify-content-center">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 pt-1">
-                            <img src="../assets/img/botsetting.svg" alt="Logo of a bot">
+                            <img src="../assets/img/game.svg" alt="Logo of a bot">
                         </div>
                         <div class="col-12 position-relative">
                             <div class="botName position-absolute w-100 bottom-0">
