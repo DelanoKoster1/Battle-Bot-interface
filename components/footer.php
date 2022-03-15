@@ -3,7 +3,9 @@
         <div class="row text-center">
             <div class="col-md-6 col-12">
                 <h6>Dit evenement is gesponsord door:</h6>
-                <img class="footerIMG" src="../assets/img/logo-nhl-stenden.png" alt="StendenLogo">
+                <div class="rounded-circle">
+                    <img class="footerIMG" src="<?=($_SESSION['sort'] == 'page') ? '../assets/img/logo-nhl-stenden.png' : 'assets/img/logo-nhl-stenden.png'?>" alt="StendenLogo">
+                </div>
             </div>
             <div class="col-md-3 col-12">
                 <h3>Battlebot</h3>
