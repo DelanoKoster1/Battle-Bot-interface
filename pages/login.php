@@ -166,12 +166,12 @@ function checkRegisterFields(string $username, string $email, string $password, 
  * @param   string          $username  Filled in username
  * @return  string/boolean  $error  False or error message
  */
-function checkUserInDataBase(mysqli $conn, string $username) {
+function checkUserInDataBase(mysqli $conn, string $username, string $email) {
     //Call global variable(s)
     global $error;
 
     //SQL Query for selecting all users where an email is in DB
-    $query = "SELECT * FROM account WHERE username = ?";
+    $query = "SELECT * FROM account WHERE username = ? OR email = ?";
 
     //Prpeparing SQL Query with database connection
     $stmt = mysqli_prepare($conn, $query);
@@ -181,7 +181,7 @@ function checkUserInDataBase(mysqli $conn, string $username) {
     }
 
     //Binding params into ? fields
-    if (!mysqli_stmt_bind_param($stmt, "s", $username)) {
+    if (!mysqli_stmt_bind_param($stmt, "ss", $username, $email)) {
         $_SESSION['error'] = "database_error";
         header("location: ../components/error.php");
     }
@@ -209,7 +209,9 @@ function checkUserInDataBase(mysqli $conn, string $username) {
             }
         }
         mysqli_stmt_close($stmt);      
-        return $error;
+        foreach($error as $errorMsg) {
+            return $errorMsg;
+        }
     } else {
         mysqli_stmt_close($stmt);
         return false;
@@ -226,7 +228,7 @@ if (isset($_POST['register'])) {
 
     //Check form data fields
     if (!checkRegisterFields($username, $email, $password, $password2)) {
-        if (!checkUserInDataBase($conn, $username)) {
+        if (!checkUserInDataBase($conn, $username, $email)) {
             //Hash the password before putting in database
             $password = password_hash($password, PASSWORD_DEFAULT);
 
