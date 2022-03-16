@@ -1,0 +1,48 @@
+:root {
+    --grayBackground: #F7F7F7;
+}
+
+/* Boxes around form */
+.box {
+    background-color: white;
+    border: 3px solid #d6d4d4;
+    max-width: 75%;
+    margin: 0 auto;
+    display: block;
+}
+@media only screen and (max-width: 1000px) {
+    .box {
+        max-width: 100%;
+    }
+}
+
+/* Alert box above form */
+.alert {
+    max-width: 72%;
+    margin: 0 auto;
+}
+@media only screen and (max-width: 1000px) {
+    .alert {
+        max-width: 94%;
+    }
+}
+.alert ul {
+    margin-bottom: 0rem;
+    text-align: left;
+}
+
+/* Form input fields */
+input[type=text].form-control, input[type=password].form-control, input[type=email].form-control {
+    background-color: var(--grayBackground);
+    border-color: #d6d4d4;
+    box-shadow: none;
+    height: 50px;
+    max-width: 70%;
+    margin: 0 auto;
+    display: block;
+}
+input[type=submit].btn {
+    width: 50%;
+    height: 50px;
+    box-shadow: none;
+}

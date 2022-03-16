@@ -4,75 +4,88 @@ CREATE DATABASE IF NOT EXISTS `battlebot`;
 USE `battlebot`;
 
 CREATE TABLE IF NOT EXISTS `role` (
-    Id INT NOT NULL AUTO_INCREMENT,
-    Name VARCHAR(50) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
 
-    CONSTRAINT pk_role PRIMARY KEY (Id)
+    CONSTRAINT pk_role PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS `stats` (
-    Id INT NOT NULL AUTO_INCREMENT,
-    Wins INT NOT NULL DEFAULT 0,
-    PlayedMatches INT NOT NULL DEFAULT 0,
+    id INT NOT NULL AUTO_INCREMENT,
+    wins INT NOT NULL DEFAULT 0,
+    playedMatches INT NOT NULL DEFAULT 0,
 
-    CONSTRAINT pk_stats PRIMARY KEY (Id)
+    CONSTRAINT pk_stats PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS `specs` (
-    Id INT NOT NULL AUTO_INCREMENT,
-    Board VARCHAR(100) NOT NULL,
-    Interface VARCHAR(100) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    board VARCHAR(100) NOT NULL,
+    interface VARCHAR(100) NOT NULL,
 
-    CONSTRAINT pk_specs PRIMARY KEY (Id)
+    CONSTRAINT pk_specs PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS `bot` (
-    Id INT NOT NULL AUTO_INCREMENT,
-    StatsId INT NOT NULL,
-    SpecsId INT NOT NULL,
-    Name VARCHAR(50) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    statsId INT NOT NULL,
+    specsId INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    description VARCHAR(999),
+    imagePath VARCHAR(50),
 
-    CONSTRAINT pk_bot PRIMARY KEY (Id),
-    CONSTRAINT fk_botstats FOREIGN KEY (StatsId) REFERENCES stats(Id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_botspecs FOREIGN KEY (SpecsId) REFERENCES specs(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+    CONSTRAINT pk_bot PRIMARY KEY (id)
+    
+    );
 
 CREATE TABLE IF NOT EXISTS `team` (
-    Id INT NOT NULL AUTO_INCREMENT,
-    BotId INT NOT NULL,
-    Name VARCHAR(50) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    botId INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
 
-    CONSTRAINT pk_team PRIMARY KEY (Id),
-    CONSTRAINT fk_teambot FOREIGN KEY (BotId) REFERENCES bot(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+    CONSTRAINT pk_team PRIMARY KEY (id)
+    );
 
 CREATE TABLE IF NOT EXISTS `account` (
-    Id INT NOT NULL AUTO_INCREMENT,
-    TeamId INT NOT NULL,
-    RoleId INT NOT NULL,
-    Username VARCHAR(50) NOT NULL,
-    Password VARCHAR(255) NOT NULL,
-    Email VARCHAR(200) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    teamId INT,
+    roleId INT NOT NULL,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(200) NOT NULL,
 
-    CONSTRAINT pk_account PRIMARY KEY (Id),
-    CONSTRAINT fk_accountteam FOREIGN KEY (TeamId) REFERENCES team(Id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_accountrole FOREIGN KEY (RoleId) REFERENCES `role`(Id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT pk_account PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS `event` (
-    Id INT NOT NULL AUTO_INCREMENT,
-    Name VARCHAR(50) NOT NULL,
-    Date TIMESTAMP NOT NULL,
-    Description VARCHAR(999) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    date TIMESTAMP NOT NULL,
+    description VARCHAR(999) NOT NULL,
 
-    CONSTRAINT pk_event PRIMARY KEY (Id)
+    CONSTRAINT pk_event PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS `team-event` (
-    EventId INT NOT NULL,
-    TeamId INT NOT NULL,
+    eventId INT NOT NULL,
+    teamId INT NOT NULL,
+    points INT DEFAULT 0,
 
-    CONSTRAINT pk_team_event PRIMARY KEY (EventId, TeamId),
-    CONSTRAINT fk_cevent FOREIGN KEY (EventId) REFERENCES event(Id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_cteam FOREIGN KEY (TeamId) REFERENCES team(Id) ON DELETE CASCADE ON UPDATE CASCADE
-);
+    CONSTRAINT pk_team_event PRIMARY KEY (eventId, teamId)
+    );
+
+INSERT INTO `role` (id, name) VALUES (1, "Default"), (2, "Admin");
+
+INSERT INTO `stats` (id) VALUES (1), (2), (3), (4), (5);
+
+INSERT INTO `specs` (id, board, interface) VALUES (1, "ESP32", "Arduino IDE"), (2, "ESP32", "Arduino IDE"), (3, "ESP32", "Arduino IDE"), (4, "ESP32", "Arduino IDE"), (5, "ESP32", "Arduino IDE");
+
+INSERT INTO `bot` (id, statsId, specsId, name, description, imagePath) VALUES (1, 1, 1, "Bot1", "Description Bot1", "image.png"), (2, 2, 2, "Bot2", "Description Bot2", "image.png"), (3, 3, 3, "Bot3", "Description Bot3", "image.png"), (4, 4, 4, "Bot4", "Description Bot4", "image.png"), (5, 5, 5, "Bot5", "Description Bot5", "image.png");
+
+INSERT INTO `team` (id, botId, name) VALUES (1, 1, "INF1A"), (2, 2, "INF1B"), (3, 3, "INF1C"), (4, 4, "INF1D"), (5, 5, "INF1E");
+
+INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES (1, 0, 1, "User", "test1", "user1@battlebot.nl"), (2, 0, 2, "Admin", "test2", "admin@battlebot.nl");
+
+INSERT INTO `event` (id, name, date, description) VALUES (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!");
+
+INSERT INTO `team-event` (eventId, teamId) VALUES (1, 1);

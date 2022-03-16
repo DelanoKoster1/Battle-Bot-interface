@@ -1,33 +1,19 @@
-.playVideo {
-    margin-top: 40px;
-    margin-left: 20px;
+.commandLine {
+    padding: 0 16px;
 }
 
-#liveChat {
-    padding: 10px;
-    border-bottom: 1px solid lightgrey;
+.chatbox .card-header {
+    line-height: 34px;
 }
-
-.chatBox {
-    margin-top: 40px;
-    margin-left: 75px;
-    border: 3px solid blue;
+.chatmessage-container {
+    max-height: 75vw;
+    overflow-y: auto;
 }
-
-.chat {
-    padding: 10px;
-    height: 433px;
-}
-
-.chatField {
-    border-top: 1px solid lightgrey;
-    padding: 10px;
-}
-
-#chatMessage {
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: 1px solid lightgrey;
-    color: lightgrey;
+@media only screen and (max-width: 990px) {
+    .chatbox {
+        height: 450px!important;
+    }
+    .commandLine {
+        width: 100%;
+    }
 }

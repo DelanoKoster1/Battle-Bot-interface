@@ -3,9 +3,23 @@
   margin: 0;
   padding: 0;
 }
+@font-face {
+  font-family: "Aviano Future Bold"; 
+  src: url("../fonts/Aviano-future/bold/Aviano-future-bold.eot") format("embedded-opentype"), 
+       url("../fonts/Aviano-future/bold/Aviano-future-bold.woff2") format("woff2"),
+       url("../fonts/Aviano-future/bold/Aviano-future-bold.woff") format("woff"), 
+       url("../fonts/Aviano-future/bold/Aviano-future-bold.ttf") format("truetype"); 
+} 
+@font-face {
+  font-family: "Aviano Future Black"; 
+  src: url("../fonts/Aviano-future/black/Aviano-future-black.eot") format("embedded-opentype"), 
+       url("../fonts/Aviano-future/black/Aviano-future-black.woff2") format("woff2"), 
+       url("../fonts/Aviano-future/black/Aviano-future-black.woff") format("woff"), 
+       url("../fonts/Aviano-future/black/Aviano-future-black.ttf") format("truetype");
+} 
 body {
   font-size: 16px;
-  font-family: 'PT Serif', serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 h1,
 h2,
@@ -14,11 +28,13 @@ h4,
 h5,
 h6,
 header {
-font-family: 'Roboto', sans-serif;
+  font-family: "Aviano Future Bold", "Roboto", sans-serif;
 }
-
+.nav-link {
+  font-family: "Aviano Future Bold", "Roboto", sans-serif;
+}
 header .img-fluid.logo {
-  height: 75px;
+  height: 100px;
   padding: 16px 0;
 }
 .frontpageIMG {
@@ -43,12 +59,13 @@ header .img-fluid.logo {
   color: #1915a7;
 }
 #events .card.event {
-  max-width: 175px;
-  width: 175px;
+  max-width: 400px;
+  width: 300px;
   padding: 15px;
-  height: 350px;
-  border: 3px solid blue;
+  height: 150px;
   border-radius: 0%;
+  background-color: black;
+  opacity: 80%;
 }
 
 #events .calendarbox {
@@ -69,10 +86,22 @@ header .img-fluid.logo {
   font-size: 2rem;
 }
 
-#events .time {
+#events .calendarDate {
   font-weight: bold;
-  color: gray;
+  color: white;
 }
+
+#events .calendarTitle {
+  color: rgb(211, 187, 187);
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+#events .calendarInfo {
+  color: white;
+  font-size: 1rem;
+}
+
 @media (min-width : 992px) {
   .input-group.w-lg-50 {
     width: 50%;
