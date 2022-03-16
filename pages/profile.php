@@ -124,7 +124,7 @@ if (isset($_POST['save'])) {
                     isVisibleRep = true;
                     document.getElementById("togglePassword").textContent = "visibility";
                 } else {
-                    isVisible = false;
+                    isVisibleRep = false;
                     document.getElementById("togglePassword").textContent = "visibility_off";
                 }
                 const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
