@@ -32,16 +32,19 @@ function eventTimeDescent() {
     require_once("database.php");
 
     $query = "SELECT
-              `date`
+              date
               FROM `event`
              ";
 
     $results = stmtExec($query);
-    debug($results);
 
     $now = new DateTime();
 
-    $eventDate = new DateTime('2022-03-25 9:30:00');
+    foreach($results as $unused => $date) {
+        foreach($date as $typedOutDate) {
+            $eventDate = new DateTime($typedOutDate);
+        }
+    }
 
     if (!empty($eventDate)) {
 
