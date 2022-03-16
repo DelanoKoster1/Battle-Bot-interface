@@ -1,4 +1,8 @@
 <?php
+if (!isset($_SESSION['email'])) {
+    header('location: ../index.php');
+}
+
 if (isset($_POST['save'])) {
     if (!empty($_POST['username'])) {
         if (!empty($_POST['email'])) {
