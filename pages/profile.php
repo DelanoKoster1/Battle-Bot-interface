@@ -1,6 +1,8 @@
 <?php
+include_once('../functions/function.php');
+
 if (!isset($_SESSION['email'])) {
-    header('location: ../index.php');
+    header('location: ../components/error.php');
 }
 
 if (isset($_POST['save'])) {
@@ -38,7 +40,6 @@ if (isset($_POST['save'])) {
     <head>
         <?php
         include_once('../components/head.html');
-        include_once('../functions/function.php');
         ?>
         <link rel="stylesheet" href="../assets/css/style.css">
         <link rel="stylesheet" href="../assets/css/footer.css">
@@ -56,14 +57,14 @@ if (isset($_POST['save'])) {
                 <form class="col-md-8 col-12 bg-white" method="post" action="">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="text-center bg-white w-100 pt-5 pb-5">Welkom, <?php //echo $_SESSION['username']?></h1>
+                            <h1 class="text-center bg-white w-100 pt-5 pb-5">Welkom, <?php echo $_SESSION['username']?></h1>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">person</span></span>
-                                <input name="username" type="text" class="form-control bg-light" placeholder="Gebruikersnaam"  value="<?php //echo $_SESSION['username']?>" aria-label="username" aria-describedby="basic-addon1">                                   
+                                <input name="username" type="text" class="form-control bg-light" placeholder="Gebruikersnaam"  value="<?php echo $_SESSION['username']?>" aria-label="username" aria-describedby="basic-addon1">                                   
                             </div>
                         </div>
                     </div>
@@ -71,7 +72,7 @@ if (isset($_POST['save'])) {
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">email</span></span>
-                                <input name="email" type="email" class="form-control bg-light" placeholder="Email"  value="<?php //echo $_SESSION['email']?>" aria-label="email" aria-describedby="basic-addon1">
+                                <input name="email" type="email" class="form-control bg-light" placeholder="Email"  value="<?php echo $_SESSION['email']?>" aria-label="email" aria-describedby="basic-addon1">
                             </div>
                         </div>
                     </div>
@@ -79,7 +80,7 @@ if (isset($_POST['save'])) {
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">lock</span></span>
-                                <input name="password" id="password" type="password" class="form-control bg-light" placeholder="Wachtwoord"  value="<?php //echo $_SESSION['password']?>" aria-label="password" aria-describedby="basic-addon1">
+                                <input name="password" id="password" type="password" class="form-control bg-light" placeholder="Wachtwoord"  value="" aria-label="password" aria-describedby="basic-addon1">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span id="togglePassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
                             </div>
                         </div>
@@ -88,7 +89,7 @@ if (isset($_POST['save'])) {
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">lock</span></span>
-                                <input name="rpassword" id="rpassword" type="password" class="form-control bg-light" placeholder="Herhaal Wachtwoord"  value="<?php //echo $_SESSION['password']?>" aria-label="rpassword" aria-describedby="basic-addon1">
+                                <input name="rpassword" id="rpassword" type="password" class="form-control bg-light" placeholder="Herhaal Wachtwoord"  value="" aria-label="rpassword" aria-describedby="basic-addon1">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span id="toggleRPassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
                             </div>
                         </div>

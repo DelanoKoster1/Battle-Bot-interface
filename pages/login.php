@@ -4,8 +4,7 @@ include_once('../functions/function.php');
 
 //Check if user is logged
 if (isset($_SESSION['email'])) {
-    //Send user to index.php
-    header('location: ../index.php');
+    header('location: ../components/error.php');
 }
 
 //Call database connection
