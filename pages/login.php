@@ -224,7 +224,7 @@ if (isset($_POST['register'])) {
             $password = password_hash($password, PASSWORD_DEFAULT);
 
             //Define standard role, user
-            $role = 0;
+            $role = 1;
             $teamid = 0;
 
             //SQL Query for inserting into user table
