@@ -26,12 +26,33 @@ function includeHeader(String $sort) {
     }
 }
 
+//function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
 function eventTimeDescent() {
 
-    $EventTimeFromDB = "25";
-    $currentDate = date("d");
-    $timeBetween = $EventTimeFromDB - $currentDate;
+    require_once("database.php");
 
-    return $timeBetween . " dagen tot evenement.";
+    $query = "SELECT
+              `date`
+              FROM `event`
+             ";
+
+    $results = stmtExec($query);
+    debug($results);
+
+    $now = new DateTime();
+
+    $eventDate = new DateTime('2022-03-25 9:30:00');
+
+    if (!empty($eventDate)) {
+
+        $interval = date_diff($now, $eventDate);
+
+        $endDate = date_interval_format($interval,"%a days, %h hours, %i minutes, %s seconds");
+
+        return $endDate;
+
+    } else {
+        return "er zijn momenteel geen evenementen";
+    }
 
 }
