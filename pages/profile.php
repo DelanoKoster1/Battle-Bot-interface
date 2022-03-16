@@ -1,5 +1,10 @@
 <?php
 include_once('../functions/function.php');
+require_once("../functions/database.php");
+$conn = connectDB();
+$query = "SELECT * FROM `account` WHERE id = ?";
+$results = stmtExec($query, 0, $_SESSION['id']);
+debug($results);
 
 if (!isset($_SESSION['email'])) {
     header('location: ../components/error.php');
@@ -76,11 +81,12 @@ if (isset($_POST['save'])) {
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row">
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">lock</span></span>
-                                <input name="password" id="password" type="password" class="form-control bg-light" placeholder="Wachtwoord"  value="" aria-label="password" aria-describedby="basic-addon1">
+                                <input name="password" id="password" type="password" class="form-control bg-light" placeholder="Wachtwoord"  value="<?php //echo $password?>" aria-label="password" aria-describedby="basic-addon1">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span id="togglePassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
                             </div>
                         </div>
@@ -112,9 +118,10 @@ if (isset($_POST['save'])) {
             const togglePassword = document.querySelector('#togglePassword');
             const password = document.querySelector('#password');
 
+            let isVisibleRep = false;
             togglePassword.addEventListener('click', function (e) {
-                if (isVisible == false) {
-                    isVisible = true;
+                if (isVisibleRep == false) {
+                    isVisibleRep = true;
                     document.getElementById("togglePassword").textContent = "visibility";
                 } else {
                     isVisible = false;
@@ -143,3 +150,4 @@ if (isset($_POST['save'])) {
         </script>
     </body>
 </html>
+
