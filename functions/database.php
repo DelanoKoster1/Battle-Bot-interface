@@ -47,21 +47,24 @@ function fail(?string $code = NULL, ?string $info = NULL) {
 /*
  *                         
  * @param string $sql: Give the sql query to execute                                                                                    
- * @param int $failCode: Use a code for fail messages, You can easily create 1 above                        
- * @param ?string $paramchars: Use this when need to use WHERE conditions -> Use given type: s, i, d or b       
+ * @param int $failCode: Use a code for fail messages, You can easily create 1 above                           
  * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                           
  *                                                                                                  
  * By:          Joris Hummel                                                                         
  *                                                                                                   
  */
-function stmtExec(string $sql, int $failCode = 0, ?string $paramChars = NULL, ...$bindParamVars) : array| bool {
 
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) : array| bool {
 
-    //Require function.php
-    require_once('function.php');
+    //Require env.php
+    require_once('env.php');
 
-    if($conn = connectDB()) {
-        if(mysqli_select_db($conn, $db)) {
+    if($conn = mysqli_connect(HOSTNAME, USERNAME, PASSWORD)) {
+        $query = "SHOW DATABASES LIKE '".DATABASE."'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_row($result);
+        if(is_array($row) && count($row) > 0 && mysqli_select_db($conn, DATABASE)) {
+            
             // Check if the statement can be prepared
             if($stmt = mysqli_prepare($conn, $sql)) {
 
@@ -69,66 +72,27 @@ function stmtExec(string $sql, int $failCode = 0, ?string $paramChars = NULL, ..
                 // Check if the statement needs to bind
                 if(substr_count($sql, "?")) {
                     
-                    // If true
-                    // Check if the bind param chars are set
-                    if(!empty($paramChars)) {
-
-                        // Check if the given chars are valid
-                        for ($i=0; $i<strlen($paramChars); $i++) {
-                            switch($paramChars[$i]) {
-                                case 's':
-                                case 'i':
-                                case 'd':
-                                case 'b':
-                                    // Valid, set $continue to true
-                                    // Break the inner loop and continue the loop
-                                    $continue = 1;
-                                    break 1;
-                                default:
-                                    // Not valid, set $continue to false
-                                    // Break the outer loop
-                                    $continue = 0;
-                                    break 2;
-                            }
-                        }
-                        
-                        if($continue) {
-                            // If true
-                            // Check if the length of the chars is the same as the total bind requests in the statement
-                            if(strlen($paramChars) == substr_count($sql, "?")) {
-
-                                // If true
-                                // Check if there are variable names given in the parameters
-                                if(!empty($bindParamVars)) {
-
-                                    // If true
-                                    // Check if the amount of variables is the same as the bind request in the statement
-                                    if(count($bindParamVars) == substr_count($sql, "?")) {
-                                        
-                                        // If true
-                                        // Check if it's possible to bind and continue the function
-                                        if(!mysqli_stmt_bind_param($stmt, $paramChars, ...$bindParamVars)) {
-                                            fail("DB".$failCode."4", mysqli_error($conn));
-                                            return false;
-                                        } 
-                                    } else {
-                                        fail("DB".$failCode."1", substr_count($sql, "?"));
-                                        return false;
-                                    }
-                                } else {
-                                    fail("DB".$failCode."0");
-                                    return false;
-                                }
+                    // Check if the given params for binding in the query is the same as
+                    // The total binding places
+                    if(count($bindParamVars) == substr_count($sql, "?")) {
+                        $paramChars = "";
+                        foreach($bindParamVars as $var) {
+                            if(is_int($var)) {
+                                $paramChars .= "i";
+                            } else if(is_string($var)) {
+                                $paramChars .= "s";
+                            } else if(is_double($var)) {
+                                $paramChars .= "d";
                             } else {
-                                fail("DB".$failCode."3", substr_count($sql, "?"));
-                                return false;
+                                $paramChars .= "b";
                             }
-                        } else {
-                            fail("DB".$failCode."5");
-                            return false;
                         }
+
+                        if(!mysqli_stmt_bind_param($stmt, $paramChars, ...$bindParamVars)) {
+                            fail("DB".$failCode."4", mysqli_error($conn));
+                            return false;
+                        } 
                     } else {
-                        fail("DB".$failCode."2");
                         return false;
                     }
                 }  
