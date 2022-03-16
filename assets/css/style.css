@@ -78,5 +78,8 @@ header .img-fluid.logo {
     width: 50%;
     margin: 0 auto;
   }
-  
+}
+
+.pointer {
+  cursor: pointer;
 }
