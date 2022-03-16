@@ -25,3 +25,13 @@ function includeHeader(String $sort) {
         require_once('components/header.php');
     }
 }
+
+function eventTimeDescent() {
+
+    $EventTimeFromDB = "25";
+    $currentDate = date("d");
+    $timeBetween = $EventTimeFromDB - $currentDate;
+
+    return $timeBetween . " dagen tot evenement.";
+
+}

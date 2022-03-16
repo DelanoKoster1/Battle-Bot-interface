@@ -29,6 +29,7 @@
                         <div class="d-flex justify-content-left align-items-center">
                             <div>
                                 <span class="calendarDate d-block">25 Maart 2022</span>
+                                <span class="calendarDate d-block"><?php echo eventTimeDescent(); ?></span>
                                 <span class="calendarTitle">Testdag</span>
                             </div>
                         </div>
