@@ -4,8 +4,7 @@ include_once('../functions/function.php');
 
 //Check if user is logged
 if (isset($_SESSION['email'])) {
-    //Send user to index.php
-    header('location: ../index.php');
+    header('location: ../components/error.php');
 }
 
 //Call database connection
@@ -201,8 +200,15 @@ function checkUserInDataBase(mysqli $conn, string $username) {
 
     //Check if a result has been found with number of rows
     if (mysqli_stmt_num_rows($stmt) > 0) {
-        mysqli_stmt_close($stmt);
-        $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
+        while(mysqli_stmt_fetch($stmt)) {
+            if($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
+                $error[] = 'Er bestaat al een account met deze email';
+            }
+            if($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
+                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
+            }
+        }
+        mysqli_stmt_close($stmt);      
         return $error;
     } else {
         mysqli_stmt_close($stmt);
