@@ -3,9 +3,23 @@
   margin: 0;
   padding: 0;
 }
+@font-face {
+  font-family: "Aviano Future Bold"; 
+  src: url("../fonts/Aviano-future/bold/Aviano-future-bold.eot") format("embedded-opentype"), 
+       url("../fonts/Aviano-future/bold/Aviano-future-bold.woff2") format("woff2"),
+       url("../fonts/Aviano-future/bold/Aviano-future-bold.woff") format("woff"), 
+       url("../fonts/Aviano-future/bold/Aviano-future-bold.ttf") format("truetype"); 
+} 
+@font-face {
+  font-family: "Aviano Future Black"; 
+  src: url("../fonts/Aviano-future/black/Aviano-future-black.eot") format("embedded-opentype"), 
+       url("../fonts/Aviano-future/black/Aviano-future-black.woff2") format("woff2"), 
+       url("../fonts/Aviano-future/black/Aviano-future-black.woff") format("woff"), 
+       url("../fonts/Aviano-future/black/Aviano-future-black.ttf") format("truetype");
+} 
 body {
   font-size: 16px;
-  font-family: "PT Serif", serif;
+  font-family: Arial, Helvetica, sans-serif;
 }
 h1,
 h2,
@@ -14,9 +28,11 @@ h4,
 h5,
 h6,
 header {
-  font-family: "Roboto", sans-serif;
+  font-family: "Aviano Future Bold", "Roboto", sans-serif;
 }
-
+.nav-link {
+  font-family: "Aviano Future Bold", "Roboto", sans-serif;
+}
 header .img-fluid.logo {
   height: 100px;
   padding: 16px 0;
@@ -85,6 +101,7 @@ header .img-fluid.logo {
   color: white;
   font-size: 1rem;
 }
+
 @media (min-width : 992px) {
   .input-group.w-lg-50 {
     width: 50%;
