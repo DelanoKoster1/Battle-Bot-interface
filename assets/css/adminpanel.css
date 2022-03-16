@@ -1,16 +1,22 @@
-.box {
+.game,
+.start {
   height: 150px;
   border-radius: 18px;
+  border: 1px solid black;
   background-color: gray;
 }
 
-.box img {
+.game img {
   padding-top: 5px;
 }
 
-.botName {
+.gameName {
   border-radius: 18px;
   background-color: #bfc9d3;
   height: 35px;
   line-height: 35px;
+}
+
+.game:hover {
+  opacity: 70%;
 }
