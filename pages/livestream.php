@@ -89,6 +89,7 @@
     <!-- /.modal-content -->
   </div>
   <!-- /.modal-dialog -->
+</div>
 
     <footer>
         <?php include_once('../components/footer.php') ?>
