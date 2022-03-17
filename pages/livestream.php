@@ -55,7 +55,7 @@
                                             <div class="col-12 d-flex justify-content-between mb-3">
                                                 <div class="btn w-33 btn-success">1000</div>
                                                 <button class="btn text-right btn-success">Scorebord</button>
-                                                <button class="btn text-right btn-success">Stemmen</button>
+                                                <button class="btn text-right btn-success vote-button">Stemmen</button>
                                             </div>
                                         </div>
                                     </div>
@@ -72,6 +72,25 @@
             </div>
         </div>
     </div>
+
+<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true">X</span></button>
+        <h4 class="modal-title custom_align" id="Heading">Vote for your bot</h4>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Vote</button>
+      </div>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+
     <footer>
         <?php include_once('../components/footer.php') ?>
     </footer>
@@ -99,7 +118,14 @@
             livestream.classList.remove("col-md-11");
 
             openChatBtn.classList.add("d-none");
-        })
+        });
+       
+        $(document).ready(function() {
+            $("button.vote-button").click(function() {
+                $("#modalEdit").modal("show");
+            });
+        });
+
     </script>
     <script src="../assets/js/chat.js"></script>
 </body>
