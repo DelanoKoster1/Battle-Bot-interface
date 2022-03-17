@@ -2,9 +2,10 @@
 <html lang="en">
 
 <head>
-    <?php 
-        include_once('../components/head.html');
-        include_once('../functions/function.php');
+    <?php
+    include_once('../components/head.html');
+    include_once('../functions/function.php');
+    include_once('../functions/database.php');
     ?>
 
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -35,78 +36,131 @@
                 </div>
             </div>
             <div class="col-lg-2 col-sm-4 col-6">
-                <div class="box bg-secondary d-flex justify-content-center">
-                    <div class="row g-0 w-100 text-center">
-                        <div class="col-12 pt-1">
-                            <img src="../assets/img/bot.svg" alt="Logo of a bot">
-                        </div>
-                        <div class="col-12 position-relative">
-                            <div class="botName position-absolute w-100 bottom-0">
-                                <span>Lorem Ipsum</span>
+                    <div class="box bg-secondary d-flex justify-content-center">
+                        <div class="row g-0 w-100 text-center">
+                            <div class="col-12 pt-1">
+                                <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
+                            </div>
+                            <div class="col-12 position-relative">
+                                <div class="botName position-absolute w-100 bottom-0">
+                                    <span class="fw-bold">Doolhof</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="box bg-secondary d-flex justify-content-center">
-                    <div class="row g-0 w-100 text-center">
-                        <div class="col-12 pt-1">
-                            <img src="../assets/img/bot.svg" alt="Logo of a bot">
-                        </div>
-                        <div class="col-12 position-relative">
-                            <div class="botName position-absolute w-100 bottom-0">
-                                <span>Lorem Ipsum</span>
+                <div class="col-lg-2 col-sm-4 col-6">
+                    <div class="box bg-secondary d-flex justify-content-center">
+                        <div class="row g-0 w-100 text-center">
+                            <div class="col-12 pt-1">
+                                <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
+                            </div>
+                            <div class="col-12 position-relative">
+                                <div class="botName position-absolute w-100 bottom-0">
+                                    <span class="fw-bold">Butler</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="box bg-secondary d-flex justify-content-center">
-                    <div class="row g-0 w-100 text-center">
-                        <div class="col-12 pt-1">
-                            <img src="../assets/img/bot.svg" alt="Logo of a bot">
-                        </div>
-                        <div class="col-12 position-relative">
-                            <div class="botName position-absolute w-100 bottom-0">
-                                <span>Lorem Ipsum</span>
+                <div class="col-lg-2 col-sm-4 col-6">
+                    <div class="box bg-secondary d-flex justify-content-center">
+                        <div class="row g-0 w-100 text-center">
+                            <div class="col-12 pt-1">
+                                <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
+                            </div>
+                            <div class="col-12 position-relative">
+                                <div class="botName position-absolute w-100 bottom-0">
+                                    <span class="fw-bold">Race</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="box bg-secondary d-flex justify-content-center">
-                    <div class="row g-0 w-100 text-center">
-                        <div class="col-12 pt-1">
-                            <img src="../assets/img/bot.svg" alt="Logo of a bot">
-                        </div>
-                        <div class="col-12 position-relative">
-                            <div class="botName position-absolute w-100 bottom-0">
-                                <span>Lorem Ipsum</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-2 col-sm-4 col-6">
-                <div class="box bg-secondary d-flex justify-content-center">
-                    <div class="row g-0 w-100 text-center">
-                        <div class="col-12 pt-1">
-                            <img src="../assets/img/bot.svg" alt="Logo of a bot">
-                        </div>
-                        <div class="col-12 position-relative">
-                            <div class="botName position-absolute w-100 bottom-0">
-                                <span>Lorem Ipsum</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-        
-        <?php for ($row = 0; $row < 5; $row++) { ?>
+        <?php
+        $sql = "SELECT  bot.id,
+                        bot.name,
+                        bot.imagePath,
+                        team.name
+                FROM    bot
+                INNER JOIN team
+                        ON bot.id = team.botId
+        ";
+        $dbResults = stmtExec($sql);
+        $ids = $dbResults["bot.id"];
+        foreach ($ids as $botId) {
+            $id = $botId;
+            $imgPath = $dbResults["bot.imagePath"][$botId - 1];
+            if ($imgPath === "image.png") $imgPath = "../assets/img/bot.svg";
+            $name = $dbResults["bot.name"][$botId - 1];
+            $teamName = $dbResults["team.name"][$botId - 1];
+        ?>
+            <div class="row my-5">
+                <h3 style="padding: 10px; margin: 10px;">Robot : <?=$name?> (<?=$teamName?>).</h3>
+                <div class="col-lg-2 col-sm-4 col-6">
+                    <div class="box bg-secondary d-flex justify-content-center">
+                        <div class="row g-0 w-100 text-center">
+                            <div class="col-12 pt-1">
+                                <img src="../assets/img/bot.svg" alt="<?=$name?>">
+                            </div>
+                            <div class="col-12 position-relative">
+                                <div class="botName position-absolute w-100 bottom-0">
+                                    <span><?=$name?></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-4 col-6">
+                    <div class="box bg-secondary d-flex justify-content-center">
+                        <div class="row g-0 w-100 text-center">
+                            <div class="col-12 pt-1">
+                                <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
+                            </div>
+                            <div class="col-12 position-relative">
+                                <div class="botName position-absolute w-100 bottom-0">
+                                    <span class="fw-bold">Doolhof</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-4 col-6">
+                    <div class="box bg-secondary d-flex justify-content-center">
+                        <div class="row g-0 w-100 text-center">
+                            <div class="col-12 pt-1">
+                                <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
+                            </div>
+                            <div class="col-12 position-relative">
+                                <div class="botName position-absolute w-100 bottom-0">
+                                    <span class="fw-bold">Butler</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-sm-4 col-6">
+                    <div class="box bg-secondary d-flex justify-content-center">
+                        <div class="row g-0 w-100 text-center">
+                            <div class="col-12 pt-1">
+                                <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
+                            </div>
+                            <div class="col-12 position-relative">
+                                <div class="botName position-absolute w-100 bottom-0">
+                                    <span class="fw-bold">Race</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        <?php
+        }
+        ?>
+
+        <!-- <?php for ($row = 0; $row < 5; $row++) { ?>
             <div class="row my-5">
             <h3 style="padding: 10px; margin: 10px;">robot (*).</h3>
                 <div class="col-lg-2 col-sm-4 col-6">
@@ -194,12 +248,13 @@
                     </div>
                 </div>
             </div>
-        <?php } ?>
+        <?php } ?> -->
     </div>
 
     <footer>
         <?php include_once('../components/footer.php') ?>
     </footer>
+    <script src="../assets/js/robot.js"></script>
 </body>
 
 </html>

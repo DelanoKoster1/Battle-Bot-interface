@@ -1,15 +1,22 @@
-const ws = new WebSocket("ws://http://battlebot1.serverict.nl/websocket/src/websocket/chat");
+const ws = new WebSocket("ws://localhost:3002/websocket/src/websocket/chat");
 let chatInput = document.getElementById('chatMessage');
 let chatButton = document.getElementById('button-addon2');
 let username = document.getElementById('username').value;
 
-ws.addEventListener("open", () => {
 
-   
+ws.onopen = function(e) {
+    console.log("Connection established");
+};
+
+ws.onerror = function(e) {
+    console.log("WebSocket Error: " , e);
+ };
+
+ws.addEventListener("open", () => {
 
     chatInput.addEventListener("keyup", (e) => {
         e.preventDefault();
-        if (e.keyCode === 13) {
+        if (e.key === "Enter") {
             sendMsgToWS();
         }
 

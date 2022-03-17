@@ -1,0 +1,25 @@
+{
+  "name": "battle-bot-websocket",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mappeldorn/battle-bot-websocket.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mappeldorn/battle-bot-websocket/issues"
+  },
+  "homepage": "https://github.com/Mappeldorn/battle-bot-websocket#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "https": "^1.0.0",
+    "nodemon": "^2.0.15",
+    "ws": "^8.5.0"
+  }
+}
