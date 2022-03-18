@@ -74,6 +74,30 @@ header .menu, #open-btn {
 .eventShowBox {
   max-width: 1000px;
 }
+.card {
+  background-color: #707070;
+  color: white;
+  font-weight: bold;
+  border-radius: 1rem;
+  transition: ease-in-out 0.4s;
+  cursor: default;
+}
+
+.card:hover {
+  transform: scale(1.1);
+  transition: ease-in-out 0.4s;
+  
+}
+.calendarDate {
+  font-size: 15px;
+}
+.calendarTitle {
+  font-size: 20px;
+  color: #BFC9D3;
+}
+.calendarInfo {
+  font-size: 12px;
+}
 
 /* Mobile menu */
 

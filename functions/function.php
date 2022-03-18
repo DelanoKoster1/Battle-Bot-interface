@@ -92,20 +92,32 @@ function showEvents() {
 
     $query = "SELECT id, name, date, description FROM event";
     $eventResults = stmtExec($query);
-    $ids = $eventResults["id"];
+    if (!empty($eventResults["id"])) {
+        $ids = $eventResults["id"];
 
-    foreach ($ids as $eventId) {
-        $name = $eventResults["name"][$eventId - 1];
-        $eventDate = $eventResults["date"][$eventId - 1];
-        $description = $eventResults["description"][$eventId - 1];
-
+        foreach ($ids as $eventId) {
+            $name = $eventResults["name"][$eventId - 1];
+            $eventDate = $eventResults["date"][$eventId - 1];
+            $description = $eventResults["description"][$eventId - 1];
+    
+            echo '
+            <div class="col-sm-3 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <span class="calendarDate d-block text-lowercase">'. formatdate($eventDate) .'</span>
+                        <span class="calendarTitle d-block text-capitalize">'. $name .'</span>
+                        <span class="calendarInfo mt-4 d-block">'. $description .'</span>
+                    </div>
+                </div>
+            </div>
+            ';
+        }
+    } else {
         echo '
-        <div class="col-sm-3 mb-4">
+        <div class="col-sm-12 mb-4">
             <div class="card">
-                <div class="card-body">
-                    <span class="calendarDate d-block">'. formatdate($eventDate) .'</span>
-                    <span class="calendarTitle">'. $name .'</span>
-                    <span class="calendarInfo mt-4">'. $description .'</span>
+                <div class="card-body text-center">
+                    <span class="calendarTitle d-block text-white">Nog geen opkomende evenementen</span>
                 </div>
             </div>
         </div>
