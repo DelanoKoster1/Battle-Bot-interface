@@ -88,3 +88,6 @@ connection.php
 connection.php
 functions/env.php
 functions/env.php.dist
+
+node_modules
+websocket/node_modules
