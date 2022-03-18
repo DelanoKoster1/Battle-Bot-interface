@@ -18,7 +18,12 @@ switch (true) {
         $headerTitle = 'Poll toevoegen';
         $content = "../components/admin/poll.php";
         break;
-    
+
+    case isset($_GET['points']);
+        $headerTitle = 'Punten toevoegen';
+        $content = "../components/admin/points.php";
+        break;
+
     default:
         $headerTitle = 'Event toevoegen';
         $content = "../components/admin/event.php";
@@ -130,6 +135,9 @@ if (isset($_POST['event'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?poll">Poll toevoegen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?points">Punten toevoegen</a>
                         </li>
                     </ul>
                 </nav>
