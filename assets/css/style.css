@@ -74,7 +74,7 @@ header .menu, #open-btn {
 .eventShowBox {
   max-width: 1000px;
 }
-.card {
+.eventsCard {
   background-color: #707070;
   color: white;
   font-weight: bold;
@@ -83,7 +83,7 @@ header .menu, #open-btn {
   cursor: default;
 }
 
-.card:hover {
+.eventsCard:hover {
   transform: scale(1.1);
   transition: ease-in-out 0.4s;
   

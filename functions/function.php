@@ -102,7 +102,7 @@ function showEvents() {
     
             echo '
             <div class="col-sm-3 mb-4">
-                <div class="card">
+                <div class="card eventsCard">
                     <div class="card-body">
                         <span class="calendarDate d-block text-lowercase">'. formatdate($eventDate) .'</span>
                         <span class="calendarTitle d-block text-capitalize">'. $name .'</span>
@@ -115,7 +115,7 @@ function showEvents() {
     } else {
         echo '
         <div class="col-sm-12 mb-4">
-            <div class="card">
+            <div class="card eventsCard">
                 <div class="card-body text-center">
                     <span class="calendarTitle d-block text-white">Nog geen opkomende evenementen</span>
                 </div>
