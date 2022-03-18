@@ -46,6 +46,73 @@ function checkValidDate(String $date) {
     }
 }
 
+/**
+ * Function to format a date
+ * 
+ */
+function formatdate(string $date) : string {
+    switch(date("F", strtotime($date))) {
+        case "January":
+            $month = "\\J\\a\\n\\u\\a\\r\\i";
+            break;
+        case "February":
+            $month = "\\F\\e\\b\\r\\u\\a\\r\\i";
+            break;
+        case "March":
+            $month = "\\M\\a\\a\\r\\t";
+            break;
+        case "May":
+            $month = "\\M\\e\\i";
+            break;
+        case "June":
+            $month = "\\J\\u\\n\\i";
+            break;
+        case "July":
+            $month = "\\J\\u\\l\\i";
+            break;
+        case "August":
+            $month = "\\A\\u\\g\\u\\s\\t\\u\\s";
+            break;
+        case "October":
+            $month = "\\O\\k\\t\\o\\b\\e\\r";
+            break;
+        default:
+            break;
+    }
+
+    return (isset($month)) ? date("d $month Y", strtotime($date)) : date("d F Y", strtotime($date));
+}
+
+/**
+ * Function to show events as HTML
+ * 
+ */
+function showEvents() {
+    require_once('database.php');
+
+    $query = "SELECT id, name, date, description FROM event";
+    $eventResults = stmtExec($query);
+    $ids = $eventResults["id"];
+
+    foreach ($ids as $eventId) {
+        $name = $eventResults["name"][$eventId - 1];
+        $eventDate = $eventResults["date"][$eventId - 1];
+        $description = $eventResults["description"][$eventId - 1];
+
+        echo '
+        <div class="col-sm-3 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <span class="calendarDate d-block">'. formatdate($eventDate) .'</span>
+                    <span class="calendarTitle">'. $name .'</span>
+                    <span class="calendarInfo mt-4">'. $description .'</span>
+                </div>
+            </div>
+        </div>
+        ';
+    }
+}
+
 //function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
 function eventTimeDescent() {
 
