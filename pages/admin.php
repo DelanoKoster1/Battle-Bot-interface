@@ -31,15 +31,16 @@ function checkEventFields($eventDate, $eventName, $eventOmschrijving) {
 
     if (!$eventDate && empty($eventDate)) {
         $error[] = 'Event datum mag niet leeg zijn!';
+    } else {
+        if (!checkValidDate($eventDate)) {
+            $error[] = 'Event datum is ongeldig!';
+        }
     }
     if (!$eventName && empty($eventName)) {
         $error[] = 'Event naam mag niet leeg zijn!';
     }
     if (!$eventOmschrijving && empty($eventOmschrijving)) {
         $error[] = 'Event omschrijving mag niet leeg zijn!';
-    }
-    if (!checkValidDate($eventDate)) {
-        $error[] = 'Event datum is ongeldig!';
     }
     if (strlen($eventName) > 255) {
         $error[] = 'Event naam is te lang!';
