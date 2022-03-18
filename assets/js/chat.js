@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://http://battlebot1.serverict.nl/websocket/src/websocket/chat");
+const ws = new WebSocket("ws://localhost:3002/client/chat");
 let chatInput = document.getElementById('chatMessage');
 let chatButton = document.getElementById('button-addon2');
 let username = document.getElementById('username').value;
