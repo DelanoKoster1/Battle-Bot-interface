@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `account` (
     username VARCHAR(50) NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(200) NOT NULL,
+    points int(11) NOT NULL DEFAULT 1000,
 
     CONSTRAINT pk_account PRIMARY KEY (id)
 );
