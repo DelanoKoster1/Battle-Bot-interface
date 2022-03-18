@@ -1,0 +1,23 @@
+/* Sidebar */
+.sidebar {
+  background-color: gray;
+  min-height: calc(100vh - 100px);
+}
+@media only screen and (max-width: 767px) {
+  .sidebar {
+    min-height: 10vh;
+  }
+}
+.sidebar .nav-item {
+    background-color: rgb(75, 75, 75);
+    margin: 0 0 10px 0;
+    word-wrap: break-word; 
+}
+.sidebar .nav-item:hover {
+    background-color: rgb(58, 58, 58);
+}
+
+/* Event page */
+.eventBox {
+  max-width: 500px;
+}
