@@ -3,12 +3,6 @@
   --text-nav-hover: #a7a7a7;
   --footer-bg: #292929;
 }
-.column {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-}
 
 .footer {
   width: 100%;
@@ -17,8 +11,7 @@
   padding-top: 50px;
   bottom: 0;
 }
-.rounded-circle {
-  border-radius: 50%;
+footer .rounded-circle {
   width: 250px;
   display: flex;
   justify-content: center;
@@ -40,4 +33,13 @@ footer .nav-link {
 }
 footer .nav-link:hover {
   color: var(--text-nav-hover);
+}
+
+@media (max-width: 991px) {
+  footer .rounded-circle {
+    width: 175px;
+  }
+  .footerIMG {
+    width:110px;
+  }
 }
