@@ -41,24 +41,36 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="chatmessage-container h-75">
-                                       
+
                                     </div>
+
                                     <div class="commandLine position-absolute bottom-0 start-0">
                                         <div class="row">
-                                            <div class="col-12">
-                                                <div class="input-group mb-3">
-                                                    <input type="text" class="form-control" placeholder="Type uw bericht" aria-label="Type uw bericht" id="chatMessage" aria-describedby="button-addon2">
-                                                    <input type="hidden" id="username" value='<?=$_SESSION["username"]?>'>
-                                                    <button class="btn btn-outline-secondary" type="button" id="button-addon2"><span class="material-icons align-middle">send</span></button>
+                                            <?php if (isset($_SESSION['username'])) {
+                                            ?>
+                                                <div class="col-12">
+                                                    <div class="input-group mb-3">
+
+                                                        <input type="text" class="form-control" placeholder="Type uw bericht" aria-label="Type uw bericht" id="chatMessage" aria-describedby="button-addon2">
+                                                        <input type="hidden" id="username" value='<?php echo $_SESSION['username'] ?>'>
+                                                        <button class="btn btn-outline-secondary" type="button" id="button-addon2"><span class="material-icons align-middle">send</span></button>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-12 d-flex justify-content-between mb-3">
-                                                <div class="btn w-33 btn-success">1000</div>
-                                                <button class="btn text-right btn-success">Scorebord</button>
-                                                <button class="btn text-right btn-success vote-button">Stemmen</button>
-                                            </div>
+                                                <div class="col-12 d-flex justify-content-between mb-3">
+                                                    <div class="btn w-33 btn-success">1000</div>
+                                                    <button class="btn text-right btn-success">Scorebord</button>
+                                                    <button class="btn text-right btn-success vote-button">Stemmen</button>
+                                                </div>
+                                            <?php } else {
+                                            ?>
+                                                  <div class="col-12">
+                                                      <p>Login om te kunnen chatten</p>
+                                                  </div>          
+                                            <?php
+                                            } ?>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -73,23 +85,23 @@
         </div>
     </div>
 
-<div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true">X</span></button>
-        <h4 class="modal-title custom_align" id="Heading">Vote for your bot</h4>
-      </div>
-      <div class="modal-body">
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Vote</button>
-      </div>
+    <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="edit" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true">X</span></button>
+                    <h4 class="modal-title custom_align" id="Heading">Vote for your bot</h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Vote</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
     </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
 
     <footer>
         <?php include_once('../components/footer.php') ?>
@@ -119,13 +131,12 @@
 
             openChatBtn.classList.add("d-none");
         });
-       
+
         $(document).ready(function() {
             $("button.vote-button").click(function() {
                 $("#modalEdit").modal("show");
             });
         });
-
     </script>
     <script src="../assets/js/chat.js"></script>
 </body>
