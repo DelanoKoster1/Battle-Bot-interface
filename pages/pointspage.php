@@ -89,14 +89,14 @@
     </div>
     <div class="row pt-3">
         
-        <div class="col-6">
+        <div class="col-12">
             <?php for($count = 0; $count < $rows; $count++) { ?>
             <div class="row">
-                <div class="col-2 d-flex align-items-center mt-4">
+                <div class="col-1 d-flex align-items-center mt-4">
                     <img class="w-100" src="../assets/img/battlebotlogo.png" alt="Picture of Robot">
                     <span class="d-md-none"><?= $teamNames[$count] ?></span>
                 </div>
-                <div class="col-12 col-md-10">
+                <div class="col-12 col-md-5">
                     <div class="col-10 col-md-12 d-none d-md-block">
                         <p class="mb-2 ps-2"><?= $teamNames[$count] ?></p>
                     </div>
@@ -104,14 +104,29 @@
                         <div class="progress-bar" style="width: <?=$progress[$count]?>" role="progressbar"> </div>
                     </div>
                 </div>
+                <div class="col-6">
+                    <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+                        <div class="col-12 mt-4 pt-2">
+                            <select class="form-select" style="height: 40px"  name="bot" id="bot">
+                                <option value="1">25</option>
+                                <option value="2">18</option>
+                                <option value="3">15</option>
+                                <option value="4">12</option>
+                                <option value="5">10</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
             </div>
             <?php } ?>
-        </div>
-        <div class="col-6">
-            <div class="">
-                
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6 text-center mt-3">
+                    <input type="submit" name="" id="">
+                </div>
             </div>
         </div>
+        
     </div>
     <?php } ?>
 </div>
