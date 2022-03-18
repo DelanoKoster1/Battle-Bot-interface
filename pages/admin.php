@@ -8,7 +8,9 @@ if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
 }
 
 //Global variables
+$conn = connectDB();
 $today = date("Y-m-d");
+$error = array();
 
 //Switch for loading in content
 switch (true) {
@@ -23,7 +25,78 @@ switch (true) {
         break;
 }
 
-//Post handling
+//Post submissions
+function checkEventFields($eventDate, $eventName, $eventOmschrijving) {
+    global $error;
+
+    if (!$eventDate && empty($eventDate)) {
+        $error[] = 'Event datum mag niet leeg zijn!';
+    }
+    if (!$eventName && empty($eventName)) {
+        $error[] = 'Event naam mag niet leeg zijn!';
+    }
+    if (!$eventOmschrijving && empty($eventOmschrijving)) {
+        $error[] = 'Event omschrijving mag niet leeg zijn!';
+    }
+    if (!checkValidDate($eventDate)) {
+        $error[] = 'Event datum is ongeldig!';
+    }
+    if (strlen($eventName) > 255) {
+        $error[] = 'Event naam is te lang!';
+    }
+    if (strlen($eventOmschrijving) > 255) {
+        $error[] = 'Event omschrijving is te lang!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $error;
+    }
+}
+
+if (isset($_POST['event'])) {
+    //Submitted form data validation
+    $eventDate = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
+    $eventName = filter_input(INPUT_POST, 'eventNaam', FILTER_SANITIZE_SPECIAL_CHARS);
+    $eventDescription = filter_input(INPUT_POST, 'eventOmschrijving', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (!checkEventFields($eventDate, $eventName, $eventDescription)) {
+        //SQL Query for inserting into user table
+        $query = "INSERT INTO event (name, date, description) VALUES (?,?,?)";
+
+        //Prpeparing SQL Query with database connection
+        $stmt = mysqli_prepare($conn, $query);
+        if (!$stmt) {
+            $_SESSION['error'] = "database_error";
+            header("location: ../components/error.php");
+        }
+
+        //Binding params into ? fields
+        if (!mysqli_stmt_bind_param($stmt, "sss", $eventName, $eventDate, $eventDescription)) {
+            $_SESSION['error'] = "database_error";
+            header("location: ../components/error.php");
+        }
+
+        //Executing statement
+        if (!mysqli_stmt_execute($stmt)) {
+            mysqli_stmt_error($stmt);
+            $_SESSION['error'] = "database_error";
+            header("location: ../components/error.php");
+        }
+
+        //Close the statement and connection
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
+
+        //Set succes message
+        $_SESSION['succes'] = 'Event toegevoegd!';
+
+        //Send user to index.php
+        header('location: admin.php');
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -66,6 +139,41 @@ switch (true) {
                         <h1><?php echo $headerTitle; ?></h1>
                     </div>
                 </div>
+
+                <?php
+                if (!empty($_SESSION['succes'])) {
+                    ?>
+                    <div class="col-md-12 p-0">
+                        <div class="alert alert-success text-black fw-bold p-4 rounded-0" role="alert">
+                            <ul class="mb-0">
+                                <?php
+                                echo '<li>' . $_SESSION['succes'] . '</li>';
+                                $_SESSION['succes'] = '';
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <?php
+                }
+
+                if (!empty($error)) {
+                ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
+                                <ul class="mb-0">
+                                    <?php
+                                    foreach ($error as $errorMsg) {
+                                        echo '<li>' . $errorMsg . '</li>';
+                                    }
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
 
                 <div class="row">
                     <div class="col-md-12">
