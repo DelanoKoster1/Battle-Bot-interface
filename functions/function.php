@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+/**
+ * Function to connect to Database
+ * 
+ */
 function connectDB() {
     //Require ENV
     require_once('env.php');
@@ -17,12 +21,107 @@ function connectDB() {
     return $conn;
 }
 
+/**
+ * Function to include header with correct map structure
+ * 
+ */
 function includeHeader(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');
     } else {
         require_once('components/header.php');
+    }
+}
+
+/**
+ * Function to check if date is valid
+ * 
+ */
+function checkValidDate(String $date) {
+    if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$date)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Function to format a date
+ * 
+ */
+function formatdate(string $date) : string {
+    switch(date("F", strtotime($date))) {
+        case "January":
+            $month = "\\J\\a\\n\\u\\a\\r\\i";
+            break;
+        case "February":
+            $month = "\\F\\e\\b\\r\\u\\a\\r\\i";
+            break;
+        case "March":
+            $month = "\\M\\a\\a\\r\\t";
+            break;
+        case "May":
+            $month = "\\M\\e\\i";
+            break;
+        case "June":
+            $month = "\\J\\u\\n\\i";
+            break;
+        case "July":
+            $month = "\\J\\u\\l\\i";
+            break;
+        case "August":
+            $month = "\\A\\u\\g\\u\\s\\t\\u\\s";
+            break;
+        case "October":
+            $month = "\\O\\k\\t\\o\\b\\e\\r";
+            break;
+        default:
+            break;
+    }
+
+    return (isset($month)) ? date("d $month Y", strtotime($date)) : date("d F Y", strtotime($date));
+}
+
+/**
+ * Function to show events as HTML
+ * 
+ */
+function showEvents() {
+    require_once('database.php');
+
+    $query = "SELECT id, name, date, description FROM event";
+    $eventResults = stmtExec($query);
+    if (!empty($eventResults["id"])) {
+        $ids = $eventResults["id"];
+
+        foreach ($ids as $eventId) {
+            $name = $eventResults["name"][$eventId - 1];
+            $eventDate = $eventResults["date"][$eventId - 1];
+            $description = $eventResults["description"][$eventId - 1];
+    
+            echo '
+            <div class="col-sm-3 mb-4">
+                <div class="card eventsCard">
+                    <div class="card-body">
+                        <span class="calendarDate d-block text-lowercase">'. formatdate($eventDate) .'</span>
+                        <span class="calendarTitle d-block text-capitalize">'. $name .'</span>
+                        <span class="calendarInfo mt-4 d-block">'. $description .'</span>
+                    </div>
+                </div>
+            </div>
+            ';
+        }
+    } else {
+        echo '
+        <div class="col-sm-12 mb-4">
+            <div class="card eventsCard">
+                <div class="card-body text-center">
+                    <span class="calendarTitle d-block text-white">Nog geen opkomende evenementen</span>
+                </div>
+            </div>
+        </div>
+        ';
     }
 }
 

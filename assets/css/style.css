@@ -79,38 +79,32 @@ header .menu, #open-btn {
   opacity: 80%;
 }
 
-#events .calendarbox {
-  background-image: url("../img/Calendar.svg");
-  background-size: contain;
-  background-repeat: no-repeat;
-  text-align: center;
-  height: 150px;
+.eventShowBox {
+  max-width: 1000px;
 }
-#events .calendarbox span {
+.eventsCard {
+  background-color: #707070;
   color: white;
-  line-height: 48px;
-}
-#events .calendarbox span.calendarDay {
-  font-size: 3.5rem;
-}
-#events .calendarbox span.calendarMonth {
-  font-size: 2rem;
-}
-
-#events .calendarDate {
   font-weight: bold;
-  color: white;
+  border-radius: 1rem;
+  transition: ease-in-out 0.4s;
+  cursor: default;
 }
 
-#events .calendarTitle {
-  color: rgb(211, 187, 187);
-  font-weight: bold;
-  font-size: 0.9rem;
+.eventsCard:hover {
+  transform: scale(1.1);
+  transition: ease-in-out 0.4s;
+  
 }
-
-#events .calendarInfo {
-  color: white;
-  font-size: 1rem;
+.calendarDate {
+  font-size: 15px;
+}
+.calendarTitle {
+  font-size: 20px;
+  color: #BFC9D3;
+}
+.calendarInfo {
+  font-size: 12px;
 }
 
 /* Mobile menu */

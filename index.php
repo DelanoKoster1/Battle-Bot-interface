@@ -12,7 +12,6 @@ print_r(json_decode($data));
     include_once('components/head.html');
     include_once('functions/function.php');
     include_once('functions/database.php');
-    include_once('functions/formattedtime.php');
     ?>
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/footer.css">
@@ -77,32 +76,10 @@ print_r(json_decode($data));
                 <div class="col-12 mb-2 text-center">
                     <h3>Evenementen</h3>
                 </div>
-                <div class="col-lg-12 d-flex justify-content-center">
-                    <?php
-                    $sql = "SELECT id, name, date, description FROM event";
-                    $eventResults = stmtExec($sql);
-                    $ids = $eventResults["id"];
+            </div>
 
-                    foreach ($ids as $eventId) {
-                        $name = $eventResults["name"][$eventId - 1];
-                        $eventDate = $eventResults["date"][$eventId - 1];
-                        // $date = $eventDate[0];
-
-                        $description = $eventResults["description"][$eventId - 1];
-                        echo "<div class='card mx-3 event'>
-                                    <div class='d-flex justify-content-left align-items-center'>
-                                        <div>
-                                            <span class='calendarDate d-block'>" . formatdate($eventDate) . "</span>
-                                            <span class='calendarTitle'>$name</span>
-                                        </div>
-                                    </div>
-                                    <div class='d-flex justify-content-left'>
-                                        <span class='calendarInfo mt-4'>$description</span>
-                                    </div>
-                                </div>";
-                    }
-                    ?>
-                </div>
+            <div class="row m-auto eventShowBox">
+                <?php showEvents(); ?>
             </div>
         </div>
     </section>
