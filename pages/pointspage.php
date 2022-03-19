@@ -3,7 +3,7 @@
     include_once('../functions/function.php');
     $conn = connectDB();
 
-    $maxPoints = 10;
+    $maxPoints = 80;
     $sql = "SELECT teamId, points, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
     $stmt = mysqli_prepare($conn, $sql);
 

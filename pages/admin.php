@@ -103,6 +103,25 @@ if (isset($_POST['event'])) {
         exit();
     }
 }
+if(isset($_GET['points'])) {
+    $sql = "SELECT teamId, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if(!$stmt) {
+        header("location: ../components/error.php");
+    }
+
+    if(!mysqli_stmt_execute($stmt)) {
+        header("location: ../components/error.php");
+    }
+
+    mysqli_stmt_bind_result($stmt, $teamId, $teamName);
+    mysqli_stmt_store_result($stmt);
+    while(mysqli_stmt_fetch($stmt)) {
+        $teams[] = $teamName;
+    }
+}
+    
 ?>
 
 <!DOCTYPE html>
