@@ -2,7 +2,7 @@
   "name": "battle-bot-websocket",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "nodemon server.js",
   "scripts": {
     "start": "nodemon src/server.js"
   },
@@ -20,6 +20,7 @@
     "express": "^4.17.3",
     "https": "^1.0.0",
     "nodemon": "^2.0.15",
+    "watch": "^1.0.2",
     "ws": "^8.5.0"
   }
 }
