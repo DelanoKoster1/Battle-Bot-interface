@@ -4,7 +4,7 @@
 
 $data = file_get_contents("http://localhost:3001/api/robot-list");
 
-print_r(json_decode($data));
+// print_r(json_decode($data));
 
 ?>
 <head>
