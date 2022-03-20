@@ -103,8 +103,11 @@ if (isset($_POST['event'])) {
         exit();
     }
 }
+
 if(isset($_GET['points'])) {
     $teams = array();
+
+    //Get all the teams from database
     $sql = "SELECT teamId, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
     $stmt = mysqli_prepare($conn, $sql);
 
@@ -118,7 +121,6 @@ if(isset($_GET['points'])) {
 
     mysqli_stmt_bind_result($stmt, $teamId, $teamName);
     mysqli_stmt_store_result($stmt);
-    $rows = mysqli_stmt_num_rows($stmt);
     while(mysqli_stmt_fetch($stmt)) {
         $teams += [$teamId => $teamName];
     }
@@ -126,15 +128,30 @@ if(isset($_GET['points'])) {
 
 if(isset($_POST['submitPoints'])) {
     $poinsPerTeam = array();
+
+    //Get all values from the radiobuttons
     foreach($_POST as $radioTeamId => $assignedPoints) {
         $poinsPerTeam += [$radioTeamId => $assignedPoints];
         $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
         $stmt = mysqli_prepare($conn, $sql);
-        mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+
+        if(!$stmt) {
+            header("location: ../components/error.php");
+        }
+
+        if(!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)){
+            header('location: ../components/error.php');
+        }
+
+        if(!mysqli_stmt_execute($stmt)) {
+            header('location ../components/error.php');
+        }
+        mysqli_stmt_close($stmt);   
     }
+
     mysqli_close($conn);
+    $_SESSION['succes'] = 'Punten toegevoegd';
+    
     header('location: admin.php?points');
 }
 
