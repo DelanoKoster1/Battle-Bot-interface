@@ -30,6 +30,6 @@
     line-height: 35px;
 }
 
-.game-card, .start-button{
+.game-card-all, .start-button-all, .game-card-single{
     cursor: pointer;
 }

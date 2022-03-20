@@ -1,7 +1,7 @@
 const ws = new WebSocket("ws://localhost:3003/websocket/src/websocket/robot");
-let startButton = document.querySelector('.start-button');
+let startButton = document.querySelector('.start-button-all');
 
-document.querySelectorAll('.game-card').forEach(item => {
+document.querySelectorAll('.game-card-all').forEach(item => {
     item.addEventListener('click', ev => {
         let itemId = item.id;
         startButton.setAttribute('id', itemId);
@@ -13,7 +13,7 @@ ws.addEventListener("open", () => {
     ws.send(JSON.stringify({
         "action": "login",
         "role": "admin",
-        "id": "3"
+        "id": "admin1"
     }));
 
     startButton.addEventListener('click', (ev) => {
@@ -21,23 +21,36 @@ ws.addEventListener("open", () => {
 
         if (selectedGame == "") {
             console.log('Geen game geselecteerd');
+        }else{
+            let body = {
+                "for": "all",
+                "action": "start_game",
+                "game": selectedGame
+            }
+        
+            ws.send(JSON.stringify(body));
         }
-
-        startGame(selectedGame);
 
     })
 
 
+    document.querySelectorAll('.game-card-single').forEach(item => {
+        item.addEventListener('click', ev => {
+            let itemId = item.id.split('-');
+            let game = itemId[0];
+            let botId = itemId[1];
+
+            let body = {
+                "action": "start_game",
+                "for": "single",
+                "game": game,
+                "id": botId
+            }
+
+            ws.send(JSON.stringify(body));
+
+        })
+    })
+
+
 })
-
-
-function startGame(game) {
-
-    let body = {
-        "for": "all",
-        "action": "start_game",
-        "game": game
-    }
-
-    ws.send(JSON.stringify(body));
-}

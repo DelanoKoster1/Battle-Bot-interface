@@ -22,7 +22,7 @@
         <h4 style="text-align: center; margin: 10px; padding: 10px;">Robots</h4>
         <div class="row my-5">
             <div class="col-lg-2 col-sm-4 col-6">
-                <div class="box bg-secondary d-flex justify-content-center start-button">
+                <div class="box bg-secondary d-flex justify-content-center start-button-all">
                     <div class="row g-0 w-100 text-center">
                         <div class="col-12 pt-1">
                             <img src="../assets/img/playbutton.svg" alt="Logo of a playbutton">
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div class="col-lg-2 col-sm-4 col-6">
-                    <div id="doolhof" class="box bg-secondary d-flex justify-content-center game-card">
+                    <div id="doolhof" class="box bg-secondary d-flex justify-content-center game-card-all">
                         <div class="row g-0 w-100 text-center">
                             <div class="col-12 pt-1">
                                 <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-sm-4 col-6">
-                    <div id="butler" class="box bg-secondary d-flex justify-content-center game-card">
+                    <div id="butler" class="box bg-secondary d-flex justify-content-center game-card-all">
                         <div class="row g-0 w-100 text-center">
                             <div class="col-12 pt-1">
                                 <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
@@ -64,7 +64,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-sm-4 col-6">
-                    <div id="race" class="box bg-secondary d-flex justify-content-center game-card">
+                    <div id="race" class="box bg-secondary d-flex justify-content-center game-card-all">
                         <div class="row g-0 w-100 text-center">
                             <div class="col-12 pt-1">
                                 <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
@@ -113,7 +113,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-sm-4 col-6">
-                    <div class="box bg-secondary d-flex justify-content-center">
+                    <div id="doolhof-<?= $id ?>" class="box bg-secondary d-flex justify-content-center game-card-single">
                         <div class="row g-0 w-100 text-center">
                             <div class="col-12 pt-1">
                                 <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-sm-4 col-6">
-                    <div class="box bg-secondary d-flex justify-content-center">
+                    <div id="butler-<?= $id ?>" class="box bg-secondary d-flex justify-content-center game-card-single">
                         <div class="row g-0 w-100 text-center">
                             <div class="col-12 pt-1">
                                 <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
@@ -141,7 +141,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-sm-4 col-6">
-                    <div class="box bg-secondary d-flex justify-content-center">
+                    <div id="race-<?= $id ?>" class="box bg-secondary d-flex justify-content-center game-card-single">
                         <div class="row g-0 w-100 text-center">
                             <div class="col-12 pt-1">
                                 <img src="../assets/img/joystick.svg" alt="Logo of a joystick">
