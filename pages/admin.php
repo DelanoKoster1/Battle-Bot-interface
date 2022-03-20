@@ -104,6 +104,7 @@ if (isset($_POST['event'])) {
     }
 }
 if(isset($_GET['points'])) {
+    $teams = array();
     $sql = "SELECT teamId, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
     $stmt = mysqli_prepare($conn, $sql);
 
@@ -117,10 +118,26 @@ if(isset($_GET['points'])) {
 
     mysqli_stmt_bind_result($stmt, $teamId, $teamName);
     mysqli_stmt_store_result($stmt);
+    $rows = mysqli_stmt_num_rows($stmt);
     while(mysqli_stmt_fetch($stmt)) {
-        $teams[] = $teamName;
+        $teams += [$teamId => $teamName];
     }
 }
+
+if(isset($_POST['submitPoints'])) {
+    $poinsPerTeam = array();
+    foreach($_POST as $radioTeamId => $assignedPoints) {
+        $poinsPerTeam += [$radioTeamId => $assignedPoints];
+        $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+    mysqli_close($conn);
+    header('location: admin.php?points');
+}
+
     
 ?>
 

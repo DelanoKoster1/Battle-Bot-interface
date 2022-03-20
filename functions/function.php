@@ -173,32 +173,3 @@ function eventTimeDescent() {
     }
 
 }
-
-
-// get points per team from the database and calculate their progress
-function getPointsFromTeams() {
-    $conn = connectDB();
-
-    $maxPoints = 10;
-    $sql = "SELECT teamId, points, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
-    $stmt = mysqli_prepare($conn, $sql);
-
-    if(!$stmt) {
-        header("location: ../components/error.php");
-    }
-
-    if(!mysqli_stmt_execute($stmt)) {
-        header("location: ../components/error.php");
-    }
-
-    mysqli_stmt_bind_result($stmt, $teamId, $points, $teamName);
-
-    mysqli_stmt_store_result($stmt);
-    $rows  = mysqli_stmt_num_rows($stmt);
-    while(mysqli_stmt_fetch($stmt)) {
-        $teamNames[] = $teamName; 
-        $pointsPerTeam = array($teamName => $points);
-        $progressPerTeam = ($pointsPerTeam[$teamName] / $maxPoints) * 100 . "%";
-        $progress[] = $progressPerTeam;
-    }
-}
