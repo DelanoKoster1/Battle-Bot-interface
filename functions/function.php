@@ -90,10 +90,12 @@ function formatdate(string $date) : string {
 function showEvents() {
     require_once('database.php');
 
-    $query = "SELECT id, name, date, description 
+    $query = "SELECT id, name, date, description
               FROM event 
+              WHERE date > now()
+              ORDER BY date ASC
               limit 5";
-              
+
     $eventResults = stmtExec($query);
 
     if (!empty($eventResults["id"])) {
