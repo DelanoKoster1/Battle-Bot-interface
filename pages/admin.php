@@ -22,6 +22,11 @@ switch (true) {
         $headerTitle = 'Games';
         $content = "../components/admin/game.php";
         break;
+    case isset($_GET['points']);
+        $headerTitle = 'Punten toevoegen';
+        $content = "../components/admin/points.php";
+        break;
+
     default:
         $headerTitle = 'Event toevoegen';
         $content = "../components/admin/event.php";
@@ -101,6 +106,59 @@ if (isset($_POST['event'])) {
         exit();
     }
 }
+
+if(isset($_GET['points'])) {
+    $teams = array();
+
+    //Get all the teams from database
+    $sql = "SELECT teamId, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    if(!$stmt) {
+        header("location: ../components/error.php");
+    }
+
+    if(!mysqli_stmt_execute($stmt)) {
+        header("location: ../components/error.php");
+    }
+
+    mysqli_stmt_bind_result($stmt, $teamId, $teamName);
+    mysqli_stmt_store_result($stmt);
+    while(mysqli_stmt_fetch($stmt)) {
+        $teams += [$teamId => $teamName];
+    }
+}
+
+if(isset($_POST['submitPoints'])) {
+    $poinsPerTeam = array();
+
+    //Get all values from the radiobuttons
+    foreach($_POST as $radioTeamId => $assignedPoints) {
+        $poinsPerTeam += [$radioTeamId => $assignedPoints];
+        $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+
+        if(!$stmt) {
+            header("location: ../components/error.php");
+        }
+
+        if(!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)){
+            header('location: ../components/error.php');
+        }
+
+        if(!mysqli_stmt_execute($stmt)) {
+            header('location ../components/error.php');
+        }
+        mysqli_stmt_close($stmt);   
+    }
+
+    mysqli_close($conn);
+    $_SESSION['succes'] = 'Punten toegevoegd';
+    
+    header('location: admin.php?points');
+}
+
+    
 ?>
 
 <!DOCTYPE html>
@@ -136,6 +194,7 @@ if (isset($_POST['event'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?game">Games</a>
+                            <a class="nav-link text-white" href="admin.php?points">Punten toevoegen</a>
                         </li>
                     </ul>
                 </nav>
