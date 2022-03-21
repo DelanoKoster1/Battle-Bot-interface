@@ -96,11 +96,14 @@ header .menu, #open-btn {
   cursor: default;
 }
 
-.eventsCard:hover {
-  transform: scale(1.1);
-  transition: ease-in-out 0.4s;
-  
+@media only screen and (min-width: 767px) {
+  .eventsCard:hover {
+    transform: scale(1.1);
+    transition: ease-in-out 0.4s;
+    
+  }
 }
+
 .calendarDate {
   font-size: 15px;
 }

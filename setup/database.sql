@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `event` (
     name VARCHAR(50) NOT NULL,
     date TIMESTAMP NOT NULL,
     description VARCHAR(999) NOT NULL,
+    type enum('public','private') NOT NULL,
 
     CONSTRAINT pk_event PRIMARY KEY (id)
 );

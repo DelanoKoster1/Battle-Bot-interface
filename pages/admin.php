@@ -3,13 +3,14 @@
 include_once('../functions/function.php');
 include_once('../functions/database.php');
 
-//Check if admin is logged in
+// Check if admin is logged in
 if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
-    header('location: ../components/error.php');
+header('location: ../components/error.php');
 }
 
 //Global variables
-$today = date("Y-m-d");
+$conn = connectDB();
+$today = date('Y-m-d\TH:i');
 $error = array();
 
 //Switch for loading in content
@@ -26,6 +27,10 @@ switch (true) {
         $headerTitle = 'Punten toevoegen';
         $content = "../components/admin/points.php";
         break;
+    case isset($_GET['director']);
+        $headerTitle = 'Ressigeur pagina';
+        $content = "../components/admin/director.php";
+        break;
 
     default:
         $headerTitle = 'Event toevoegen';
@@ -34,8 +39,7 @@ switch (true) {
 }
 
 //Post submissions
-function checkEventFields($eventDate, $eventName, $eventDescription)
-{
+function checkEventFields($eventDate, $eventName, $eventOmschrijving, $eventType) {
     global $error;
 
     if (!$eventDate && empty($eventDate)) {
@@ -48,7 +52,17 @@ function checkEventFields($eventDate, $eventName, $eventDescription)
     if (!$eventName && empty($eventName)) {
         $error[] = 'Event naam mag niet leeg zijn!';
     }
-    if (!$eventDescription && empty($eventDescription)) {
+    if (!$eventType && empty($eventType)) {
+        $error[] = 'Event type mag niet leeg zijn!';
+    } else {
+        if ($eventType == 'public' || $eventType == 'private') {
+            //Do nothing 
+        } else {
+            $error[] = 'Event type klopt niet';
+        }
+    }
+
+    if (!$eventOmschrijving && empty($eventOmschrijving)) {
         $error[] = 'Event omschrijving mag niet leeg zijn!';
     }
     if (strlen($eventName) > 255) {
@@ -69,18 +83,18 @@ if (isset($_POST['event'])) {
     //Submitted form data validation
     $eventDate = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
     $eventName = filter_input(INPUT_POST, 'eventNaam', FILTER_SANITIZE_SPECIAL_CHARS);
+    $eventType = filter_input(INPUT_POST, 'eventType', FILTER_SANITIZE_SPECIAL_CHARS);
     $eventDescription = filter_input(INPUT_POST, 'eventOmschrijving', FILTER_SANITIZE_SPECIAL_CHARS);
 
-    if (!checkEventFields($eventDate, $eventName, $eventDescription)) {
+    if (!checkEventFields($eventDate, $eventName, $eventDescription, $eventType)) {
         //SQL Query for inserting into user table
-        $sql = "INSERT INTO event (name, date, description) VALUES (?,?,?)";
-        stmtExec($sql, 0, $eventName, $eventDate, $eventDescription);
+        $query = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
 
-        if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription)) {
+        if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
             $_SESSION['error'] = "Cannot add event";
             header("location: ../components/error.php");
         }
-
+      
         //Set succes message
         $_SESSION['succes'] = 'Event toegevoegd!';
 
@@ -159,6 +173,9 @@ if (isset($_POST['submitPoints'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?points">Punten toevoegen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?director">Regisseur pagina</a>
                         </li>
                     </ul>
                 </nav>
