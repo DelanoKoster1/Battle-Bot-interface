@@ -205,6 +205,8 @@ if (isset($_POST['register'])) {
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
+            $_SESSION['id'] = mysqli_insert_id($conn);
+           
 
             //Send user to index.php
             header('location: ../index.php');
