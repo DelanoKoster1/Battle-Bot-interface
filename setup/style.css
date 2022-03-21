@@ -15,9 +15,11 @@ main {
     width: fit-content;
     height: fit-content;
     text-align: center;
+    position: relative;
 }
 .database {
     margin-top: 50px;
+    height: fit-content;
 }
 
 a {
@@ -32,6 +34,13 @@ a:hover {
     background-color: #0305ff;
     border: 3px solid transparent;
     cursor: pointer;
+}
+
+main > a {
+    position: absolute;
+    top: calc(100% + 20px);
+    left: 30%;
+    /* right: 40%; */
 }
 @media (min-width : 992px) {
     .input-group.w-lg-50 {
