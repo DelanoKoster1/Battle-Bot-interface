@@ -57,10 +57,19 @@
                 $sql = "SELECT  team.id,
                                 team.name,
                                 bot.name,
-                                bot.id
+                                bot.id,
+                                bot.specsId,
+                                specs.board,
+                                specs.interface,
+                                stats.wins,
+                                stats.playedMatches
                         FROM    team
                         INNER JOIN bot 
-                        ON team.botId = bot.id            
+                        ON team.botId = bot.id 
+                        INNER JOIN specs 
+                        ON specs.id = bot.specsId  
+                        INNER JOIN stats
+                        ON stats.id = bot.statsId         
                 ";
                 $dbResults = stmtExec($sql);
                 // debug($dbResults);
@@ -69,7 +78,11 @@
                     $id = $teamId;
                     $botId = $dbResults["bot.id"][$teamId - 1];
                     $botName = $dbResults["bot.name"][$teamId - 1];
-                    $teamName = $dbResults["team.name"][$teamId - 1];
+                    $teamName = $dbResults["team.name"][$teamId - 1]; 
+                    $specsBoard = $dbResults["specs.board"][$botId - 1];
+                    $specsInterface = $dbResults["specs.interface"][$botId - 1];;
+                    $gamesWon = $dbResults["stats.wins"][$botId - 1];;
+                    $gamesPlayed = $dbResults["stats.playedMatches"][$botId - 1];; 
                     echo ' 
                         <div class="tab-pane" id="' . $botName . '" role="tabpanel" aria-labelledby="' . $botName . '">
                             <div class="row">
@@ -88,8 +101,50 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <h3 class="my-3">Stats</h3>
+                                    <table class="table mb-5">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"></th>
+                                                <th scope="col">Aantal Spellen Gespeeld</th>
+                                                <th scope="col">Aantal Spellen Gewonnen</th>
+                                                <th scope="col">Aantal Spellen Verloren</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"></th>
+                                                <td>' . $gamesPlayed . '</td>
+                                                <td>' . $gamesWon . '</td>
+                                                <td>' . $gamesPlayed - $gamesWon . '</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-6">
+                                    <h3 class="my-3">Specs</h3>
+                                    <table class="table mb-5">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"></th>
+                                                <th scope="col">Board</th>
+                                                <th scope="col">Interface</th>                                           
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row"></th>
+                                                <td>' . $specsBoard . '</td>
+                                                <td>' . $specsInterface . '</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    ';
+                        ';
                 }
                 ?>
             </div>
