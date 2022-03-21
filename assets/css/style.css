@@ -107,6 +107,12 @@ header .menu, #open-btn {
   font-size: 12px;
 }
 
+/* Footer */
+
+.height {
+  min-height: 445px;
+}
+
 /* Mobile menu */
 
 .menu {

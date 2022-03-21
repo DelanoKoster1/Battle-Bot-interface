@@ -18,17 +18,18 @@
         <?php includeHeader('page'); ?>
     </section>
     <div class="container-fluid">
-        <div class="row my-5 nav nav-tabs" role="tablist">
-            <?php
-            $sql = "SELECT id, name, imagePath FROM bot";
-            $dbResults = stmtExec($sql);
-            $ids = $dbResults["id"];
-            foreach ($ids as $botId) {
-                $id = $botId;
-                $imgPath = $dbResults["imagePath"][$botId - 1];
-                if ($imgPath === "image.png") $imgPath = "../assets/img/bot.svg";
-                $name = $dbResults["name"][$botId - 1];
-                echo ' 
+        <div class="height">
+            <div class="row my-5 nav nav-tabs" role="tablist">
+                <?php
+                $sql = "SELECT id, name, imagePath FROM bot";
+                $dbResults = stmtExec($sql);
+                $ids = $dbResults["id"];
+                foreach ($ids as $botId) {
+                    $id = $botId;
+                    $imgPath = $dbResults["imagePath"][$botId - 1];
+                    if ($imgPath === "image.png") $imgPath = "../assets/img/bot.svg";
+                    $name = $dbResults["name"][$botId - 1];
+                    echo ' 
                     <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $name . '" type="button" role="tab" aria-controls="' . $name . '" aria-selected="false">
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
@@ -44,17 +45,17 @@
                         </div>
                     </div>
                 ';
-            }
-            ?>
-        </div>
-
-        <div class="row">
-            <div class="col-12">
-                <h1>Team</h1>
+                }
+                ?>
             </div>
-            <div class="tab-content">
-                <?php
-                $sql = "SELECT  team.id,
+
+            <div class="row">
+                <div class="col-12">
+                    <h1>Team</h1>
+                </div>
+                <div class="tab-content">
+                    <?php
+                    $sql = "SELECT  team.id,
                                 team.name,
                                 bot.name,
                                 bot.id
@@ -62,15 +63,15 @@
                         INNER JOIN bot 
                         ON team.botId = bot.id            
                 ";
-                $dbResults = stmtExec($sql);
-                // debug($dbResults);
-                $ids = $dbResults["team.id"];
-                foreach ($ids as $teamId) {
-                    $id = $teamId;
-                    $botId = $dbResults["bot.id"][$teamId - 1];
-                    $botName = $dbResults["bot.name"][$teamId - 1];
-                    $teamName = $dbResults["team.name"][$teamId - 1];
-                    echo ' 
+                    $dbResults = stmtExec($sql);
+                    // debug($dbResults);
+                    $ids = $dbResults["team.id"];
+                    foreach ($ids as $teamId) {
+                        $id = $teamId;
+                        $botId = $dbResults["bot.id"][$teamId - 1];
+                        $botName = $dbResults["bot.name"][$teamId - 1];
+                        $teamName = $dbResults["team.name"][$teamId - 1];
+                        echo ' 
                         <div class="tab-pane" id="' . $botName . '" role="tabpanel" aria-labelledby="' . $botName . '">
                             <div class="row">
                                 <div class="col-lg-2 col-sm-4 col-6 my-3">
@@ -90,8 +91,9 @@
                             </div>
                         </div>
                     ';
-                }
-                ?>
+                    }
+                    ?>
+                </div>
             </div>
         </div>
     </div>
