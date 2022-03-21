@@ -68,7 +68,7 @@ function checkEventFields($eventDate, $eventName, $eventOmschrijving, $eventType
     if (strlen($eventName) > 255) {
         $error[] = 'Event naam is te lang!';
     }
-    if (strlen($eventDescription) > 255) {
+    if (strlen($eventOmschrijving) > 255) {
         $error[] = 'Event omschrijving is te lang!';
     }
 
@@ -90,7 +90,7 @@ if (isset($_POST['event'])) {
         //SQL Query for inserting into user table
         $query = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
 
-        if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
+        if (!stmtExec($query, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
             $_SESSION['error'] = "Cannot add event";
             header("location: ../components/error.php");
         }
