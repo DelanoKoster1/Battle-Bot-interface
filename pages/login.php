@@ -263,6 +263,8 @@ if (isset($_POST['register'])) {
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
+            $_SESSION['id'] = mysqli_insert_id($conn);
+           
 
             //Close the statement and connection
             mysqli_stmt_close($stmt);

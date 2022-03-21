@@ -2,125 +2,102 @@
 include_once('../functions/function.php');
 require_once("../functions/database.php");
 
+global $error;
+
 $conn = connectDB();
 $query = "SELECT username, password, email FROM `account` WHERE id =" . $_SESSION['id'];
 $results = stmtExec($query, 0, $_SESSION['id']);
-    
+
 if (!isset($_SESSION['email'])) {
     header('location: ../components/error.php');
 }
-if (!empty($_POST['password']) && empty($_POST['rpassword']) || empty($_POST['password']) && !empty($_POST['rpassword'])) {
-    echo "passwords don't match, try again";
+if (!empty($_POST['password']) && empty($_POST['newpassword']) || empty($_POST['rpassword']) && !empty($_POST['rpassword'])) {
+    $error[] =  'De wachtwoorden komen niet overeen';
 }
+$query = "SELECT username, email, password FROM `account` WHERE id = ?";
+$results = stmtExec($query, 0, $_SESSION['id']);
+$username = $results["username"][0];
+$email = $results["email"][0];
+$password = $results["password"][0];
+$hash = $password;
+
 if (isset($_POST['save'])) {
-    // Only username
-    if (!empty($_POST['username']) && empty($_POST['password']) && empty($_POST['rpassword']) && empty($_POST['email'])) {
-        if ($username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-            $query = "UPDATE `account` SET username = ? WHERE id = ?";
-            $results = stmtExec($query, 0, $username, $_SESSION['id']);
-            echo "Succes username";
-        } else {
-            echo "user filter";
-        }
-    // Only email
-    } elseif (!empty($_POST['email']) && empty($_POST['password']) && empty($_POST['rpassword']) && empty($_POST['username'])) {
-        if ($email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)) {
-            $query = "UPDATE `account` SET email = ? WHERE id = ?";
-            $results = stmtExec($query, 0, $email, $_SESSION['id']);
-            echo "Succes email";
-        } else {
-            echo "email filter";
-        }
-    // Only passwords
-    } elseif (!empty($_POST['password']) && !empty($_POST['rpassword']) && empty($_POST['email']) && empty($_POST['username'])) {
-        if ($_POST['password'] == $_POST['rpassword']) {
-            if ($password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                if ($rpassword = filter_input(INPUT_POST, "rpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                    $password = password_hash($password, PASSWORD_DEFAULT);
-                    $query = "UPDATE `account` SET password = ? WHERE id = ?";
-                    $results = stmtExec($query, 0, $password, $_SESSION['id']);
-                    echo "Succes password";
-                } else {
-                    echo "rpassword filter";
-                }
-            } else {
-                echo "password filter";
-            }
-        } else {
-            echo "passwords don't match";
-        }
-    // Username and email
-    } elseif (!empty($_POST['username']) && !empty($_POST['email']) && empty($_POST['password']) && empty($_POST['rpassword'])) {
-        if ($username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-            if ($email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)) {
-                $query = "UPDATE `account` SET username = ?, email = ? WHERE id = ?";
-                $results = stmtExec($query, 0, $username, $email, $_SESSION['id']);
-                echo "Succes username & email";
-            } else {
-                echo "email filter";
-            }
-        } else {
-            echo "username filter";
-        }
-    // Username & passwords
-    } elseif (!empty($_POST['username']) && !empty($_POST['password']) && !empty($_POST['rpassword']) && empty($_POST['email'])) {
-        if ($username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-            if ($password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                if ($rpassword = filter_input(INPUT_POST, "rpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                    $password = password_hash($password, PASSWORD_DEFAULT);
-                    $query = "UPDATE `account` SET username = ?, password = ? WHERE id = ?";
-                    $results = stmtExec($query, 0, $username, $password, $_SESSION['id']);
-                    echo "Succes username & passwords";
-                } else {
-                    echo "rpassword filter";
-                }
-            } else {
-                echo "password filter";
-            }
-        } else {
-            echo "username filter";
-        }
-    // Email & passwords
-    } elseif (!empty($_POST['email']) && !empty($_POST['password']) && !empty($_POST['rpassword']) && empty($_POST['username'])) {
-        if ($email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)) {
-            if ($password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                if ($rpassword = filter_input(INPUT_POST, "rpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                    $password = password_hash($password, PASSWORD_DEFAULT);
-                    $query = "UPDATE `account` SET email = ?, password = ? WHERE id = ?";
-                    $results = stmtExec($query, 0, $email, $password, $_SESSION['id']);
-                    echo "Succes email & passwords";
-                } else {
-                    echo "rpassword filter";
-                }
-            } else {
-                echo "password filter";
-            }
-        } else {
-            echo "email filter";
-        }
-    } else {
-        if ($username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-            if ($email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)) {
-                if ($password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                    if ($rpassword = filter_input(INPUT_POST, "rpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-                        $password = password_hash($password, PASSWORD_DEFAULT);
-                        $query = "UPDATE `account` SET username = ?, email = ?, password = ? WHERE id = ?";
-                        $results = stmtExec($query, 0, $username, $email, $password, $_SESSION['id']);
-                        echo "Succes all";
+    if (!empty($_POST['username'])) {
+        if (!empty($_POST['email'])) {
+            if (!empty($_POST['curpassword'])) {
+                if (!empty($_POST['newpassword']) && !empty($_POST['rpassword'])) {
+                    if ($username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                        if ($email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)) {
+                            if ($curPassword = filter_input(INPUT_POST, "curpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                                if (password_verify($curPassword, $hash)) {
+                                    if ($newPassword = filter_input(INPUT_POST, "newpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                                        if ($rpassword = filter_input(INPUT_POST, "rpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                                            $newPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                                            $query = "UPDATE `account` SET username = ?, email = ?, password = ? WHERE id = ?";
+                                            stmtExec($query, 0, $username, $email, $newPassword, $_SESSION['id']);
+                                            echo "<div class='alert alert-success text-black mb-0 p-4 fw-bold'>De gegevens zijn succesvol aangepast</div>";
+                                        } else {
+                                            $error[] = 'Het herhaal wachtwoord is ongeldig';
+                                        }
+                                    } else {
+                                        $error[] = 'Het nieuwe wachtwoord is ongeldig';
+                                    }
+                                } else {
+                                    $error[] = 'Het huidige wachtwoord klopt niet';
+                                }
+                            } else {
+                                $error[] = 'Het huidige wachtwoord is ongeldig';
+                            }
+                        } else {
+                            $error[] = 'Het e-mailadres is ongeldig';
+                        }
                     } else {
-                        echo "rpassword filter";
+                        $error[] = 'De gebruikersnaam is ongeldig';
+                    }
+                } elseif (empty($_POST['newpassword']) && empty($_POST['rpassword'])) {
+                    if ($username = filter_input(INPUT_POST, "username", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                        if ($email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL)) {
+                            if ($curPassword = filter_input(INPUT_POST, "curpassword", FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                                if (password_verify($curPassword, $hash)) {
+                                    $query = "SELECT username FROM `account` WHERE NOT id = ?";
+                                    $results = stmtExec($query, 0, $username, $_SESSION['id']);  
+                                    $curPassword = password_hash($curPassword, PASSWORD_DEFAULT);
+                                    $query = "UPDATE `account` SET username = ?, email = ?, password = ? WHERE id = ?";
+                                    stmtExec($query, 0, $username, $email, $curPassword, $_SESSION['id']);
+                                    echo "<div class='alert alert-success text-black mb-0 p-4 fw-bold'>De gegevens zijn succesvol aangepast</div>";
+                                } else {
+                                    $error[] = 'Het huidige wachtwoord klopt niet';
+                                }
+                            } else {
+                                $error[] = 'Het huidige wachtwoord is ongeldig';
+                            }
+                        } else {
+                            $error[] = 'Het e-mailadres is ongeldig';
+                        }
+                    } else {
+                        $error[] = 'De gebruikersnaam is ongeldig';
                     }
                 } else {
-                    echo "password filter";
+                    $error[] = 'Het nieuwe wachtwoord en het herhaal wachtwoord komen niet overeen';
                 }
             } else {
-                echo "email filter";
+                $error[] = 'De huidige wachtwoord mag niet leeg zijn';
             }
         } else {
-            echo "username filter";
+            $error[] = 'Het e-mailadres mag niet leeg zijn';
         }
+    } else {
+        $error[] = 'De gebruikersnaam mag niet leeg zijn';
     }
-    
+    if (isset($_POST['save']) && !empty($error)) {
+        foreach ($error as $errorMsg) { ?>
+            <div class="col-md-12 p-0">
+                <div class="alert alert-danger text-black fw-bold p-4 mb-0 rounded" role="alert">
+                    <?php echo $errorMsg; ?>
+                </div>
+            </div><?php
+        }
+    } 
 }
 ?>
 <!DOCTYPE html>
@@ -145,14 +122,14 @@ if (isset($_POST['save'])) {
                 <form class="col-md-8 col-12 bg-white" method="post" action="">
                     <div class="row">
                         <div class="col-12">
-                            <h1 class="text-center bg-white w-100 pt-5 pb-5">Welkom, <?php //echo $username?></h1>
+                            <h1 class="text-center bg-white w-100 pt-5 pb-5">Welkom, <?php echo $username?></h1>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">person</span></span>
-                                <input name="username" type="text" class="form-control bg-light" placeholder="Gebruikersnaam"  value="<?php //echo $username?>" aria-label="username" aria-describedby="basic-addon1">                                   
+                                <input name="username" type="text" class="form-control bg-light" placeholder="Gebruikersnaam"  value="<?php echo $username?>" aria-label="username" aria-describedby="basic-addon1">                                   
                             </div>
                         </div>
                     </div>
@@ -160,17 +137,25 @@ if (isset($_POST['save'])) {
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">email</span></span>
-                                <input name="email" type="email" class="form-control bg-light" placeholder="Email"  value="<?php // echo $email?>" aria-label="email" aria-describedby="basic-addon1">
+                                <input name="email" type="email" class="form-control bg-light" placeholder="Email"  value="<?php echo $email?>" aria-label="email" aria-describedby="basic-addon1">
                             </div>
                         </div>
                     </div>
-                    
                     <div class="row">
                         <div class="col-12 bg-white">
                             <div class="input-group w-lg-50 mb-3 pb-2">
                                 <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">lock</span></span>
-                                <input name="password" id="password" type="password" class="form-control bg-light" placeholder="Wachtwoord" aria-label="password" aria-describedby="basic-addon1">
-                                <span class="input-group-text bg-light" id="basic-addon1"><span id="togglePassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
+                                <input name="curpassword" id="curpassword" type="password" class="form-control bg-light" placeholder="Huidig Wachtwoord" aria-label="curpassword" aria-describedby="basic-addon1">
+                                <span class="input-group-text bg-light" id="basic-addon1"><span id="toggleCurPassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 bg-white">
+                            <div class="input-group w-lg-50 mb-3 pb-2">
+                                <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">lock</span></span>
+                                <input name="newpassword" id="newpassword" type="password" class="form-control bg-light" placeholder="Nieuw Wachtwoord" aria-label="newpassword" aria-describedby="basic-addon1">
+                                <span class="input-group-text bg-light" id="basic-addon1"><span id="toggleNewPassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
                             </div>
                         </div>
                     </div>
@@ -197,34 +182,51 @@ if (isset($_POST['save'])) {
             <?php include_once("../components/footer.php"); ?>
         </div>
         <script>
-            // Selecting the fields
-            const togglePassword = document.querySelector('#togglePassword');
-            const password = document.querySelector('#password');
+            // Change eye icon for current password field
+            const toggleCurPassword = document.querySelector('#toggleCurPassword');
+            const curpassword = document.querySelector('#curpassword');
 
-            let isVisibleRep = false;
-            togglePassword.addEventListener('click', function (e) {
-                if (isVisibleRep == false) {
-                    isVisibleRep = true;
-                    document.getElementById("togglePassword").textContent = "visibility";
+            let isVisibleCur = false;
+            toggleCurPassword.addEventListener('click', function (e) {
+                if (isVisibleCur == false) {
+                    isVisibleCur = true;
+                    document.getElementById("toggleCurPassword").textContent = "visibility";
                 } else {
-                    isVisibleRep = false;
-                    document.getElementById("togglePassword").textContent = "visibility_off";
+                    isVisibleCur = false;
+                    document.getElementById("toggleCurPassword").textContent = "visibility_off";
                 }
-                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                password.setAttribute('type', type);
+                const type = curpassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                curpassword.setAttribute('type', type);
             });
 
-            // Selecting the fields
+            // Change eye icon for new password field
+            const toggleNewPassword = document.querySelector('#toggleNewPassword');
+            const newpassword = document.querySelector('#newpassword');
+
+            let isVisibleNew = false;
+            toggleNewPassword.addEventListener('click', function (e) {
+                if (isVisibleNew == false) {
+                    isVisibleNew = true;
+                    document.getElementById("toggleNewPassword").textContent = "visibility";
+                } else {
+                    isVisibleNew = false;
+                    document.getElementById("toggleNewPassword").textContent = "visibility_off";
+                }
+                const type = newpassword.getAttribute('type') === 'password' ? 'text' : 'password';
+                newpassword.setAttribute('type', type);
+            });
+
+            // Change eye icon for repeat password field
             const toggleRPassword = document.querySelector('#toggleRPassword');
             const rpassword = document.querySelector('#rpassword');
 
-            let isVisible = false;
+            let isVisibleR = false;
             toggleRPassword.addEventListener('click', function (e) {
-                if (isVisible == false) {
-                    isVisible = true;
+                if (isVisibleR == false) {
+                    isVisibleR = true;
                     document.getElementById("toggleRPassword").textContent = "visibility";
                 } else {
-                    isVisible = false;
+                    isVisibleR = false;
                     document.getElementById("toggleRPassword").textContent = "visibility_off";
                 }
                 const type = rpassword.getAttribute('type') === 'password' ? 'text' : 'password';
