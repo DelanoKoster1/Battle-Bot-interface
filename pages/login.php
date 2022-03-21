@@ -31,13 +31,13 @@ function checkLoginFields(String $username, String $password) {
     if (!$username && empty($username)) {
         $error[] = 'Gebruikersnaam is niet correct!';
     }
-    if (strlen($username) > 255) {
+    if (strlen($username) > 50) {
         $error[] = 'Gebruikersnaam is te lang!';
     }
     if (!$password && empty($password)) {
         $error[] = 'Wachtwoord mag niet leeg zijn!';
     }
-    if (strlen($password) > 255) {
+    if (strlen($password) > 200) {
         $error[] = 'Wachtwoord is te lang!';
     }
 
@@ -142,10 +142,10 @@ function checkRegisterFields(string $username, string $email, string $password, 
     if ($password != $password2) {
         $error[] = 'Wachtwoorden komen niet overeen!';
     }
-    if (strlen($email) > 255) {
+    if (strlen($email) > 200) {
         $error[] = 'E-mail is te lang!';
     }
-    if (strlen($username) > 255) {
+    if (strlen($username) > 50) {
         $error[] = 'Gebruikersnaam is te lang!';
     }
     if (strlen($password) > 255) {
@@ -259,10 +259,13 @@ if (isset($_POST['register'])) {
                 header("location: ../components/error.php");
             }
 
+            $lastInsertedID = mysqli_insert_id($conn);
+
             // log user in
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
+            $_SESSION['id'] = $lastInsertedID;
 
             //Close the statement and connection
             mysqli_stmt_close($stmt);
