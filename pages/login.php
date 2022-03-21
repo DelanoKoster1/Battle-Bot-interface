@@ -79,7 +79,7 @@ if (isset($_POST['login'])) {
         }
 
         //Bind the STMT results(sql statement) to variables
-        mysqli_stmt_bind_result($stmt, $ID, $teamID, $role, $username, $password2, $email);
+        mysqli_stmt_bind_result($stmt, $ID, $teamID, $role, $username, $password2, $email, $points);
 
         //Fetch STMT data
         while (mysqli_stmt_fetch($stmt)) {
@@ -171,7 +171,7 @@ function checkUserInDataBase(mysqli $conn, string $username, string $email) {
     global $error;
 
     //SQL Query for selecting all users where an email is in DB
-    $query = "SELECT * FROM account WHERE username = ? OR email = ?";
+    $query = "SELECT username, email FROM account WHERE username = ? OR email = ?";
 
     //Prpeparing SQL Query with database connection
     $stmt = mysqli_prepare($conn, $query);
@@ -193,7 +193,7 @@ function checkUserInDataBase(mysqli $conn, string $username, string $email) {
     };
 
     //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $ID, $teamid, $roleid, $username, $password, $email);
+    mysqli_stmt_bind_result($stmt, $username, $email);
 
     //Store STMT data
     mysqli_stmt_store_result($stmt);

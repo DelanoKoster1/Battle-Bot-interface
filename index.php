@@ -22,6 +22,9 @@ $data = file_get_contents("http://localhost:3001/api/robot-list");
     <section id="header">
         <?php includeHeader('index'); ?>
     </section>
+    <div class="text-center alert alert-dark" id="eventTimeDisplay" role="alert">
+    </div>
+    <span hidden id="dateOfEvent"><?= eventTimeDescent(); ?></span>
     <section id="content">
         <div class="container">
             <div class="row py-5">
@@ -84,6 +87,7 @@ $data = file_get_contents("http://localhost:3001/api/robot-list");
         </div>
     </section>
     <?php include_once('components/footer.php') ?>
+    <script src="assets/js/function.js"></script>
 </body>
 
 </html>
