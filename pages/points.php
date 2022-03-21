@@ -39,7 +39,6 @@
     ?>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
-    <link rel="styelsheet" href="../assets/css/points.css">
 
     <title>Punten Pagina</title>
 </head>
@@ -61,9 +60,9 @@
         <div class="col-8">
             <?php for($count = 0; $count < $rows; $count++) { ?>
             <div class="row">
-                <div class="col-2 d-flex align-items-end mt-4">
-                    <img class="w-100" src="../assets/img/battlebotlogo.png" alt="Picture of Robot">
-                    <span class="d-md-none"><?= $teamNames[$count] ?></span>
+                <div class="col-md-2 col-12 d-flex align-items-end mt-4">
+                    <img class="img-fluid scoreImg" src="../assets/img/battlebotlogo.png" alt="<?= $teamNames[$count] ?>">
+                    <span class="d-md-none my-auto"><?= $teamNames[$count] ?></span>
                 </div>
                 <div class="col-12 col-md-10">
                     <div class="col-10 col-md-12 d-none d-md-block">
@@ -76,7 +75,6 @@
             </div>
             <?php } ?>
         </div>
-        <div class="col-2"></div>
     </div>
 </div>
 <footer class="mt-5">

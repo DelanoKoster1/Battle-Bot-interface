@@ -159,6 +159,17 @@ function eventTimeDescent() {
 
 }
 
+function getLivestream() {
+        return '
+            <iframe
+            id="ytplayer"
+            type="text/html"
+            src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true"
+            frameborder="0">
+            </iframe>
+            ';
+}
+
 // function getBots() {
 
 // }

@@ -24,7 +24,7 @@
         <div class="row">
             <div id="livestream" class="col-xl-9 col-lg-8 col-12">
                 <div class="ratio ratio-16x9">
-                    <iframe id="ytplayer" type="text/html" src="https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com" frameborder="0"></iframe>
+                    <?=getLivestream();?>
                 </div>
             </div>
             <div id="chat" class="col-xl-3 col-lg-4 col-12 mt-4 mt-lg-0">
@@ -42,7 +42,6 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="chatmessage-container h-75">
-
                                     </div>
 
                                     <div class="commandLine position-absolute bottom-0 start-0">
@@ -184,7 +183,7 @@
     </div>
     <div class="text-center">
         <h3>Doet de livestream het niet?</h3>
-        <a href="https://www.twitch.tv/stendenbattlebot"><h6>Klik hier!</h6></a>
+        <a target="_blank" href="https://www.twitch.tv/stendenbattlebot"><h6>Klik hier!</h6></a>
     </div>
     <footer>
         <?php include_once('../components/footer.php') ?>
