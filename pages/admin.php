@@ -2,14 +2,14 @@
 //Includes
 include_once('../functions/function.php');
 
-//Check if admin is logged in
-//if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
-// header('location: ../components/error.php');
-//}
+// Check if admin is logged in
+if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
+header('location: ../components/error.php');
+}
 
 //Global variables
 $conn = connectDB();
-$today = date("Y-m-d");
+$today = date('Y-m-d\TH:i');
 $error = array();
 
 //Switch for loading in content
@@ -38,8 +38,7 @@ switch (true) {
 }
 
 //Post submissions
-function checkEventFields($eventDate, $eventName, $eventOmschrijving)
-{
+function checkEventFields($eventDate, $eventName, $eventOmschrijving, $eventType) {
     global $error;
 
     if (!$eventDate && empty($eventDate)) {
@@ -52,6 +51,16 @@ function checkEventFields($eventDate, $eventName, $eventOmschrijving)
     if (!$eventName && empty($eventName)) {
         $error[] = 'Event naam mag niet leeg zijn!';
     }
+    if (!$eventType && empty($eventType)) {
+        $error[] = 'Event type mag niet leeg zijn!';
+    } else {
+        if ($eventType == 'public' || $eventType == 'private') {
+            //Do nothing 
+        } else {
+            $error[] = 'Event type klopt niet';
+        }
+    }
+
     if (!$eventOmschrijving && empty($eventOmschrijving)) {
         $error[] = 'Event omschrijving mag niet leeg zijn!';
     }
@@ -73,11 +82,12 @@ if (isset($_POST['event'])) {
     //Submitted form data validation
     $eventDate = filter_input(INPUT_POST, 'date', FILTER_SANITIZE_SPECIAL_CHARS);
     $eventName = filter_input(INPUT_POST, 'eventNaam', FILTER_SANITIZE_SPECIAL_CHARS);
+    $eventType = filter_input(INPUT_POST, 'eventType', FILTER_SANITIZE_SPECIAL_CHARS);
     $eventDescription = filter_input(INPUT_POST, 'eventOmschrijving', FILTER_SANITIZE_SPECIAL_CHARS);
 
-    if (!checkEventFields($eventDate, $eventName, $eventDescription)) {
+    if (!checkEventFields($eventDate, $eventName, $eventDescription, $eventType)) {
         //SQL Query for inserting into user table
-        $query = "INSERT INTO event (name, date, description) VALUES (?,?,?)";
+        $query = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
 
         //Prpeparing SQL Query with database connection
         $stmt = mysqli_prepare($conn, $query);
@@ -87,7 +97,7 @@ if (isset($_POST['event'])) {
         }
 
         //Binding params into ? fields
-        if (!mysqli_stmt_bind_param($stmt, "sss", $eventName, $eventDate, $eventDescription)) {
+        if (!mysqli_stmt_bind_param($stmt, "ssss", $eventName, $eventDate, $eventDescription, $eventType)) {
             $_SESSION['error'] = "database_error";
             header("location: ../components/error.php");
         }

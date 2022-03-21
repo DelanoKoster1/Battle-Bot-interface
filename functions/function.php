@@ -39,7 +39,15 @@ function includeHeader(String $sort) {
  * 
  */
 function checkValidDate(String $date) {
-    if (preg_match("/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/",$date)) {
+    $today = date('Y-m-d\TH:i');
+
+    //Check if filled in date is older then today.
+    if ($date < $today) {
+        return false;
+    }
+
+    //Check if date format is correct
+    if (preg_match("/^(000[1-9]|00[1-9]\d|0[1-9]\d\d|100\d|10[1-9]\d|1[1-9]\d{2}|[2-9]\d{3}|[1-9]\d{4}|1\d{5}|2[0-6]\d{4}|27[0-4]\d{3}|275[0-6]\d{2}|2757[0-5]\d|275760)-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T(0\d|1\d|2[0-4]):(0\d|[1-5]\d)(?::(0\d|[1-5]\d))?(?:.(00\d|0[1-9]\d|[1-9]\d{2}))?$/",$date)) {
         return true;
     } else {
         return false;
