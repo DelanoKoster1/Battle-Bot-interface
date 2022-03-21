@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `team-event` (
     points INT DEFAULT 0,
 
     CONSTRAINT pk_team_event PRIMARY KEY (eventId, teamId)
-    );
+);
 
 INSERT INTO `role` (id, name) VALUES (1, "Default"), (2, "Admin");
 
@@ -86,7 +86,7 @@ INSERT INTO `bot` (id, statsId, specsId, name, description, imagePath) VALUES (1
 
 INSERT INTO `team` (id, botId, name) VALUES (1, 1, "INF1A"), (2, 2, "INF1B"), (3, 3, "INF1C"), (4, 4, "INF1D"), (5, 5, "INF1E");
 
-INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES (1, 0, 1, "User", "test1", "user1@battlebot.nl"), (2, 0, 2, "Admin", "test2", "admin@battlebot.nl");
+INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES (1, 0, 1, "User", "$2y$10$aGQ8W0VZuImV2hrYKq3HdO2sGSnDip3X.WekIXwgq0vk1tLlKak.6", "user1@battlebot.nl"), (2, 0, 2, "Admin", "$2y$10$0CG/LGUl/KgxUQFGBzqkUOXHFoNL03jQY9JKbq6KrXGO3R9/vcusC", "admin@battlebot.nl");
 
 INSERT INTO `event` (id, name, date, description) VALUES (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!");
 

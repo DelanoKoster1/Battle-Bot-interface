@@ -54,7 +54,7 @@ function fail(?string $code = NULL, ?string $info = NULL) {
  *                                                                                                   
  */
 
-function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) : array| bool {
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
 
     //Require env.php
     require_once('env.php');

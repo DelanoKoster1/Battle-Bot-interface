@@ -1,1 +1,1 @@
-ErrorDocument 404 http://localhost/Battle-Bot-interface/components/error.php
+ErrorDocument 404 https://%{REQUEST_URI}/Battle-Bot-interface/components/error.php

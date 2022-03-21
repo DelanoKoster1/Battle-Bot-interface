@@ -1,6 +1,7 @@
 <?php
 //Includes
 include_once('../functions/function.php');
+include_once('../functions/database.php');
 
 // Check if admin is logged in
 if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
@@ -67,7 +68,7 @@ function checkEventFields($eventDate, $eventName, $eventOmschrijving, $eventType
     if (strlen($eventName) > 255) {
         $error[] = 'Event naam is te lang!';
     }
-    if (strlen($eventOmschrijving) > 255) {
+    if (strlen($eventDescription) > 255) {
         $error[] = 'Event omschrijving is te lang!';
     }
 
@@ -89,30 +90,11 @@ if (isset($_POST['event'])) {
         //SQL Query for inserting into user table
         $query = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
 
-        //Prpeparing SQL Query with database connection
-        $stmt = mysqli_prepare($conn, $query);
-        if (!$stmt) {
-            $_SESSION['error'] = "database_error";
+        if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
+            $_SESSION['error'] = "Cannot add event";
             header("location: ../components/error.php");
         }
-
-        //Binding params into ? fields
-        if (!mysqli_stmt_bind_param($stmt, "ssss", $eventName, $eventDate, $eventDescription, $eventType)) {
-            $_SESSION['error'] = "database_error";
-            header("location: ../components/error.php");
-        }
-
-        //Executing statement
-        if (!mysqli_stmt_execute($stmt)) {
-            mysqli_stmt_error($stmt);
-            $_SESSION['error'] = "database_error";
-            header("location: ../components/error.php");
-        }
-
-        //Close the statement and connection
-        mysqli_stmt_close($stmt);
-        mysqli_close($conn);
-
+      
         //Set succes message
         $_SESSION['succes'] = 'Event toegevoegd!';
 
@@ -126,21 +108,11 @@ if (isset($_GET['points'])) {
     $teams = array();
 
     //Get all the teams from database
-    $sql = "SELECT teamId, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
-    $stmt = mysqli_prepare($conn, $sql);
+    $sql = "SELECT teamId, name FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
+    $results = stmtExec($sql);
 
-    if (!$stmt) {
-        header("location: ../components/error.php");
-    }
-
-    if (!mysqli_stmt_execute($stmt)) {
-        header("location: ../components/error.php");
-    }
-
-    mysqli_stmt_bind_result($stmt, $teamId, $teamName);
-    mysqli_stmt_store_result($stmt);
-    while (mysqli_stmt_fetch($stmt)) {
-        $teams += [$teamId => $teamName];
+    for($i = 1; $i < count($results); $i++) {
+        $teams += [$results['teamId'][$i-1] => $results['name'][$i-1]];
     }
 }
 
@@ -151,23 +123,12 @@ if (isset($_POST['submitPoints'])) {
     foreach ($_POST as $radioTeamId => $assignedPoints) {
         $poinsPerTeam += [$radioTeamId => $assignedPoints];
         $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
-        $stmt = mysqli_prepare($conn, $sql);
 
-        if (!$stmt) {
+        if (!stmtExec($sql, 0, $assignedPoints, $radioTeamId)) {
             header("location: ../components/error.php");
         }
-
-        if (!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)) {
-            header('location: ../components/error.php');
-        }
-
-        if (!mysqli_stmt_execute($stmt)) {
-            header('location ../components/error.php');
-        }
-        mysqli_stmt_close($stmt);
     }
 
-    mysqli_close($conn);
     $_SESSION['succes'] = 'Punten toegevoegd';
 
     header('location: admin.php?points');

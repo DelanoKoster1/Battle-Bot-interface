@@ -41,7 +41,7 @@ include_once('../functions/function.php');
     <footer class="navbar">
         <?php include_once('../components/footer.php') ?>
     </footer>
-    <script src="../assets/js/function.js"></script>
+    <script src="../assets/js/timer.js"></script>
 </body>
 
 </html>

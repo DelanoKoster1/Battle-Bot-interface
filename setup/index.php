@@ -46,6 +46,7 @@ if(isset($_GET['database'])) {
             <a href="?database=refresh">Import / Refresh</a>
             <a href="?database=delete">Delete</a>
         </div>
+        <a href="../">Go back</a>
     </main>
 </body>
 </html>
