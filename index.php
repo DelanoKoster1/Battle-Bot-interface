@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-
-$data = file_get_contents("http://localhost:3001/api/robot-list");
-
-// print_r(json_decode($data));
-
-?>
 <head>
     <?php
     include_once('components/head.html');
@@ -54,11 +47,11 @@ $data = file_get_contents("http://localhost:3001/api/robot-list");
                         $sql = "SELECT id, name, imagePath FROM bot";
                         $dbResults = stmtExec($sql);
                         $ids = $dbResults["id"];
-                        foreach ($ids as $botId) {
-                            $id = $botId;
-                            $imgPath = $dbResults["imagePath"][$botId - 1];
+                        for($i = 0; $i < count($ids); $i++) {
+                            $id = $ids[$i];
+                            $imgPath = $dbResults["imagePath"][$i];
                             if ($imgPath === "image.png") $imgPath = "assets/img/bots/BB_sawblaze-beauty.jpg";
-                            $name = $dbResults["name"][$botId - 1];
+                            $name = $dbResults["name"][$i];
                             echo "<div class='card'>
                                         <img src='$imgPath' class='img-fluid card-img-top' alt='$name'>
                                         <div class='card-body'>

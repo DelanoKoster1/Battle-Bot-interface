@@ -90,15 +90,19 @@ function formatdate(string $date) : string {
 function showEvents() {
     require_once('database.php');
 
-    $query = "SELECT id, name, date, description FROM event";
+    $query = "SELECT id, name, date, description 
+              FROM event 
+              limit 5";
+              
     $eventResults = stmtExec($query);
+
     if (!empty($eventResults["id"])) {
         $ids = $eventResults["id"];
 
-        foreach ($ids as $eventId) {
-            $name = $eventResults["name"][$eventId - 1];
-            $eventDate = $eventResults["date"][$eventId - 1];
-            $description = $eventResults["description"][$eventId - 1];
+        for($i = 0; $i < count($ids); $i++) {
+            $name = $eventResults["name"][$i];
+            $eventDate = $eventResults["date"][$i];
+            $description = $eventResults["description"][$i];
     
             echo '
             <div class="col-sm-3 mb-4">
