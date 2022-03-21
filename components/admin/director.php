@@ -12,8 +12,8 @@ src="https://player.twitch.tv/?channel=stendenbattlebot&parent=Battle-Bot-interf
 frameborder="0" 
 allowfullscreen="true" 
 scrolling="no" 
-height="378" 
-width="620">
+height="540" 
+width="960">
 </iframe>
 </body>
 </html>
