@@ -64,8 +64,9 @@
             <?php foreach($pointsPerTeam as $team => $point) { ?>
             <div class="row">
                 <div class="col-md-2 col-12 d-flex align-items-end mt-4">
-                    <img class="img-fluid scoreImg" src="../assets/img/battlebotlogo.png" alt="<?= $teamNames[$count] ?>">
-                    <span class="d-md-none my-auto"><?= $teamNames[$count] ?></span>
+                    <img class="img-fluid scoreImg" src="../assets/img/battlebotlogo.png" alt="<?= $team ?>">
+                    <span class="d-md-none my-auto"><?= $team ?></span>
+                </div>
                 <div class="col-12 col-md-10">
                     <div class="col-10 col-md-12 d-none d-md-block">
                         <p class="mb-2 ps-2"><?= $team ?></p>
