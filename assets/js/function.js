@@ -36,3 +36,14 @@ document.addEventListener('DOMContentLoaded', function() {
         test.innerHTML += '<span class="fw-bold" id="timeUntilEvent"></span>';
         test.innerHTML += '<span class="material-icons align-middle test">local_fire_department</span>';
     }, false);
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    $("div.checkBot").click(function(event) {
+        $(this).addClass("checked");
+        if ($(this).hasClass("checked")) {
+            $(this).find('img').delete("checkImg");
+        }
+    });
+    
+}, false);

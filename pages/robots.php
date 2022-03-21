@@ -18,7 +18,7 @@
         <?php includeHeader('page'); ?>
     </section>
     <div class="container-fluid">
-        <div class="row my-5 nav nav-tabs" role="tablist">
+        <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
             $sql = "SELECT id, name, imagePath FROM bot";
             $dbResults = stmtExec($sql);
@@ -33,7 +33,7 @@
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
                                 <div class="col-12 pt-1">
-                                    <img src="' . $imgPath . '" alt="' . $name . '">
+                                    <img class="img-fluid" src="' . $imgPath . '" alt="' . $name . '">
                                 </div>
                                 <div class="col-12 position-relative">
                                     <div class="botName position-absolute w-100 bottom-0">
@@ -48,7 +48,7 @@
             ?>
         </div>
 
-        <div class="row">
+        <div class="row ms-4">
             <div class="col-12">
                 <h1>Team</h1>
             </div>
@@ -77,7 +77,7 @@
                                     <div class="box bg-secondary d-flex justify-content-center">
                                         <div class="row g-0 w-100 text-center">
                                             <div class="col-12 my-auto">
-                                                <img src="../assets/img/person.svg" alt="' . $teamName . '">
+                                                <img class="img-fluid" src="../assets/img/person.svg" alt="' . $teamName . '">
                                             </div>
                                             <div class="col-12 position-relative">
                                                 <div class="botName position-absolute w-100 bottom-0">

@@ -145,6 +145,39 @@ function eventTimeDescent() {
 
 }
 
-// function getBots() {
+function getBots() {
 
-// }
+    require_once('database.php');
+
+    $query = " SELECT   name
+               FROM     bot 
+             ";
+
+    $results = stmtExec($query);
+
+    $botReturn = '';
+
+    foreach ($results as $unused => $botArray) {
+        foreach ($botArray as $bot) {
+            $botReturn .= '<div class="col-lg-4 col-sm-4 col-6 mb-2 checkBot">';
+                $botReturn .= '<div class="box bg-secondary d-flex justify-content-center">';
+                    $botReturn .= '<div class="row g-0 w-100 text-center">';
+                        $botReturn .= '<div class="col-12 pt-1">';
+                            $botReturn .= '<img class="img-fluid" src="../assets/img/bot.svg" alt="Logo of a bot">';
+                        $botReturn .= '</div>';
+                        $botReturn .= '<div class="col-12 position-relative">';
+                            $botReturn .= '<div class="botName position-absolute w-100 bottom-0">';
+                                $botReturn .= '<span>'.$bot.'</span>';
+                                $botReturn .= '<span><input type="checkbox" id="team(X)" name="voteTeam" value="team(X)"></span>';
+                                $botReturn .= '<span><?= getBots(); ?></span>';
+                            $botReturn .= '</div>';
+                        $botReturn .= '</div>';
+                    $botReturn .= '</div>';
+                $botReturn .= '</div>';
+            $botReturn .= '</div>';
+        }
+    }
+    
+    return $botReturn;
+
+}

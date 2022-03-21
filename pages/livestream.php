@@ -91,91 +91,17 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true">X</span></button>
-                    <h4 class="modal-title custom_align" id="Heading">Vote for your bot</h4>
+                    <h4 class="modal-title custom_align" id="Heading">Stem voor een robot</h4>
                 </div>
                 <div class="modal-body">
                     <form method="post" action="">
                         <div class="row justify-content-evenly">
-                            <div class="col-lg-4 col-sm-4 col-6 mb-2">
-                                <div class="box bg-secondary d-flex justify-content-center">
-                                    <div class="row g-0 w-100 text-center">
-                                        <div class="col-12 pt-1">
-                                            <img class="img-fluid" src="../assets/img/bot.svg" alt="Logo of a bot">
-                                        </div>
-                                        <div class="col-12 position-relative">
-                                            <div class="botName position-absolute w-100 bottom-0">
-                                                <span>Team (X)</span>
-                                                <span><input type="checkbox" id="team(X)" name="voteTeam" value="team(X)"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-sm-4 col-6">
-                                <div class="box bg-secondary d-flex justify-content-center">
-                                    <div class="row g-0 w-100 text-center">
-                                        <div class="col-12 pt-1">
-                                            <img class="img-fluid" src="../assets/img/bot.svg" alt="Logo of a bot">
-                                        </div>
-                                        <div class="col-12 position-relative">
-                                            <div class="botName position-absolute w-100 bottom-0">
-                                                <span>Team (X)</span>
-                                                <span><input type="checkbox" id="team(X)" name="voteTeam" value="team(X)"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-sm-4 col-6">
-                                <div class="box bg-secondary d-flex justify-content-center">
-                                    <div class="row g-0 w-100 text-center">
-                                        <div class="col-12 pt-1">
-                                            <img class="img-fluid" src="../assets/img/bot.svg" alt="Logo of a bot">
-                                        </div>
-                                        <div class="col-12 position-relative">
-                                            <div class="botName position-absolute w-100 bottom-0">
-                                                <span>Team (X)</span>
-                                                <span><input type="checkbox" id="team(X)" name="voteTeam" value="team(X)"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-sm-4 col-6">
-                                <div class="box bg-secondary d-flex justify-content-center">
-                                    <div class="row g-0 w-100 text-center">
-                                        <div class="col-12 pt-1">
-                                            <img class="img-fluid" src="../assets/img/bot.svg" alt="Logo of a bot">
-                                        </div>
-                                        <div class="col-12 position-relative">
-                                            <div class="botName position-absolute w-100 bottom-0">
-                                                <span>Team (X)</span>
-                                                <span><input type="checkbox" id="team(X)" name="voteTeam" value="team(X)"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4 col-sm-4 col-6">
-                                <div class="box bg-secondary d-flex justify-content-center">
-                                    <div class="row g-0 w-100 text-center">
-                                        <div class="col-12 pt-1">
-                                            <img class="img-fluid" src="../assets/img/bot.svg" alt="Logo of a bot">
-                                        </div>
-                                        <div class="col-12 position-relative">
-                                            <div class="botName position-absolute w-100 bottom-0">
-                                                <span>Team (X)</span>
-                                                <span><input type="checkbox" id="team(X)" name="voteTeam" value="team(X)"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php echo getBots(); ?>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span> Vote</button>
+                    <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Stem nu!</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -220,8 +146,10 @@
                 $("#modalEdit").modal("hide");
             });
         });
+
     </script>
     <script src="../assets/js/chat.js"></script>
+    <script src="../assets/js/function.js"></script>
 </body>
 
 </html>
