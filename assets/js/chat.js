@@ -1,16 +1,7 @@
-const ws = new WebSocket("ws://localhost:3002/websocket/src/websocket/chat");
+const ws = new WebSocket(`ws://${getDomainName()}:3002/websocket/src/websocket/chat`);
 let chatInput = document.getElementById('chatMessage');
 let chatButton = document.getElementById('button-addon2');
 let username = document.getElementById('username').value;
-
-
-ws.onopen = function(e) {
-    console.log("Connection established");
-};
-
-ws.onerror = function(e) {
-    console.log("WebSocket Error: " , e);
- };
 
 ws.addEventListener("open", () => {
 

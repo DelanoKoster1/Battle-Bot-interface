@@ -1,4 +1,4 @@
-const ws = new WebSocket("ws://localhost:3003/websocket/src/websocket/robot");
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/src/websocket/robot`);
 let startButton = document.querySelector('.start-button-all');
 
 document.querySelectorAll('.game-card-all').forEach(item => {

@@ -1,12 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-<?php 
-
-$data = file_get_contents("http://localhost:3001/api/robot-list");
-
-// print_r(json_decode($data));
-
-?>
 <head>
     <?php
     include_once('components/head.html');
@@ -87,7 +80,7 @@ $data = file_get_contents("http://localhost:3001/api/robot-list");
         </div>
     </section>
     <?php include_once('components/footer.php') ?>
-    <script src="assets/js/function.js"></script>
+    <script src="assets/js/timer.js"></script>
 </body>
 
 </html>

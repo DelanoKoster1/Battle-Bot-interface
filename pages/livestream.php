@@ -221,6 +221,7 @@
             });
         });
     </script>
+    <script src="../assets/js/functions.js"></script>
     <script src="../assets/js/chat.js"></script>
 </body>
 
