@@ -12,7 +12,7 @@
                 <ul class="list-unstyled mt-4">
                     <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php'?>">Voorpagina</a></li>
                     <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'robots.php' : 'pages/robots.php'?>">Robots</a></li>
-                    <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'calendarpage.php' : 'pages/calendarpage.php'?>">Kalender</a></li>
+                    <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'calendar.php' : 'pages/calendar.php'?>">Kalender</a></li>
                     <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'livestream.php' : 'pages/livestream.php'?>">Livestream</a></li>
                 </ul>
             </div>

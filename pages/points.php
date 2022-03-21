@@ -37,7 +37,7 @@
     ?>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
-    <link rel="styelsheet" href="../assets/css/pointspage.css">
+    <link rel="styelsheet" href="../assets/css/points.css">
 
     <title>Punten Pagina</title>
 </head>

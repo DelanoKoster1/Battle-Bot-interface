@@ -16,10 +16,10 @@
                             <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/robots.php' : 'pages/robots.php'?>">Robots</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/pointspage.php' : 'pages/pointspage.php'?>">Scores</a>
+                            <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/points.php' : 'pages/points.php'?>">Scores</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/calendarpage.php' : 'pages/calendarpage.php'?>">Kalender</a>
+                            <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/calendar.php' : 'pages/calendar.php'?>">Kalender</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/livestream.php' : 'pages/livestream.php'?>">Livestream</a>
@@ -72,12 +72,12 @@
           </a>
         </li>
         <li class="menu-item">
-          <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/pointspage.php' : 'pages/pointspage.php'?>">
+          <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/points.php' : 'pages/points.php'?>">
             <span >Scores</span>
           </a>
         </li>
         <li class="menu-item">
-          <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/calendarpage.php' : 'pages/calendarpage.php'?>">
+          <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/calendar.php' : 'pages/calendar.php'?>">
             <span >Kalender</span>
           </a>
         </li>
