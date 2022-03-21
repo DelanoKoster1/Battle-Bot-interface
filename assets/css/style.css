@@ -193,6 +193,15 @@ header .menu, #open-btn {
 }
 .menu-content h3 span {
   color: #333 !important;
+}
+
+#events .calendarCountDown {
+  font-weight: bold;
+  color: Black;
+}
+
+#events .calendarTitle {
+  color: rgb(211, 187, 187);
   font-weight: bold;
 }
 .menu-item {
