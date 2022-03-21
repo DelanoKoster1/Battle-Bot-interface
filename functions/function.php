@@ -157,7 +157,7 @@ function getBots() {
 
     $botReturn = '';
 
-    foreach ($results as $unused => $botArray) {
+    foreach ($results as $botArray) {
         foreach ($botArray as $bot) {
             $botReturn .= '<div class="col-lg-4 col-sm-4 col-6 mb-2 checkBot">';
                 $botReturn .= '<div class="box bg-secondary d-flex justify-content-center">';
@@ -168,8 +168,7 @@ function getBots() {
                         $botReturn .= '<div class="col-12 position-relative">';
                             $botReturn .= '<div class="botName position-absolute w-100 bottom-0">';
                                 $botReturn .= '<span>'.$bot.'</span>';
-                                $botReturn .= '<span><input type="checkbox" id="team(X)" name="voteTeam" value="team(X)"></span>';
-                                $botReturn .= '<span><?= getBots(); ?></span>';
+                                $botReturn .= '<span><input type="checkbox" class="d-none" id="'.$bot.'" name="voteTeam[]" value="'.$bot.'"></span>';
                             $botReturn .= '</div>';
                         $botReturn .= '</div>';
                     $botReturn .= '</div>';
@@ -177,7 +176,15 @@ function getBots() {
             $botReturn .= '</div>';
         }
     }
-    
+
     return $botReturn;
 
+}
+
+function voteBot($votedBot) {
+    if (count($votedBot) <= 1) {
+        return "<div class='alert alert-success text-center' role='alert'>ja je hebt goed gestemt</div>";
+    } else {
+        return "<div class='alert alert-danger text-center' role='alert'>je mag maar op 1 robot stemmen</div>";
+    }
 }

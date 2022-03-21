@@ -40,9 +40,13 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
 
     $("div.checkBot").click(function(event) {
-        $(this).addClass("checked");
+        $(this).toggleClass("checked");
         if ($(this).hasClass("checked")) {
-            $(this).find('img').delete("checkImg");
+            $(this).find('img').replaceWith("<img class='img-fluid' src='../assets/img/check-solid.svg' alt='Logo of a check'>");
+            $(this).find('input').attr("checked", true);
+        } else {
+            $(this).find('img').replaceWith("<img class='img-fluid' src='../assets/img/bot.svg' alt='Logo of a check'>");
+            $(this).find('input').attr("checked", false);
         }
     });
     

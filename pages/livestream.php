@@ -6,7 +6,6 @@
     include_once('../components/head.html');
     include_once('../functions/function.php');
     ?>
-
     <link rel="stylesheet" href="../assets/css/playback.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
@@ -19,6 +18,11 @@
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
+    <?php
+        if (isset($_POST['sendVote'])) {
+            echo voteBot($_POST['voteTeam']);
+        }
+    ?>
 
     <div class="container-fluid my-5">
         <div class="row">
@@ -64,9 +68,9 @@
                                                 </div>
                                             <?php } else {
                                             ?>
-                                                  <div class="col-12">
-                                                      <p>Login om te kunnen chatten</p>
-                                                  </div>          
+                                                <div class="col-12">
+                                                    <p>Login om te kunnen chatten</p>
+                                                </div>
                                             <?php
                                             } ?>
                                         </div>
@@ -94,19 +98,20 @@
                     <h4 class="modal-title custom_align" id="Heading">Stem voor een robot</h4>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="">
+
+                    <form method="post" id="formBot" action="">
                         <div class="row justify-content-evenly">
                             <?php echo getBots(); ?>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-warning btn-lg" style="width: 100%;"><span class="glyphicon glyphicon-ok-sign"></span>Stem nu!</button>
+                    <input type="submit" form="formBot" name="sendVote" class="btn btn-warning btn-lg" style="width: 100%;">
                 </div>
             </div>
             <!-- /.modal-content -->
         </div>
-    <!-- /.modal-dialog -->
+        <!-- /.modal-dialog -->
     </div>
 
     <footer>
@@ -146,7 +151,6 @@
                 $("#modalEdit").modal("hide");
             });
         });
-
     </script>
     <script src="../assets/js/chat.js"></script>
     <script src="../assets/js/function.js"></script>
