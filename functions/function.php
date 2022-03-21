@@ -144,14 +144,13 @@ function eventTimeDescent() {
 
     require_once("database.php");
 
-    $query = "SELECT
-              date
-              FROM `event`
-             ";
-
+    $query = "SELECT    date
+              FROM      `event`
+              WHERE     NOW() <= date;
+    ";
     $results = stmtExec($query);
 
-    foreach($results as $unused => $date) {
+    foreach($results as $date) {
         foreach($date as $typedOutDate) {
             return $typedOutDate; 
         }
