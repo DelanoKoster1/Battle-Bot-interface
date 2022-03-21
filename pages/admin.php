@@ -3,9 +3,9 @@
 include_once('../functions/function.php');
 
 //Check if admin is logged in
-if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
-    header('location: ../components/error.php');
-}
+//if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
+// header('location: ../components/error.php');
+//}
 
 //Global variables
 $conn = connectDB();
@@ -26,6 +26,10 @@ switch (true) {
         $headerTitle = 'Punten toevoegen';
         $content = "../components/admin/points.php";
         break;
+    case isset($_GET['director']);
+        $headerTitle = 'Ressigeur pagina';
+        $content = "../components/admin/director.php";
+        break;
 
     default:
         $headerTitle = 'Event toevoegen';
@@ -34,7 +38,8 @@ switch (true) {
 }
 
 //Post submissions
-function checkEventFields($eventDate, $eventName, $eventOmschrijving) {
+function checkEventFields($eventDate, $eventName, $eventOmschrijving)
+{
     global $error;
 
     if (!$eventDate && empty($eventDate)) {
@@ -107,58 +112,58 @@ if (isset($_POST['event'])) {
     }
 }
 
-if(isset($_GET['points'])) {
+if (isset($_GET['points'])) {
     $teams = array();
 
     //Get all the teams from database
     $sql = "SELECT teamId, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
     $stmt = mysqli_prepare($conn, $sql);
 
-    if(!$stmt) {
+    if (!$stmt) {
         header("location: ../components/error.php");
     }
 
-    if(!mysqli_stmt_execute($stmt)) {
+    if (!mysqli_stmt_execute($stmt)) {
         header("location: ../components/error.php");
     }
 
     mysqli_stmt_bind_result($stmt, $teamId, $teamName);
     mysqli_stmt_store_result($stmt);
-    while(mysqli_stmt_fetch($stmt)) {
+    while (mysqli_stmt_fetch($stmt)) {
         $teams += [$teamId => $teamName];
     }
 }
 
-if(isset($_POST['submitPoints'])) {
+if (isset($_POST['submitPoints'])) {
     $poinsPerTeam = array();
 
     //Get all values from the radiobuttons
-    foreach($_POST as $radioTeamId => $assignedPoints) {
+    foreach ($_POST as $radioTeamId => $assignedPoints) {
         $poinsPerTeam += [$radioTeamId => $assignedPoints];
         $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
         $stmt = mysqli_prepare($conn, $sql);
 
-        if(!$stmt) {
+        if (!$stmt) {
             header("location: ../components/error.php");
         }
 
-        if(!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)){
+        if (!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)) {
             header('location: ../components/error.php');
         }
 
-        if(!mysqli_stmt_execute($stmt)) {
+        if (!mysqli_stmt_execute($stmt)) {
             header('location ../components/error.php');
         }
-        mysqli_stmt_close($stmt);   
+        mysqli_stmt_close($stmt);
     }
 
     mysqli_close($conn);
     $_SESSION['succes'] = 'Punten toegevoegd';
-    
+
     header('location: admin.php?points');
 }
 
-    
+
 ?>
 
 <!DOCTYPE html>
@@ -194,7 +199,12 @@ if(isset($_POST['submitPoints'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?game">Games</a>
+                        </li>
+                        <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?points">Punten toevoegen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?director">Regisseur pagina</a>
                         </li>
                     </ul>
                 </nav>
@@ -208,7 +218,7 @@ if(isset($_POST['submitPoints'])) {
 
                 <?php
                 if (!empty($_SESSION['succes'])) {
-                    ?>
+                ?>
                     <div class="col-md-12 p-0">
                         <div class="alert alert-success text-black fw-bold p-4 rounded-0" role="alert">
                             <ul class="mb-0">
@@ -219,7 +229,7 @@ if(isset($_POST['submitPoints'])) {
                             </ul>
                         </div>
                     </div>
-                    <?php
+                <?php
                 }
 
                 if (!empty($error)) {
@@ -243,8 +253,8 @@ if(isset($_POST['submitPoints'])) {
 
                 <div class="row">
                     <div class="col-md-12">
-                        <?php 
-                            include_once($content);
+                        <?php
+                        include_once($content);
                         ?>
                     </div>
                 </div>
