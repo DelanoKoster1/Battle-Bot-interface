@@ -8,7 +8,7 @@
 </head>
 <body>
 <iframe 
-src="https://player.twitch.tv/?channel=stendenbattlebot&parent=Battle-Bot-interface" 
+src="https://player.twitch.tv/?channel=stendenbattlebot&parent=localhost" 
 frameborder="0" 
 allowfullscreen="true" 
 scrolling="no" 
