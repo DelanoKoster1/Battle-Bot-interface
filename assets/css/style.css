@@ -91,6 +91,11 @@ header .img-fluid.logo {
   color: white;
 }
 
+#events .calendarCountDown {
+  font-weight: bold;
+  color: Black;
+}
+
 #events .calendarTitle {
   color: rgb(211, 187, 187);
   font-weight: bold;

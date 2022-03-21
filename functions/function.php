@@ -38,39 +38,14 @@ function eventTimeDescent() {
 
     $results = stmtExec($query);
 
-    $now = new DateTime();
-
     foreach($results as $unused => $date) {
         foreach($date as $typedOutDate) {
-            $eventDate = new DateTime($typedOutDate);
-
-            if (!empty($eventDate)) {
-
-                $interval = date_diff($now, $eventDate);
-
-                $endDate = date_interval_format($interval,"%a days, %h hours, %i minutes, %s seconds");
-
-                $genericDateDisplay = "";
-
-                $genericDateDisplay .= '<div class="card mx-3 event">';
-                    $genericDateDisplay .= '<div class="d-flex justify-content-left align-items-center">';
-                        $genericDateDisplay .= '<div>';
-                            $genericDateDisplay .= '<span class="calendarDate d-block">25 Maart 2022</span>';
-                            $genericDateDisplay .= '<span class="calendarDate d-block">'.$endDate.'</span>';
-                            $genericDateDisplay .= '<span class="calendarTitle">Testdag</span>';
-                        $genericDateDisplay .= '</div>';
-                    $genericDateDisplay .= '</div>';
-                    $genericDateDisplay .= '<div class="d-flex justify-content-left">';
-                        $genericDateDisplay .= '<span class="calendarInfo mt-4">De officiële testdag van het evenement</span>';
-                    $genericDateDisplay .= '</div>';
-                $genericDateDisplay .= '</div>';
-
-                return $genericDateDisplay;
-
-            } else {
-                return "er zijn momenteel geen evenementen";
-            }
+            return $typedOutDate; 
         }
     }
 
 }
+
+// function getBots() {
+
+// }
