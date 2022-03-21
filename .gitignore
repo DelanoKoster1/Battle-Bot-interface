@@ -86,3 +86,6 @@ $RECYCLE.BIN/
 config.php
 connection.php
 connection.php
+
+websocket/node_modules
+functions/env.php
