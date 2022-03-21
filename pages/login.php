@@ -1,14 +1,12 @@
 <?php
 //Includes
 include_once('../functions/function.php');
+include_once('../functions/database.php');
 
 //Check if user is logged
 if (isset($_SESSION['email'])) {
     header('location: ../components/error.php');
 }
-
-//Call database connection
-$conn = connectDB();
 
 //Define global variable(s)
 $error = array();
@@ -57,47 +55,28 @@ if (isset($_POST['login'])) {
     //Check form data fields
     if (!checkLoginFields($username, $password)) {
         //SQL query to select all from user where the username is ...
-        $query = "SELECT * FROM account WHERE username = ?";
+        $sql = "SELECT id, roleId, username, password, email FROM account WHERE username = ?";
 
-        //Prpeparing SQL Query with database connection
-        $stmt = mysqli_prepare($conn, $query);
-        if (!$stmt) {
-            $_SESSION['error'] = "database_error";
-            header("location: ../components/error.php");
-        }
-
-        //Binding params into ? fields
-        if (!mysqli_stmt_bind_param($stmt, "s", $username)) {
-            $_SESSION['error'] = "database_error";
-            header("location: ../components/error.php");
-        }
-
-        //Executing statement
-        if (!mysqli_stmt_execute($stmt)) {
-            $_SESSION['error'] = "database_error";
-            header("location: ../components/error.php");
-        }
-
-        //Bind the STMT results(sql statement) to variables
-        mysqli_stmt_bind_result($stmt, $ID, $teamID, $role, $username, $password2, $email, $points);
-
-        //Fetch STMT data
-        while (mysqli_stmt_fetch($stmt)) {
-        }
+        //Get results from the database
+        $results = stmtExec($sql, 0, $username);
 
         //Check if no result has been found
-        if (mysqli_stmt_num_rows($stmt) > 0) {
+        if (is_array($results) && count($results) > 0) {
+            //Set password value
+            $dbPassword = $results['password'][0];
+
             //Check password
-            if (password_verify($password, $password2)) {
+            if (password_verify($password, $dbPassword)) {
+                //Set other values
+                $email = $results['email'][0];
+                $role = $results['roleId'][0];
+                $id = $results['id'][0];
+                
                 //Put value's in session
                 $_SESSION['username'] = $username;
                 $_SESSION['email'] = $email;
                 $_SESSION['role'] = $role;
-                $_SESSION['id'] = $ID;
-
-                //Close the statement and connection
-                mysqli_stmt_close($stmt);
-                mysqli_close($conn);
+                $_SESSION['id'] = $id;
 
                 header('location: ../index.php');
                 exit();
@@ -166,54 +145,32 @@ function checkRegisterFields(string $username, string $email, string $password, 
  * @param   string          $username  Filled in username
  * @return  string/boolean  $error  False or error message
  */
-function checkUserInDataBase(mysqli $conn, string $username, string $email) {
+function checkUserInDataBase(string $username, string $email) {
     //Call global variable(s)
     global $error;
 
     //SQL Query for selecting all users where an email is in DB
-    $query = "SELECT username, email FROM account WHERE username = ? OR email = ?";
+    $sql = "SELECT username, email FROM account WHERE username = ? OR email = ?";
 
-    //Prpeparing SQL Query with database connection
-    $stmt = mysqli_prepare($conn, $query);
-    if (!$stmt) {
-        $_SESSION['error'] = "database_error";
-        header("location: ../components/error.php");
-    }
+    $results = stmtExec($sql, 0, $username, $email);
 
-    //Binding params into ? fields
-    if (!mysqli_stmt_bind_param($stmt, "ss", $username, $email)) {
-        $_SESSION['error'] = "database_error";
-        header("location: ../components/error.php");
-    }
+    //Check if a result has been found
+    if (is_array($results) && count($results) > 0) {
+        for($i = 0; $i < count($results); $i++) {
+            $email = $results['email'][0];
+            $username = $results['username'][0];
 
-    //Executing statement
-    if (!mysqli_stmt_execute($stmt)) {
-        $_SESSION['error'] = "database_error";
-        header("location: ../components/error.php");
-    };
-
-    //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $username, $email);
-
-    //Store STMT data
-    mysqli_stmt_store_result($stmt);
-
-    //Check if a result has been found with number of rows
-    if (mysqli_stmt_num_rows($stmt) > 0) {
-        while(mysqli_stmt_fetch($stmt)) {
             if($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
                 $error[] = 'Er bestaat al een account met deze email';
             }
             if($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
             }
-        }
-        mysqli_stmt_close($stmt);      
+        }  
         foreach($error as $errorMsg) {
             return $errorMsg;
         }
     } else {
-        mysqli_stmt_close($stmt);
         return false;
     }
 }
@@ -228,7 +185,7 @@ if (isset($_POST['register'])) {
 
     //Check form data fields
     if (!checkRegisterFields($username, $email, $password, $password2)) {
-        if (!checkUserInDataBase($conn, $username, $email)) {
+        if (!checkUserInDataBase($username, $email)) {
             //Hash the password before putting in database
             $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -237,25 +194,10 @@ if (isset($_POST['register'])) {
             $teamid = 0;
 
             //SQL Query for inserting into user table
-            $query = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
+            $sql = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
 
-            //Prpeparing SQL Query with database connection
-            $stmt = mysqli_prepare($conn, $query);
-            if (!$stmt) {
-                $_SESSION['error'] = "database_error";
-                header("location: ../components/error.php");
-            }
-
-            //Binding params into ? fields
-            if (!mysqli_stmt_bind_param($stmt, "sssss", $teamid, $role, $username, $password, $email)) {
-                $_SESSION['error'] = "database_error";
-                header("location: ../components/error.php");
-            }
-
-            //Executing statement
-            if (!mysqli_stmt_execute($stmt)) {
-                mysqli_stmt_error($stmt);
-                $_SESSION['error'] = "database_error";
+            if (!stmtExec($sql, 0, $teamid, $role, $username, $password, $email)) {
+                $_SESSION['error'] = "Cannot create account";
                 header("location: ../components/error.php");
             }
 
@@ -263,10 +205,6 @@ if (isset($_POST['register'])) {
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
-
-            //Close the statement and connection
-            mysqli_stmt_close($stmt);
-            mysqli_close($conn);
 
             //Send user to index.php
             header('location: ../index.php');
