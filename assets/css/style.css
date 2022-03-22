@@ -55,6 +55,11 @@ header .menu, #open-btn {
 #bots .card {
   margin: 0 1.5rem;
 }
+#bots .no-bots {
+  background-color: #707070;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
 #bots .card:first-child {
   margin-left: 0rem;
 }
@@ -91,11 +96,14 @@ header .menu, #open-btn {
   cursor: default;
 }
 
-.eventsCard:hover {
-  transform: scale(1.1);
-  transition: ease-in-out 0.4s;
-  
+@media only screen and (min-width: 767px) {
+  .eventsCard:hover {
+    transform: scale(1.1);
+    transition: ease-in-out 0.4s;
+    
+  }
 }
+
 .calendarDate {
   font-size: 15px;
 }

@@ -182,7 +182,10 @@
         </div>
     <!-- /.modal-dialog -->
     </div>
-
+    <div class="text-center">
+        <h3>Doet de livestream het niet?</h3>
+        <a href="https://www.twitch.tv/stendenbattlebot"><h6>Klik hier!</h6></a>
+    </div>
     <footer>
         <?php include_once('../components/footer.php') ?>
     </footer>

@@ -29,13 +29,13 @@ function checkLoginFields(String $username, String $password) {
     if (!$username && empty($username)) {
         $error[] = 'Gebruikersnaam is niet correct!';
     }
-    if (strlen($username) > 255) {
+    if (strlen($username) > 50) {
         $error[] = 'Gebruikersnaam is te lang!';
     }
     if (!$password && empty($password)) {
         $error[] = 'Wachtwoord mag niet leeg zijn!';
     }
-    if (strlen($password) > 255) {
+    if (strlen($password) > 200) {
         $error[] = 'Wachtwoord is te lang!';
     }
 
@@ -121,10 +121,10 @@ function checkRegisterFields(string $username, string $email, string $password, 
     if ($password != $password2) {
         $error[] = 'Wachtwoorden komen niet overeen!';
     }
-    if (strlen($email) > 255) {
+    if (strlen($email) > 200) {
         $error[] = 'E-mail is te lang!';
     }
-    if (strlen($username) > 255) {
+    if (strlen($username) > 50) {
         $error[] = 'Gebruikersnaam is te lang!';
     }
     if (strlen($password) > 255) {
@@ -201,12 +201,17 @@ if (isset($_POST['register'])) {
                 header("location: ../components/error.php");
             }
 
+            $lastInsertedID = mysqli_insert_id($conn);
+
             // log user in
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
-            $_SESSION['id'] = mysqli_insert_id($conn);
-           
+            $_SESSION['id'] = $lastInsertedID;
+
+            //Close the statement and connection
+            mysqli_stmt_close($stmt);
+            mysqli_close($conn);
 
             //Send user to index.php
             header('location: ../index.php');
@@ -270,7 +275,7 @@ if (isset($_POST['register'])) {
                         <h2 class="form-heading mt-3">Inloggen</h2>
                         <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
                             <div class="form-group">
-                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username">
+                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['login'])) {echo htmlentities($_POST['username']); } ?>">
                                 <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password">
                                 <input class="btn btn-danger mt-3" type="submit" name="login" value="Inloggen">
                             </div>
@@ -305,8 +310,8 @@ if (isset($_POST['register'])) {
                         <h2 class="form-heading mt-3">Registeren</h2>
                         <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
                             <div class="form-group">
-                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username">
-                                <input class="form-control mt-3" placeholder="E-mail" type="email" name="email">
+                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['username']); } ?>">
+                                <input class="form-control mt-3" placeholder="E-mail" type="email" name="email" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['email']); } ?>">
                                 <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password1">
                                 <input class="form-control mt-3" placeholder="Wachtwoord bevestigen" type="password" name="password2">
                                 <input class="btn btn-danger mt-3" type="submit" name="register" value="Registreren">

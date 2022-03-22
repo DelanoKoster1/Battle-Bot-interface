@@ -44,21 +44,36 @@
                     </div>
                     <div class="col-12 d-flex justify-content-between">
                         <?php
-                        $sql = "SELECT id, name, imagePath FROM bot";
-                        $dbResults = stmtExec($sql);
-                        $ids = $dbResults["id"];
-                        for($i = 0; $i < count($ids); $i++) {
-                            $id = $ids[$i];
-                            $imgPath = $dbResults["imagePath"][$i];
-                            if ($imgPath === "image.png") $imgPath = "assets/img/bots/BB_sawblaze-beauty.jpg";
-                            $name = $dbResults["name"][$i];
-                            echo "<div class='card'>
-                                        <img src='$imgPath' class='img-fluid card-img-top' alt='$name'>
-                                        <div class='card-body'>
-                                            <h5 class='card-title text-center'><a href='pages/robots.php?botName=$name' class='stretched-link'>$name</a></h5>
+                            $sql = "SELECT id, name, imagePath FROM bot limit 5";
+                            $dbResults = stmtExec($sql);
+                            if(is_array($dbResults)) {
+                                $ids = $dbResults["id"];
+                                for($i = 0; $i < count($ids); $i++) {
+                                    $id = $ids[$i];
+                                    $imgPath = $dbResults["imagePath"][$i];
+
+                                    if ($imgPath === "image.png") $imgPath = "assets/img/bots/BB_sawblaze-beauty.jpg";
+
+                                    $name = $dbResults["name"][$i];
+
+                                    echo "<div class='card'>
+                                                <img src='$imgPath' class='img-fluid card-img-top' alt='$name'>
+                                                <div class='card-body'>
+                                                    <h5 class='card-title text-center'><a href='pages/robots.php?botName=$name' class='stretched-link'>$name</a></h5>
+                                                </div>
+                                            </div>";
+                                }
+                            } else {
+                                echo '
+                                <div class="col-sm-12 mb-4">
+                                    <div class="card no-bots">
+                                        <div class="card-body text-center">
+                                            <span class="card-title d-block text-white">Nog geen robots beschikbaar</span>
                                         </div>
-                                    </div>";
-                        }
+                                    </div>
+                                </div>
+                                ';
+                            }
                         ?>
                     </div>
                 </div>
