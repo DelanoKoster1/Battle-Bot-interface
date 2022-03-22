@@ -68,6 +68,13 @@ CREATE TABLE IF NOT EXISTS `event` (
     CONSTRAINT pk_event PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS `streamhistory` (
+    id INT NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
+    weburl VARCHAR(255) NOT NULL,
+    CONSTRAINT pk_history PRIMARY KEY (id)
+);
+
 CREATE TABLE IF NOT EXISTS `team-event` (
     eventId INT NOT NULL,
     teamId INT NOT NULL,
@@ -91,3 +98,5 @@ INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES (1,
 INSERT INTO `event` (id, name, date, description) VALUES (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!");
 
 INSERT INTO `team-event` (eventId, teamId) VALUES (1, 1);
+
+INSERT INTO `streamhistory` (`id`, `name`, `weburl`) VALUES (NULL, 'Stream van maandag 11 januari', 'http://localhost/Project%20Battle%20Bot/Battle-Bot-interface/pages/livestream.php');
