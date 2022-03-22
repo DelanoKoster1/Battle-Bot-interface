@@ -172,3 +172,143 @@ function getLivestream() {
 // function getBots() {
 
 // }
+
+/**
+ * @param: $arr: an array with bind param values
+ * @return: an array with specific references
+ * this function makes from merged to seperate and individual values for the bind param function
+ */
+function makeValuesReferenced($arr)
+{
+    $refs = array();
+    foreach ($arr as $key => $value)
+    $refs[$key] = &$arr[$key];
+
+    return $refs;
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
+function checkIfFile($file)
+{
+    return is_uploaded_file($_FILES[$file]["tmp_name"]);
+}
+
+/**
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
+
+function checkFileSize($fileName)
+{
+    if ($_FILES[$fileName]["size"] <= 5000000) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @param: $fileName: returns file name
+ * @param: $mimeArray: returns array with MIME types
+ * @return: true or false
+ */
+
+function checkFileType($fileName, $mimeArray)
+{
+    $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES[$fileName]["tmp_name"]);
+    if (in_array($fileInfo, $mimeArray)) {
+        if (!$_FILES[$fileName]["error"] > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @param: $issueId: returns id of issue
+ * @param: $path: returns file path
+ * @return: true or false
+ */
+
+function makeFolder($botId, $path)
+{
+    $directory = $path . $botId;
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777);
+    }
+
+    return true;
+}
+
+/**
+ * @param: $directory: returns directory to file
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
+
+function checkFileExist($directory, $fileName)
+{
+    return file_exists($directory . $fileName);
+}
+
+/**
+ * @param: $directory: returns directory to file
+ * @return: true
+ */
+
+function deleteFile($directory)
+{
+    $files = glob($directory . '*'); // get all file names
+    foreach ($files as $file) { // iterate files
+        if (is_file($file)) {
+            unlink($file); // delete file
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param: $db: returns mysqli object
+ * @param: $file: returns file object with properties
+ * @param: $tableName: returns name of the selected table
+ * @param: $recordName: returns name of selected record
+ * @param: $relationId string: name of relation
+ * @param: $Id int: relation ID
+ * @param: $directory: returns directory
+ * @return: true or false
+ */
+
+function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $directory)
+{
+    $type = "";
+    $params = array();
+
+    $query = "UPDATE " . $tableName;
+
+    $query .= " SET " . $recordName . " = ? ";
+    $type .= "s";
+    array_push($params,  $directory . $_FILES[$file]["name"]);
+
+    $query .= "WHERE " . $relationId . " = ?";
+    $type .= "i";
+    array_push($params,  $Id);
+
+
+    $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
+    call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
+
+    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())) . $directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
+        mysqli_stmt_close($stmt);
+        return true;
+    } else {
+        return false;
+    }
+}
