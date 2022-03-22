@@ -182,9 +182,35 @@ function getBots() {
 }
 
 function voteBot($votedBot) {
-    if (count($votedBot) <= 1) {
-        return "<div class='alert alert-success text-center' role='alert'>ja je hebt goed gestemt</div>";
-    } else {
-        return "<div class='alert alert-danger text-center' role='alert'>je mag maar op 1 robot stemmen</div>";
+    $conn = connectDB();
+    $username = $_SESSION['username'];
+
+    if(isset($_POST['sendVote'])) {
+
+        $vote = $_POST['voteTeam'];
+
+        if($vote == $_POST['voteTeam']) {
+            $sql = "UPDATE account SET points = points + 50 WHERE username = ?"; 
+        } else {
+            $sql = "UPDATE account SET points = points - 100 WHERE username = ?";
+        }
+        
+        $stmt = mysqli_prepare($conn, $sql);
+        if(!$stmt) {
+            header('location: ../components/error.php');
+        }
+        
+        if(!mysqli_stmt_bind_param($stmt, 's', $username)) {
+            header('location: ../components/error.php');
+        }
+        
+        if(!mysqli_stmt_execute($stmt)) {
+            header('location: ../components/error.php');
+        }
+        
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
     }
+    return "<div class='alert alert-success text-center' role='alert'>ja je hebt goed gestemt</div>";      
+
 }

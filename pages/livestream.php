@@ -1,46 +1,10 @@
-<?php include_once('../functions/function.php'); 
-$conn = connectDB();
-
-$username = $_SESSION['username'];
-if(isset($_POST['sendVote'])) {
-    if(!$vote = $_POST['voteTeam']) {
-        return;
-    }
-}
-
-if($vote == $_POST['voteTeam']) {
-    $sql = "UPDATE account SET points = points + 50 WHERE username = ?"; 
-} else {
-    $sql = "UPDATE account SET points = points - 100 WHERE username = ?";
-}
-
-$stmt = mysqli_prepare($conn, $sql);
-if(!$stmt) {
-    header('location: ../components/error.php');
-}
-
-if(!mysqli_stmt_bind_param($stmt, 's', $username)) {
-    header('location: ../components/error.php');
-}
-
-if(!mysqli_stmt_execute($stmt)) {
-    header('location: ../components/error.php');
-}
-
-mysqli_stmt_close($stmt);
-mysqli_close($conn);
-
-
-?>
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <?php
     include_once('../components/head.html');
+    include_once('../functions/function.php'); 
     ?>
     <link rel="stylesheet" href="../assets/css/playback.css">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -56,8 +20,21 @@ mysqli_close($conn);
     </section>
     <?php
         if (isset($_POST['sendVote'])) {
-            echo voteBot($_POST['voteTeam']);
-        }
+            if(isset($_POST['voteTeam'])) {
+                switch($_POST['voteTeam']) {      
+                    case count($_POST['voteTeam']) > 1:
+                        echo "<div class='alert alert-danger text-center' role='alert'>Je mag maar op 1 robot stemmen</div>"; 
+                        break;
+    
+                    default:
+                        voteBot($_POST['voteTeam']);
+                        echo "<div class='alert alert-success text-center' role='alert'>Je stem is ingezonden</div>";
+                        break;
+                }
+            } else {
+                echo "<div class='alert alert-danger text-center' role='alert'>Selecteer een robot</div>"; 
+            }
+        } 
     ?>
 
     <div class="container-fluid my-5">
