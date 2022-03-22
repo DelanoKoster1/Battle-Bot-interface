@@ -3,9 +3,9 @@ class Bots {
         this.BotList = {};
     }
 
-    saveBot(id, wsKey, client, status = "") {
+    saveBot(id, wsKey, client) {
         if(this.getBotByWsKey(wsKey) == null){
-            this.BotList[wsKey] = {"status": status, "id": id ,"client": client, "connAttempt": 2};
+            this.BotList[wsKey] = {"id": id, "action": "","status": "", "client": client, "connAttempt": 2};
             return true;   
         }else{
             return false;
@@ -31,21 +31,13 @@ class Bots {
         this.BotList[wsKey].connAttempt = attempts;
     }
 
+    setAction(wsKey, action){
+        this.BotList[wsKey].status = action;
+    }
+
     removeBot(wsKey){
         delete this.BotList[wsKey];
     }
-    // getBotById(id) {
-    //     return this.BotList[id];
-    // }
-
-    // getBotByWsKey(wsKey){
-    //     let botsList = this.getAllBots()
-    //     Object.keys(botsList).forEach(id => {
-    //         if(botsList[id].wsKey == wsKey){
-    //             return botsList[id];
-    //         }
-    //     });
-    // }
 
     getAllBots() {
         return this.BotList;

@@ -12,7 +12,7 @@ ws.addEventListener("open", () => {
 
     ws.send(JSON.stringify({
         "action": "login",
-        "role": "admin",
+        "key": "111",
         "id": "admin1"
     }));
 
@@ -24,7 +24,7 @@ ws.addEventListener("open", () => {
         }else{
             let body = {
                 "for": "all",
-                "action": "start_game",
+                "action": "prepare",
                 "game": selectedGame
             }
         
