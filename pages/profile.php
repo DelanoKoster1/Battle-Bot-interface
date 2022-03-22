@@ -20,10 +20,13 @@ if (isset($_POST['save'])) {
                     ";
                     stmtExec($query, 0, $username, $email, $_SESSION['id']);
                 }
-            }
+            } 
+        } else {
+            $error[] = 'De ingevulde gebruikersnaam is ongeldig!';
         }
+    } else {
+        $error[] = 'Het ingevulde e-mailadres is ongeldig!';
     }
-
 
     if ($curPassword = filter_input(INPUT_POST, 'curpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if ($newPassword = filter_input(INPUT_POST, 'newpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
@@ -37,11 +40,17 @@ if (isset($_POST['save'])) {
                             ";
                         stmtExec($query, 0, $hashPassword, $_SESSION['id']);
                     } else {
-                        $error[] = 'De ingevulde wachtwoorden komen overeen.';
+                        $error[] = 'Het huidige en nieuwe wachtwoord komen overeen!';
                     }
                 }
+            } else {
+                $error[] = 'Het herhaal wachtwoord is ongeldig!';
             }
+        } else {
+            $error[] = 'Het nieuwe wachtwoord is ongeldig!';
         }
+    } else {
+        $error[] = 'Het huidige wachtwoord is ongeldig!';
     }
 }
 
@@ -78,7 +87,7 @@ $results = getProfileInfo();
                         if (isset($_POST['save']) && !empty($error)) {
                             foreach ($error as $errorMsg) { ?>
                                 <div class="col-md-12 p-0">
-                                    <div class="alert alert-danger text-black fw-bold p-4 mb-0 rounded" role="alert">
+                                    <div class="alert alert-danger text-black fw-bold p-4 mb-3 rounded" role="alert">
                                         <?php echo $errorMsg; ?>
                                     </div>
                                 </div>
