@@ -1,7 +1,6 @@
 <?php
 //Includes
 include_once('../functions/function.php');
-include_once('../functions/database.php');
 
 // Check if admin is logged in
 if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {

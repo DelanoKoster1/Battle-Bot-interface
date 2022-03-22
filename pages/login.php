@@ -1,7 +1,6 @@
 <?php
 //Includes
 include_once('../functions/function.php');
-include_once('../functions/database.php');
 
 //Check if user is logged
 if (isset($_SESSION['email'])) {

@@ -1,6 +1,5 @@
 <?php
 include_once('../functions/function.php');
-require_once("../functions/database.php");
 
 global $error;
 

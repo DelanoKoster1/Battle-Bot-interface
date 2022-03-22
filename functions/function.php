@@ -1,11 +1,24 @@
 <?php
 session_start();
 
+// $type:   1 for print_r(), 0 or empty for var_dump()
+function debug($var, int $type = 0)
+{
+    echo "<pre>";
+    if ($type) {
+        print_r($var);
+    } else {
+        var_dump($var);
+    }
+    echo "</pre>";
+}
+
 /**
  * Function to connect to Database
  * 
  */
-function connectDB() {
+function connectDB()
+{
     //Require ENV
     require_once('env.php');
 
@@ -21,11 +34,231 @@ function connectDB() {
     return $conn;
 }
 
+function fail(?string $code = NULL, ?string $info = NULL)
+{
+    switch ($code) {
+            // Database Fail: Common
+        case 'DB00':
+            echo "Statement Preparation Error! $info";
+            break;
+        case 'DB01':
+            echo "Statement Execution Error! $info";
+            break;
+        case 'DB02':
+            echo "Cannot bind the result to the variables. $info";
+            break;
+        case 'DB03':
+            echo "Could not connect to the database. $info";
+            break;
+        case 'DB04':
+            echo "Could not connect to MySQL. $info";
+            break;
+            // Database Fail: With Binding
+        case 'DB10':
+            echo "No information variables are given while this is needed!";
+            break;
+        case 'DB11':
+            echo "You have to give more information variables for this statement! You need to have $info variables.";
+            break;
+        case 'DB12':
+            echo "You have to set chars for each bind parameter to execute this statement! \nChoose between 's' (string), 'i' (integer), 'd' (double) or 'b' (blob).";
+            break;
+        case 'DB13':
+            echo "You have to give more / less chars for this statement! You need to have $info chars.";
+            break;
+        case 'DB14':
+            echo "Cannot bind the parameters for this statement. $info";
+            break;
+        case 'DB15':
+            echo "You have given invalid chars as bind chars! You only can choose between: 's' (string), 'i' (integer), 'd' (double) or 'b' (blob).";
+            break;
+        default:
+            echo "Something went wrong";
+            break;
+    }
+}
+
+
+/*
+ *                         
+ * @param string $sql: Give the sql query to execute                                                                                    
+ * @param int $failCode: Use a code for fail messages, You can easily create 1 above                           
+ * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                                                                                                 
+ *                                                                                                   
+ */
+
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
+{
+
+    //Require env.php
+    require_once('env.php');
+
+    if ($conn = connectDB()) {
+        // $query = "SHOW DATABASES LIKE '".DATABASE."'";
+        // $result = mysqli_query($conn, $query);
+        // $row = mysqli_fetch_row($result);
+
+        // Check if the statement can be prepared
+        if ($stmt = mysqli_prepare($conn, $sql)) {
+
+            // If true
+            // Check if the statement needs to bind
+            if (substr_count($sql, "?")) {
+
+                // Check if the given params for binding in the query is the same as
+                // The total binding places
+                if (count($bindParamVars) == substr_count($sql, "?")) {
+                    $paramChars = "";
+                    foreach ($bindParamVars as $var) {
+                        if (is_int($var)) {
+                            $paramChars .= "i";
+                        } else if (is_string($var)) {
+                            $paramChars .= "s";
+                        } else if (is_double($var)) {
+                            $paramChars .= "d";
+                        } else {
+                            $paramChars .= "b";
+                        }
+                    }
+
+                    if (!mysqli_stmt_bind_param($stmt, $paramChars, ...$bindParamVars)) {
+                        fail("DB" . $failCode . "4", mysqli_error($conn));
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+            if (mysqli_stmt_execute($stmt)) {
+                mysqli_stmt_store_result($stmt);
+                if (mysqli_stmt_num_rows($stmt) > 0) {
+
+                    $sql = str_replace("DISTINCT ", "", $sql);
+                    $totalFromKey = substr_count($sql, "FROM");
+                    $totalEndKey = substr_count($sql, ")");
+                    $totalOpenKey = substr_count($sql, "(");
+
+                    // Check FROM
+                    for ($i = 0; $i < $totalFromKey; $i++) {
+                        if ($i === 0) {
+                            $posFromKey[$i] = strpos($sql, "FROM");
+                        } else {
+                            $posFromKey[$i] = strpos($sql, "FROM", $posFromKey[$i - 1] + 1);
+                            if ($i - 1 >= 0 && $posFromKey[$i] == $posFromKey[$i - 1]) {
+                                $posFromKey[$i] = strpos($sql, "FROM", $posFromKey[$i - 1] + 1);
+                            }
+                        }
+                    }
+
+                    // Check nested query open sign
+                    for ($i = 0; $i < $totalOpenKey; $i++) {
+                        if ($i === 0) {
+                            $posOpenKey[$i] = strpos($sql, "(");
+                        } else {
+                            $posOpenKey[$i] = strpos($sql, "(", $posOpenKey[$i - 1] + 1);
+                            if ($i - 1 >= 0 && $posOpenKey[$i] == $posOpenKey[$i - 1]) {
+                                $posOpenKey[$i] = strpos($sql, "(", $posOpenKey[$i - 1] + 1);
+                            }
+                        }
+                    }
+
+                    // Check nested query end sign
+                    for ($i = 0; $i < $totalEndKey; $i++) {
+                        if ($i === 0) {
+                            $posEndKey[$i] = strpos($sql, ")");
+                        } else {
+                            $posEndKey[$i] = strpos($sql, ")", $posEndKey[$i - 1] + 1);
+                            if ($i - 1 >= 0 && $posEndKey[$i] == $posEndKey[$i - 1]) {
+                                $posEndKey[$i] = strpos($sql, ")", $posEndKey[$i - 1] + 1);
+                            }
+                        }
+                    }
+
+                    // Get Right positions in nested queries and form for array values
+                    for ($k = 0; $k < count($posFromKey); $k++) {
+                        $posFrom = $posFromKey[$k];
+                        if (!empty($posEndKey) && !empty($posOpenKey)) {
+
+                            if ($posOpenKey[0] > $posFromKey[0]) {
+                                goto finish;
+                            }
+
+                            for ($i = 0; $i < count($posOpenKey); $i++) {
+                                $posOpen = $posOpenKey[$i];
+                                $posEnd = $posEndKey[$i];
+
+                                if ($posFrom > $posEnd && $posEnd > $posOpen) {
+                                    if ($i + 1 < $totalOpenKey && $posOpenKey[$i + 1] > $posFrom && $posEndKey[$i + 1] > $posOpenKey[$i + 1]) {
+                                        goto finish;
+                                    } else if ($i + 1 == $totalOpenKey) {
+                                        goto finish;
+                                    }
+                                } else {
+                                    $posFrom = 0;
+                                }
+                            }
+                        }
+                    }
+                    finish:
+                    if ($posFrom != 0) {
+                        $selectResults = substr($sql, 7, $posFrom - 8);
+                    } else {
+                        $selectResults = substr($sql, 7);
+                    }
+
+                    $selectResults = explode(",", $selectResults);
+
+                    for ($i = 0; $i < count($selectResults); $i++) {
+                        if (str_contains($selectResults[$i], " AS ")) {
+                            $selectResults[$i] = substr($selectResults[$i], strpos($selectResults[$i], " AS ") + 4);
+                        }
+                        $selectResults[$i] = str_replace('\s', '', $selectResults[$i]);
+                        $selectResults[$i] = trim($selectResults[$i]);
+                        $bindResults[] = $selectResults[$i];
+                    }
+
+                    if (mysqli_stmt_bind_result($stmt, ...$bindResults)) {
+                        $i = 0;
+                        while (mysqli_stmt_fetch($stmt)) {
+                            $j = 0;
+                            foreach ($bindResults as $result) {
+                                $results[$selectResults[$j]][] = $result;
+                                $j++;
+                            }
+                            $i++;
+                        }
+                        mysqli_stmt_close($stmt);
+                        return $results;
+                    } else {
+                        fail("DB" . $failCode . "2", mysqli_error($conn));
+                        return false;
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                fail("DB" . $failCode . "1", mysqli_error($conn));
+                return false;
+            }
+        } else {
+            fail("DB00", mysqli_error($conn));
+            echo $sql;
+            return false;
+        }
+        mysqli_close($conn);
+    } else {
+        fail("DB04", mysqli_error($conn));
+        return false;
+    }
+}
+
 /**
  * Function to include header with correct map structure
  * 
  */
-function includeHeader(String $sort) {
+function includeHeader(String $sort)
+{
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');
@@ -38,7 +271,8 @@ function includeHeader(String $sort) {
  * Function to check if date is valid
  * 
  */
-function checkValidDate(String $date) {
+function checkValidDate(String $date)
+{
     $today = date('Y-m-d\TH:i');
 
     //Check if filled in date is older then today.
@@ -47,7 +281,7 @@ function checkValidDate(String $date) {
     }
 
     //Check if date format is correct
-    if (preg_match("/^(000[1-9]|00[1-9]\d|0[1-9]\d\d|100\d|10[1-9]\d|1[1-9]\d{2}|[2-9]\d{3}|[1-9]\d{4}|1\d{5}|2[0-6]\d{4}|27[0-4]\d{3}|275[0-6]\d{2}|2757[0-5]\d|275760)-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T(0\d|1\d|2[0-4]):(0\d|[1-5]\d)(?::(0\d|[1-5]\d))?(?:.(00\d|0[1-9]\d|[1-9]\d{2}))?$/",$date)) {
+    if (preg_match("/^(000[1-9]|00[1-9]\d|0[1-9]\d\d|100\d|10[1-9]\d|1[1-9]\d{2}|[2-9]\d{3}|[1-9]\d{4}|1\d{5}|2[0-6]\d{4}|27[0-4]\d{3}|275[0-6]\d{2}|2757[0-5]\d|275760)-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])T(0\d|1\d|2[0-4]):(0\d|[1-5]\d)(?::(0\d|[1-5]\d))?(?:.(00\d|0[1-9]\d|[1-9]\d{2}))?$/", $date)) {
         return true;
     } else {
         return false;
@@ -58,8 +292,9 @@ function checkValidDate(String $date) {
  * Function to format a date
  * 
  */
-function formatdate(string $date) : string {
-    switch(date("F", strtotime($date))) {
+function formatdate(string $date): string
+{
+    switch (date("F", strtotime($date))) {
         case "January":
             $month = "\\J\\a\\n\\u\\a\\r\\i";
             break;
@@ -95,9 +330,8 @@ function formatdate(string $date) : string {
  * Function to show events as HTML
  * 
  */
-function showEvents() {
-    require_once('database.php');
-
+function showEvents()
+{
     $query = "SELECT id, name, date, description
               FROM event 
               WHERE date > now()
@@ -109,18 +343,18 @@ function showEvents() {
     if (!empty($eventResults["id"])) {
         $ids = $eventResults["id"];
 
-        for($i = 0; $i < count($ids); $i++) {
+        for ($i = 0; $i < count($ids); $i++) {
             $name = $eventResults["name"][$i];
             $eventDate = $eventResults["date"][$i];
             $description = $eventResults["description"][$i];
-    
+
             echo '
             <div class="col-sm-3 mb-4">
                 <div class="card eventsCard">
                     <div class="card-body">
-                        <span class="calendarDate d-block text-lowercase">'. formatdate($eventDate) .'</span>
-                        <span class="calendarTitle d-block text-capitalize">'. $name .'</span>
-                        <span class="calendarInfo mt-4 d-block">'. $description .'</span>
+                        <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                        <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
+                        <span class="calendarInfo mt-4 d-block">' . $description . '</span>
                     </div>
                 </div>
             </div>
@@ -140,26 +374,24 @@ function showEvents() {
 }
 
 //function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
-function eventTimeDescent() {
-
-    require_once("database.php");
-
+function eventTimeDescent()
+{
     $query = "SELECT    date
               FROM      `event`
               WHERE     NOW() <= date;
     ";
     $results = stmtExec($query);
 
-    foreach($results as $date) {
-        foreach($date as $typedOutDate) {
-            return $typedOutDate; 
+    foreach ($results as $date) {
+        foreach ($date as $typedOutDate) {
+            return $typedOutDate;
         }
     }
-
 }
 
-function getLivestream() {
-        return '
+function getLivestream()
+{
+    return '
             <iframe
             id="ytplayer"
             type="text/html"

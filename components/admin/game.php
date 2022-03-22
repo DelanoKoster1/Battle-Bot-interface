@@ -5,7 +5,6 @@
     <?php
     include_once('../components/head.html');
     include_once('../functions/function.php');
-    include_once('../functions/database.php');
     ?>
 
     <link rel="stylesheet" href="../assets/css/style.css">
