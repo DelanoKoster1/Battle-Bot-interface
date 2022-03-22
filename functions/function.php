@@ -611,6 +611,20 @@ function getProfileInfo()
                         password
                 FROM    `account`
                 WHERE   id = ?
-";
+            ";
     return stmtExec($query, 0, $_SESSION['id']);
+}
+function getBots()
+{
+   $query = " SELECT   name
+               FROM     bot 
+             ";
+
+    $results = stmtExec($query);
+
+    foreach ($results as $botArray) {
+        foreach ($botArray as $bot) {
+            return $bot;
+        }
+    }
 }
