@@ -9,7 +9,6 @@ header('location: ../components/error.php');
 }
 
 //Global variables
-$conn = connectDB();
 $today = date('Y-m-d\TH:i');
 $error = array();
 
