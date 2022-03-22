@@ -24,6 +24,9 @@
             <li class="nav-item">
               <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/livestream.php' : 'pages/livestream.php' ?>">Livestream</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/streamhistory.php' : 'pages/streamhistory.php' ?>">Geschiedenis</a>
+            </li>
             <?php if (!isset($_SESSION['email'])) { ?>
               <li class="nav-item">
                 <a class="nav-link text-danger" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/login.php' : 'pages/login.php' ?>">Login / Registeren</a>
@@ -84,6 +87,11 @@
             <li class="menu-item">
               <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/livestream.php' : 'pages/livestream.php' ?>">
                 <span>Livestream</span>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/streamhistory.php' : 'pages/streamhistory.php' ?>">
+                <span>Geschiedenis</span>
               </a>
             </li>
             <?php if (!isset($_SESSION['email'])) { ?>
