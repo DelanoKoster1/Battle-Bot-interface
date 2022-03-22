@@ -401,6 +401,19 @@ function getLivestream()
             ';
 }
 
-// function getBots() {
+function getBots() {
 
-// }
+    require_once('database.php');
+
+    $query = " SELECT   name
+               FROM     bot 
+             ";
+
+    $results = stmtExec($query);
+
+    foreach ($results as $botArray) {
+        foreach ($botArray as $bot) {
+            return $bot;
+        }
+    }
+}
