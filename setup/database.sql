@@ -99,4 +99,4 @@ INSERT INTO `event` (id, name, date, description) VALUES (1, "Main Event", "2022
 
 INSERT INTO `team-event` (eventId, teamId) VALUES (1, 1);
 
-INSERT INTO `streamhistory` (`id`, `name`, `weburl`) VALUES (NULL, 'Stream van maandag 11 januari', 'http://localhost/Project%20Battle%20Bot/Battle-Bot-interface/pages/livestream.php');
+INSERT INTO `streamhistory` (`id`, `name`, `weburl`) VALUES (NULL, 'Stream van maandag 11 januari', 'Project Battle Bot/Battle-Bot-interface/assets/video/Purple_Disco_Machine,_Sophie_and_the_Giants_-_In_The_Dark.mp4');
