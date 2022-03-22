@@ -39,7 +39,7 @@ switch (true) {
 }
 
 //Post submissions
-function checkEventFields($eventDate, $eventName, $eventOmschrijving, $eventType) {
+function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
     global $error;
 
     if (!$eventDate && empty($eventDate)) {
@@ -62,7 +62,7 @@ function checkEventFields($eventDate, $eventName, $eventOmschrijving, $eventType
         }
     }
 
-    if (!$eventOmschrijving && empty($eventOmschrijving)) {
+    if (!$eventDescription && empty($eventDescription)) {
         $error[] = 'Event omschrijving mag niet leeg zijn!';
     }
     if (strlen($eventName) > 255) {
@@ -88,7 +88,7 @@ if (isset($_POST['event'])) {
 
     if (!checkEventFields($eventDate, $eventName, $eventDescription, $eventType)) {
         //SQL Query for inserting into user table
-        $query = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
+        $sql = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
 
         if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
             $_SESSION['error'] = "Cannot add event";

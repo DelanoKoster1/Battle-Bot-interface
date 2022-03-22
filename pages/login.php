@@ -156,17 +156,22 @@ function checkUserInDataBase(string $username, string $email) {
 
     //Check if a result has been found
     if (is_array($results) && count($results) > 0) {
-        for($i = 0; $i < count($results); $i++) {
-            $email = $results['email'][0];
-            $username = $results['username'][0];
+        for($i = 0; $i < count($results["email"]); $i++) {
+            $email = $results['email'][$i];
 
             if($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
                 $error[] = 'Er bestaat al een account met deze email';
             }
+        }  
+
+        for($i = 0; $i < count($results["username"]); $i++) {
+            $username = $results['username'][$i];
+            
             if($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
             }
-        }  
+        }
+        
         foreach($error as $errorMsg) {
             return $errorMsg;
         }
@@ -201,17 +206,15 @@ if (isset($_POST['register'])) {
                 header("location: ../components/error.php");
             }
 
-            $lastInsertedID = mysqli_insert_id($conn);
+            $sql = "SELECT id FROM account WHERE username = ?";
+            $result = stmtExec($sql, 0, $username);
+            $lastInsertedID = $result["id"][0];
 
             // log user in
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
             $_SESSION['id'] = $lastInsertedID;
-
-            //Close the statement and connection
-            mysqli_stmt_close($stmt);
-            mysqli_close($conn);
 
             //Send user to index.php
             header('location: ../index.php');
