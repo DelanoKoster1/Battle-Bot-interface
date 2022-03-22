@@ -35,6 +35,10 @@ class Bots {
         this.BotList[wsKey].status = action;
     }
 
+    setStatus(wsKey, status){
+        this.BotList[wsKey].status = status;
+    }
+
     removeBot(wsKey){
         delete this.BotList[wsKey];
     }

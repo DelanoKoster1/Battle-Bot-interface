@@ -14,12 +14,20 @@ wss.on('connection', (client, req) => {
     client.on('message', clientReq => {
         if (isValidJSONString(clientReq)) {
             let wsKey = req.headers['sec-websocket-key'];
+            console.log(wsKey);
             let body = JSON.parse(clientReq);
 
-            if (bots.getAllBots().hasOwnProperty(wsKey) || admins.hasOwnProperty(wsKey)) {
-                if(body.action){
+            if ( clientIsBot(wsKey) || clientIsAdmin(wsKey)) {
+                if(body.action && clientIsAdmin(wsKey)){
                     sendActionToAllBots(body)
+                }else{
+                    sendMsgToClient(client, {"error": "INVALID_COMMAND"})
                 }
+
+                if(body.status){
+                    bots.setStatus(wsKey, body.status); 
+                    console.log(this.getAllBots());
+                } 
 
             } else {
                 login(body, wsKey, client);
@@ -54,7 +62,13 @@ wss.on('connection', (client, req) => {
 })
 
 
+function clientIsAdmin(wsKey){
+    return admins.hasOwnProperty(wsKey)
+}
 
+function clientIsBot(wsKey){
+    bots.getAllBots().hasOwnProperty(wsKey)
+}
 
 
 function login(req, wsKey, client) {
@@ -62,10 +76,9 @@ function login(req, wsKey, client) {
         admins[wsKey] = client;
         // console.log(bots.getAllBots());
     } else {
-
         if (bots.saveBot(req.id, wsKey, client)) {
             // console.log(bots.getAllBots());
-            sendMsgToClient(client, {
+            sendMsgToClient(client, { 
                 "loggedin": true
             })
         } else {
@@ -74,7 +87,8 @@ function login(req, wsKey, client) {
             })
         }
     }
-}
+} 
+
 
 function sendActionToAllBots(body) {
     let botsList = bots.getAllBots();
@@ -107,43 +121,3 @@ function isValidJSONString(str) {
 
 
 module.exports = router;
-
-
-// function startSingle(bot, game){
-//     if(bot != undefined){
-//         bot.send(JSON.stringify({
-//             "start": game
-//         }))
-//     } else{
-//         // send msg to admins
-//     }
-// }
-
-// function startAll(game){
-//     if(bots != undefined){
-//         for (let id in bots) {
-//             bots[id].send(JSON.stringify({ 
-//                 "start": game
-//             }))
-//         }
-//     } else{
-//         // send msg to admins
-//     }
-// }
-
-
-// let request = JSON.parse(clientReq);
-// console.log(req.headers['sec-websocket-key']);
-// switch (request.action) {
-//     case "login":
-//         login(request, req.headers['sec-websocket-key'], client)
-//         break;
-//     case "prepare":
-//         if (request.for == "single") {
-
-//         } else {
-//             sendActionToAllBots(request.action, request.game);
-//         }
-//         break;
-//     default:
-// }
