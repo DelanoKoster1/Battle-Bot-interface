@@ -182,13 +182,6 @@ header .menu, #open-btn {
 .nav-link {
   padding: 0.2rem 1rem;
 }
-.bg-light {
-  background: linear-gradient(
-    20deg,
-    rgba(87, 125, 12, 1) 0%,
-    rgba(125, 182, 17, 1) 100%
-  );
-}
 .navbar-collapse .nav-item span {
   color: white;
 }
