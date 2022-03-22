@@ -29,6 +29,10 @@ switch (true) {
         $headerTitle = 'Ressigeur pagina';
         $content = "../components/admin/director.php";
         break;
+    case isset($_GET['addRobotToEvent']);
+        $headerTitle = 'Robot aan event toevoegen';
+        $content = "../components/admin/addRobotToEvent.php";
+        break;
 
     default:
         $headerTitle = 'Event toevoegen';
@@ -131,8 +135,6 @@ if (isset($_POST['submitPoints'])) {
 
     header('location: admin.php?points');
 }
-
-
 ?>
 
 <!DOCTYPE html>
@@ -174,6 +176,9 @@ if (isset($_POST['submitPoints'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?director">Regisseur pagina</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?addRobotToEvent">Robot toevoegen aan event</a>
                         </li>
                     </ul>
                 </nav>

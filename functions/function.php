@@ -85,7 +85,6 @@ function fail(?string $code = NULL, ?string $info = NULL)
  * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                                                                                                 
  *                                                                                                   
  */
-
 function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
 {
 
@@ -614,6 +613,7 @@ function getProfileInfo()
             ";
     return stmtExec($query, 0, $_SESSION['id']);
 }
+
 function getBots()
 {
    $query = " SELECT   name
@@ -627,4 +627,72 @@ function getBots()
             return $bot;
         }
     }
+}
+
+/**
+ * Function to get all events
+ * 
+ * @return Array Array of all events with names from db
+ */
+function getAllEvents() {
+    $conn = connectDB();
+    $arr = array();
+    
+    //Creating a table
+    $query = "SELECT * FROM event";
+
+    //Prpeparing SQL Query with database connection
+    if (!$stmt = mysqli_prepare($conn, $query)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Executing statement
+    if (!mysqli_stmt_execute($stmt)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Bind the STMT results(sql statement) to variables
+    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type);
+
+    while (mysqli_stmt_fetch($stmt)) {
+        $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type];
+    }
+
+    return $arr;
+}
+
+/**
+ * Function to get all robots
+ * 
+ * @return Array Array of all robots with names from db
+ */
+function getAllRobots() {
+    $conn = connectDB();
+    $arr = array();
+    
+    //Creating a table
+    $query = "SELECT * FROM bot";
+
+    //Prpeparing SQL Query with database connection
+    if (!$stmt = mysqli_prepare($conn, $query)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Executing statement
+    if (!mysqli_stmt_execute($stmt)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Bind the STMT results(sql statement) to variables
+    mysqli_stmt_bind_result($stmt, $id, $statsId, $specsId, $name, $description, $imagePath);
+
+    while (mysqli_stmt_fetch($stmt)) {
+        $arr[] = ['id' => $id, 'statsId' => $statsId, 'specsId' => $specsId, 'name' => $name, 'description' => $description, 'imagePath' => $imagePath];
+    }
+
+    return $arr;
 }
