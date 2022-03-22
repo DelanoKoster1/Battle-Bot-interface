@@ -18,11 +18,6 @@
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
-    <?php
-        if (isset($_POST['sendVote'])) {
-            echo voteBot($_POST['voteTeam']);
-        }
-    ?>
 
     <div class="container-fluid my-5">
         <div class="row">

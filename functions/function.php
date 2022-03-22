@@ -155,36 +155,9 @@ function getBots() {
 
     $results = stmtExec($query);
 
-    $botReturn = '';
-
     foreach ($results as $botArray) {
         foreach ($botArray as $bot) {
-            $botReturn .= '<div class="col-lg-4 col-sm-4 col-6 mb-2 checkBot">';
-                $botReturn .= '<div class="box bg-secondary d-flex justify-content-center">';
-                    $botReturn .= '<div class="row g-0 w-100 text-center">';
-                        $botReturn .= '<div class="col-12 pt-1">';
-                            $botReturn .= '<img class="img-fluid" src="../assets/img/bot.svg" alt="Logo of a bot">';
-                        $botReturn .= '</div>';
-                        $botReturn .= '<div class="col-12 position-relative">';
-                            $botReturn .= '<div class="botName position-absolute w-100 bottom-0">';
-                                $botReturn .= '<span>'.$bot.'</span>';
-                                $botReturn .= '<span><input type="checkbox" class="d-none" id="'.$bot.'" name="voteTeam[]" value="'.$bot.'"></span>';
-                            $botReturn .= '</div>';
-                        $botReturn .= '</div>';
-                    $botReturn .= '</div>';
-                $botReturn .= '</div>';
-            $botReturn .= '</div>';
+            return $bot;
         }
-    }
-
-    return $botReturn;
-
-}
-
-function voteBot($votedBot) {
-    if (count($votedBot) <= 1) {
-        return "<div class='alert alert-success text-center' role='alert'>ja je hebt goed gestemt</div>";
-    } else {
-        return "<div class='alert alert-danger text-center' role='alert'>je mag maar op 1 robot stemmen</div>";
     }
 }
