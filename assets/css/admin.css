@@ -21,3 +21,8 @@
 .eventBox {
   max-width: 500px;
 }
+
+/* Add robot to event page*/
+.eventRobotBox {
+  max-width: 500px;
+}

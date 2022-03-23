@@ -1,7 +1,6 @@
 <?php
 //Includes
 include_once('../functions/function.php');
-include_once('../functions/database.php');
 
 //Check if user is logged
 if (isset($_SESSION['email'])) {
@@ -10,41 +9,6 @@ if (isset($_SESSION['email'])) {
 
 //Define global variable(s)
 $error = array();
-
-/**
- * Function checkLoginFields
- * Function to check if fields are correct and not empty.
- * Display Error message if needed.
- * @param String $username Filled in username
- * @param String $email Filled in email
- * @param String $password1 Filled in password
- * @param array $error Array with errors
- * @return String/boolean $error False or error message
- */
-function checkLoginFields(String $username, String $password) {
-    //Call global variable(s)
-    global $error;
-
-    //If statements so the error messages will be displayed all at once instead of each individual.
-    if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam is niet correct!';
-    }
-    if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
-    }
-    if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
-    }
-    if (strlen($password) > 200) {
-        $error[] = 'Wachtwoord is te lang!';
-    }
-
-    if (empty($error)) {
-        return false;
-    } else {
-        return $error;
-    }
-}
 
 //Check if submitted login
 if (isset($_POST['login'])) {
@@ -86,97 +50,6 @@ if (isset($_POST['login'])) {
         } else {
             $error[] = 'Geen gebruiker gevonden met deze gebruikersnaam.';
         }
-    }
-}
-
-/**
- * Function checkRegisterFields.
- * Function to check if fields are correct and not empty.
- * Display Error message if needed.
- * @param string    $email  Filled in email
- * @param string    $firstname  Filled in firstname
- * @param string    $lastname  Filled in lastname
- * @param string    $password  Filled in password
- * @param string    $password2  Filled in password2
- * @param array     $error  Array with errors
- * @return string/boolean  $error  False or error message
- */
-function checkRegisterFields(string $username, string $email, string $password, string $password2) {
-    //Call global variable(s)
-    global $error;
-
-    //If statements so the error messages will be displayed all at once instead of each individual.
-    if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
-    }
-    if (!$email && empty($email)) {
-        $error[] = 'Email is onjuist!';
-    }
-    if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
-    }
-    if (!$password2 && empty($password2)) {
-        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
-    }
-    if ($password != $password2) {
-        $error[] = 'Wachtwoorden komen niet overeen!';
-    }
-    if (strlen($email) > 200) {
-        $error[] = 'E-mail is te lang!';
-    }
-    if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
-    }
-    if (strlen($password) > 255) {
-        $error[] = 'Wachtwoord is te lang!';
-    }
-
-    if (empty($error)) {
-        return false;
-    } else {
-        return $error;
-    }
-}
-
-/**
- * Function checkUserInDatabase
- * Function to check if user already exists in database
- * Return Error message if needed.
- * @param   string          $username  Filled in username
- * @return  string/boolean  $error  False or error message
- */
-function checkUserInDataBase(string $username, string $email) {
-    //Call global variable(s)
-    global $error;
-
-    //SQL Query for selecting all users where an email is in DB
-    $sql = "SELECT username, email FROM account WHERE username = ? OR email = ?";
-
-    $results = stmtExec($sql, 0, $username, $email);
-
-    //Check if a result has been found
-    if (is_array($results) && count($results) > 0) {
-        for($i = 0; $i < count($results["email"]); $i++) {
-            $email = $results['email'][$i];
-
-            if($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
-                $error[] = 'Er bestaat al een account met deze email';
-            }
-        }  
-
-        for($i = 0; $i < count($results["username"]); $i++) {
-            $username = $results['username'][$i];
-            
-            if($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
-            }
-        }
-        
-        foreach($error as $errorMsg) {
-            return $errorMsg;
-        }
-    } else {
-        return false;
     }
 }
 

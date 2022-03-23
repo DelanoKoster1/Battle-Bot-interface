@@ -190,7 +190,7 @@ header .menu,
   padding: 0;
 }
 .nav-link {
-  padding: 0.2rem 1rem;
+  padding: 0.2rem .8rem;
 }
 .navbar-collapse .nav-item span {
   color: white;
