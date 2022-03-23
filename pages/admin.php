@@ -5,7 +5,7 @@ include_once('../functions/database.php');
 
 // Check if admin is logged in
 if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
-header('location: ../components/error.php');
+    header('location: ../components/error.php');
 }
 
 //Global variables
@@ -32,9 +32,8 @@ switch (true) {
         break;
     case isset($_GET['bot']);
         $headerTitle = 'Bot toevoegen';
-        $content = "../components/admin/bot.php" ;
+        $content = "../components/admin/bot.php";
         break;
-
     default:
         $headerTitle = 'Event toevoegen';
         $content = "../components/admin/event.php";
@@ -42,7 +41,8 @@ switch (true) {
 }
 
 //Post submissions
-function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
+function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
+{
     global $error;
 
     if (!$eventDate && empty($eventDate)) {
@@ -97,13 +97,53 @@ if (isset($_POST['event'])) {
             $_SESSION['error'] = "Cannot add event";
             header("location: ../components/error.php");
         }
-      
+
         //Set succes message
         $_SESSION['succes'] = 'Event toegevoegd!';
 
         //Send user to index.php
         header('location: admin.php');
         exit();
+    }
+}
+
+$acceptedFileTypes = ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf"];
+
+if (isset($_POST['bot'])) {
+    if (isset($_POST['botName']) && $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS)) {
+        if (isset($_POST['botDiscription']) && $botDiscription = filter_input(INPUT_POST, 'botDiscription', FILTER_SANITIZE_SPECIAL_CHARS)) {
+            if (isset($_POST['macAddress']) && $macAdress = filter_input(INPUT_POST, 'macAddress', FILTER_SANITIZE_SPECIAL_CHARS)) {
+
+                $sql = "INSERT INTO bot (name, description, macAddress) VALUES (?,?,?)";
+
+                if (!stmtExec($sql, 0, $botName, $botDiscription, $macAdress)) {
+                    $_SESSION['error'] = "Voer alle velden in";
+                    header("location: ../components/error.php");
+                }
+                // 
+                // if (checkIfFile("botPic")) {
+                //     if (checkFileSize("botPic")) {
+                //         if (checkFileType("botPic", $acceptedFileTypes)) {
+                //             $botId = 
+                //             if (makeFolder()) {
+                //                 if (!checkFileExist()) {
+                //                     if (uploadFile()) {
+                //                         echo "<div class='alert alert-success'>Bot aangemaakt</div>";
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+                header("location:../pages/admin.php?bot");
+            } else {
+                echo "<div class= ' alert alert-danger'>Voer het Mac adress van de bot in</div>";
+            }
+        } else {
+            echo "<div class= ' alert alert-danger'>Voer een beschijving van de bot in</div>";
+        }
+    } else {
+        echo "<div class= ' alert alert-danger'>Voer de naam van de bot in</div>";
     }
 }
 
@@ -114,8 +154,8 @@ if (isset($_GET['points'])) {
     $sql = "SELECT teamId, name FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
     $results = stmtExec($sql);
 
-    for($i = 1; $i < count($results); $i++) {
-        $teams += [$results['teamId'][$i-1] => $results['name'][$i-1]];
+    for ($i = 1; $i < count($results); $i++) {
+        $teams += [$results['teamId'][$i - 1] => $results['name'][$i - 1]];
     }
 }
 
@@ -180,7 +220,7 @@ if (isset($_POST['submitPoints'])) {
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?director">Regisseur pagina</a>
                         </li>
-                        <li  class="nav-item w-100">
+                        <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?bot">Bot toevoegen</a>
                         </li>
                     </ul>

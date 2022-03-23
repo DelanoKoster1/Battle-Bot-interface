@@ -232,7 +232,7 @@ function checkFileType($fileName, $mimeArray)
 }
 
 /**
- * @param: $issueId: returns id of issue
+ * @param: $issueId: returns id of bot
  * @param: $path: returns file path
  * @return: true or false
  */
