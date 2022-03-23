@@ -13,7 +13,7 @@ include_once('../functions/function.php');
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
 
-    <title>Geschiedenis</title>
+    <title>Terugkijken</title>
 </head>
 
 <body>
@@ -34,29 +34,12 @@ include_once('../functions/function.php');
               ";
 
     $historyResults = stmtExec($query);
-
-   
-
-    if (!empty($historyResults["id"])) {
-        $ids = $historyResults["id"];
-
-        for ($i = 0; $i < count($ids); $i++) {
-            $name = $historyResults["name"][$i];
-            $weburl = $historyResults["url"][$i];
-
-            echo '
-            <div class="col-sm-3 mb-4 pt-5">
-                <div class="card eventsCard">
-                    <div class="card-body">
-                        <span class="calendarTitle d-block text-capitalize"><a class="stretched-link" href="watchBack.php?id='.$id.'">' . $name . '</a></span>
-                    </div>
-                </div>
-            </div>
-            ';
-        }
-    }
-
     ?>
+
+    <video width="840" height="600" controls>
+        <source src="/Project Battle Bot/Battle-Bot-interface/assets/video/Purple_Disco_Machine,_Sophie_and_the_Giants_-_In_The_Dark.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
     <footer class="navbar">
         <?php include_once('../components/footer.php') ?>
