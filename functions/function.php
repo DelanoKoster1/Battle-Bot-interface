@@ -536,14 +536,15 @@ function formatdate(string $date): string
  * Function to show events as HTML
  * 
  */
-function showEvents()
+function showEvents(bool $limit = false, bool $admin = false)
 {
     $query = "SELECT id, name, date, description
               FROM event 
-              WHERE date > now()
+              WHERE date > NOW()
+              AND `type` = 'public'
               ORDER BY date ASC
-              limit 5";
-
+              ";
+    $query .= ($limit) ? "LIMIT 4" : "";
     $eventResults = stmtExec($query);
 
     if (!empty($eventResults["id"])) {
@@ -553,18 +554,31 @@ function showEvents()
             $name = $eventResults["name"][$i];
             $eventDate = $eventResults["date"][$i];
             $description = $eventResults["description"][$i];
-
-            echo '
-            <div class="col-sm-3 mb-4">
-                <div class="card eventsCard">
-                    <div class="card-body">
-                        <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                        <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
-                        <span class="calendarInfo mt-4 d-block">' . $description . '</span>
+            $id = $eventResults["id"][$i];
+            if (!$admin) {
+                echo '
+                <div class="col-sm-3 mb-4">
+                    <div class="card eventsCard">
+                        <div class="card-body">
+                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                            <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
+                            <span class="calendarInfo mt-4 d-block">' . $description . '</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            ';
+                ';
+            } else {
+                echo '
+                <div class="col-sm-3 mb-4">
+                    <div class="card eventsCard">
+                        <div class="card-body">
+                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                            <span class="calendarTitle d-block text-capitalize"><a class="stretched-link" href="admin.php?point&amp;eventId=' . $id . '">' . $name . '</span>
+                        </div>
+                    </div>
+                </div>
+                ';
+            }
         }
     } else {
         echo '
@@ -616,7 +630,7 @@ function getProfileInfo()
 
 function getBots()
 {
-   $query = " SELECT   name
+    $query = " SELECT   name
                FROM     bot 
              ";
 
@@ -634,10 +648,11 @@ function getBots()
  * 
  * @return Array Array of all events with names from db
  */
-function getAllEvents() {
+function getAllEvents()
+{
     $conn = connectDB();
     $arr = array();
-    
+
     //Creating a table
     $query = "SELECT * FROM event";
 
@@ -668,7 +683,8 @@ function getAllEvents() {
  * 
  * @return Array Array of all robots with names from db
  */
-function getAllRobots() {
+function getAllRobots()
+{
     $query = "SELECT id, statsId, specsId, name, description, imagePath FROM bot";
 
     return stmtExec($query);

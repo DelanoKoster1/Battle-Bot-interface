@@ -89,7 +89,8 @@
             </div>
 
             <div class="row m-auto eventShowBox">
-                <?php showEvents(); ?>
+                <?php showEvents(true); 
+                ?>
             </div>
         </div>
     </section>

@@ -42,7 +42,7 @@ include_once('../functions/function.php');
 
         for ($i = 0; $i < count($ids); $i++) {
             $name = $historyResults["name"][$i];
-            $weburl = $historyResults["url"][$i];
+            $id = $historyResults["id"][$i];
 
             echo '
             <div class="col-sm-3 mb-4 pt-5">
