@@ -1,31 +1,25 @@
 <?php 
     include_once('../functions/function.php');
-    $conn = connectDB();
 
     $pointsPerTeam = array();
     $progress = array();
     $maxPoints = 80;
 
-    $sql = "SELECT teamId, points, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
-    $stmt = mysqli_prepare($conn, $sql);
+    $sql = "SELECT teamId, points, name FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
+    $results = stmtExec($sql);
 
-    if(!$stmt) {
+    if(empty($results)) {
         header("location: ../components/error.php");
     }
 
-    if(!mysqli_stmt_execute($stmt)) {
-        header("location: ../components/error.php");
-    }
+    $teamIds = $results["teamId"]; 
+    $points = $results["points"];  
+    $teamNames = $results["name"]; 
 
-    mysqli_stmt_bind_result($stmt, $teamId, $points, $teamName);
-
-    mysqli_stmt_store_result($stmt);
-    $rows  = mysqli_stmt_num_rows($stmt);
-    while(mysqli_stmt_fetch($stmt)) {
-        $teamNames[] = $teamName; 
-        $pointsPerTeam += [$teamName => $points];
-        $progressPerTeam = ($pointsPerTeam[$teamName] / $maxPoints) * 100 . "%";
-        $progress += [$teamName => $progressPerTeam];
+    for($i = 0; $i < count($teamIds); $i++) {
+        $pointsPerTeam += [$teamNames[$i] => $points[$i]];
+        $progressPerTeam = ($pointsPerTeam[$teamNames[$i]] / $maxPoints) * 100 . "%";
+        $progress += [$teamNames[$i] => $progressPerTeam];
     }
     
 
