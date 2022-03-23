@@ -111,43 +111,68 @@ if (isset($_POST['event'])) {
     }
 }
 
-$acceptedFileTypes = ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf"];
-
 if (isset($_POST['bot'])) {
     if (isset($_POST['botName']) && $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (isset($_POST['botDiscription']) && $botDiscription = filter_input(INPUT_POST, 'botDiscription', FILTER_SANITIZE_SPECIAL_CHARS)) {
-            if (isset($_POST['macAddress']) && $macAdress = filter_input(INPUT_POST, 'macAddress', FILTER_SANITIZE_SPECIAL_CHARS)) {
+            if (isset($_POST['macAddress']) && preg_match('^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$^',$_POST['macAddress'])) {
+                if (isset($_POST['board']) && $botBoard = filter_input(INPUT_POST, 'board', FILTER_SANITIZE_SPECIAL_CHARS)) {
+                    if (isset($_POST['interface']) && $botInterface = filter_input(INPUT_POST, 'interface', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
-                $sql = "INSERT INTO bot (name, description, macAddress) VALUES (?,?,?)";
+                        $macAdress = $_POST['macAddress'];
+                        $sql = "INSERT INTO bot (name, description, macAddress) VALUES (?,?,?)";
 
-                if (!stmtExec($sql, 0, $botName, $botDiscription, $macAdress)) {
-                    $_SESSION['error'] = "Voer alle velden in";
-                    header("location: ../components/error.php");
+                        if (!stmtExec($sql, 0, $botName, $botDiscription, $macAdress)) {
+                            $_SESSION['error'] = "Voer alle velden in";
+                            header("location: ../components/error.php");
+                        }
+                        
+                        if (checkIfFile($_FILES['botPic'])) {
+                            if (checkFileSize($_FILES['botPic'])) {
+                                if (checkFileType($_FILES['botPic'])) {
+                                    $botId = $_SESSION['lastInsertedId'];
+                                    if (makeFolder($botId, "../assets/img/bots/")) {
+                                        if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botPic']['name'])) {
+                                            $query= "UPDATE `bot`
+                                                    SET imagePath = ?
+                                                    WHERE id = ?
+                                            ";
+
+                                            if (uploadFile($_FILES['botPic'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                                                $_SESSION['succes'] = 'Bot aangemaakt!';
+                                                header("location:../pages/admin.php?bot");
+
+                                            } else {
+                                                $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
+                                            }
+                                        } else {
+                                            $error[] = "Het bestand bestaat al";
+                                        }
+                                    } else {
+                                        $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
+                                    }
+                                } else {
+                                    $error[] = "Het bestandstype wordt niet geaccepteerd";
+                                }
+                            } else {
+                                $error[] = "Bestand is te groot";
+                            }
+                        } else {
+                            $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
+                        }
+                    } else {
+                        $error[] = "Het Interface veld is niet goed ingevuld";
+                    }   
+                } else {
+                     $error[] = "Het Board veld is niet goed ingevuld";
                 }
-                // 
-                // if (checkIfFile("botPic")) {
-                //     if (checkFileSize("botPic")) {
-                //         if (checkFileType("botPic", $acceptedFileTypes)) {
-                //             $botId = 
-                //             if (makeFolder()) {
-                //                 if (!checkFileExist()) {
-                //                     if (uploadFile()) {
-                //                         echo "<div class='alert alert-success'>Bot aangemaakt</div>";
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
-                header("location:../pages/admin.php?bot");
             } else {
-                echo "<div class= ' alert alert-danger'>Voer het Mac adress van de bot in</div>";
+                $error[] = "Mac addres niet correct";  
             }
         } else {
-            echo "<div class= ' alert alert-danger'>Voer een beschijving van de bot in</div>";
+            $error[] = "Bot beschrijving niet goed ingevuld";
         }
     } else {
-        echo "<div class= ' alert alert-danger'>Voer de naam van de bot in</div>";
+        $error[] =  "Bot naam niet goed ingevuld";       
     }
 }
 

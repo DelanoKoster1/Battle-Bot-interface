@@ -129,6 +129,7 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
             }
 
             if (mysqli_stmt_execute($stmt)) {
+                $_SESSION['lastInsertedId'] = mysqli_insert_id($conn); // sets lastinserted id back into the session
                 mysqli_stmt_store_result($stmt);
                 if (mysqli_stmt_num_rows($stmt) > 0) {
 
@@ -671,150 +672,10 @@ function getAllEvents() {
 function getAllRobots() {
     $conn = connectDB();
     $arr = array();
-    
+
     //Creating a table
     $query = "SELECT * FROM bot";
 
-}
-
-/**
- * @param: $arr: an array with bind param values
- * @return: an array with specific references
- * this function makes from merged to seperate and individual values for the bind param function
- */
-function makeValuesReferenced($arr)
-{
-    $refs = array();
-    foreach ($arr as $key => $value)
-    $refs[$key] = &$arr[$key];
-
-    return $refs;
-}
-
-/**
- * @param: $file: returns file object with properties
- * @return: true or false
- */
-
-function checkIfFile($file)
-{
-    return is_uploaded_file($_FILES[$file]["tmp_name"]);
-}
-
-/**
- * @param: $fileName: returns file name
- * @return: true or false
- */
-
-function checkFileSize($fileName)
-{
-    if ($_FILES[$fileName]["size"] <= 5000000) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-/**
- * @param: $fileName: returns file name
- * @param: $mimeArray: returns array with MIME types
- * @return: true or false
- */
-
-function checkFileType($fileName, $mimeArray)
-{
-    $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $_FILES[$fileName]["tmp_name"]);
-    if (in_array($fileInfo, $mimeArray)) {
-        if (!$_FILES[$fileName]["error"] > 0) {
-            return true;
-        } else {
-            return false;
-        }
-    } else {
-        return false;
-    }
-}
-
-/**
- * @param: $issueId: returns id of bot
- * @param: $path: returns file path
- * @return: true or false
- */
-
-function makeFolder($botId, $path)
-{
-    $directory = $path . $botId;
-    if (!file_exists($directory)) {
-        mkdir($directory, 0777);
-    }
-
-    return true;
-}
-
-/**
- * @param: $directory: returns directory to file
- * @param: $fileName: returns file name
- * @return: true or false
- */
-
-function checkFileExist($directory, $fileName)
-{
-    return file_exists($directory . $fileName);
-}
-
-/**
- * @param: $directory: returns directory to file
- * @return: true
- */
-
-function deleteFile($directory)
-{
-    $files = glob($directory . '*'); // get all file names
-    foreach ($files as $file) { // iterate files
-        if (is_file($file)) {
-            unlink($file); // delete file
-        }
-    }
-
-    return true;
-}
-
-/**
- * @param: $db: returns mysqli object
- * @param: $file: returns file object with properties
- * @param: $tableName: returns name of the selected table
- * @param: $recordName: returns name of selected record
- * @param: $relationId string: name of relation
- * @param: $Id int: relation ID
- * @param: $directory: returns directory
- * @return: true or false
- */
-
-function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $directory)
-{
-    $type = "";
-    $params = array();
-
-    $query = "UPDATE " . $tableName;
-
-    $query .= " SET " . $recordName . " = ? ";
-    $type .= "s";
-    array_push($params,  $directory . $_FILES[$file]["name"]);
-
-    $query .= "WHERE " . $relationId . " = ?";
-    $type .= "i";
-    array_push($params,  $Id);
-
-
-    $stmt = mysqli_prepare($db, $query) or die(mysqli_error($db));
-    call_user_func_array(array($stmt, "bind_param"), makeValuesReferenced(array_merge(array($type), $params)));
-
-    if (move_uploaded_file($_FILES[$file]["tmp_name"], realpath(dirname(getcwd())) . $directory . $_FILES[$file]["name"]) && mysqli_stmt_execute($stmt)) {
-        mysqli_stmt_close($stmt);
-        return true;
-    } else {
-        return false;
-    }
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
         $_SESSION['error'] = "database_error";
@@ -833,6 +694,111 @@ function uploadFile($db, $file, $tableName, $recordName, $relationId, $Id, $dire
     while (mysqli_stmt_fetch($stmt)) {
         $arr[] = ['id' => $id, 'statsId' => $statsId, 'specsId' => $specsId, 'name' => $name, 'description' => $description, 'imagePath' => $imagePath];
     }
-
     return $arr;
 }
+
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
+function checkIfFile($file)
+{
+    return is_uploaded_file($file["tmp_name"]);
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
+function checkFileSize($file)
+{
+    if ($file["size"] <= 5000000) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
+function checkFileType($file)
+{
+    $mimeArray = ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf", "video/mp4"];
+    $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file["tmp_name"]);
+    if (in_array($fileInfo, $mimeArray)) {
+        if (!$file["error"] > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @param: $id: returns id
+ * @param: $path: returns file path
+ * @return: true or false
+ */
+
+function makeFolder(int $id, string $path)
+{
+    $directory = $path . $id;
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777);
+    }
+
+    return true;
+}
+
+/**
+ * @param: $directory: returns directory to file
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
+
+function checkFileExist(string $directory, string $fileName)
+{
+    return file_exists($directory . $fileName);
+}
+
+/**
+ * @param: $directory: returns directory to file
+ * @return: true
+ */
+
+function deleteFile(string $directory)
+{
+    $files = glob($directory . '*'); // get all file names
+    foreach ($files as $file) { // iterate files
+        if (is_file($file)) {
+            unlink($file); // delete file
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @param: $Id int: relation ID
+ * @param: $directory: returns directory
+ * @return: true or false
+ */
+
+function uploadFile($file, string $query, int $id, string $directory)
+{
+    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory,$id)) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+
