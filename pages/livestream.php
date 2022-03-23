@@ -92,15 +92,14 @@
                     <h4 class="modal-title custom_align" id="Heading">Stem voor een robot</h4>
                 </div>
                 <div class="modal-body">
-
                     <form method="post" id="formBot" action="">
-                        <div class="row justify-content-evenly">
-                            <?php echo getBots(); ?>
+                        <div class="custom-control custom-radio">
+                            <?php echo retrieveQuestionInfo(); ?>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" form="formBot" name="sendVote" class="btn btn-warning btn-lg" style="width: 100%;">
+                    <input type="submit" form="formBot" name="submitAnswer" class="btn btn-warning btn-lg" style="width: 100%;">
                 </div>
             </div>
             <!-- /.modal-content -->
