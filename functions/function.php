@@ -669,30 +669,7 @@ function getAllEvents() {
  * @return Array Array of all robots with names from db
  */
 function getAllRobots() {
-    $conn = connectDB();
-    $arr = array();
-    
-    //Creating a table
-    $query = "SELECT * FROM bot";
+    $query = "SELECT id, statsId, specsId, name, description, imagePath FROM bot";
 
-    //Prpeparing SQL Query with database connection
-    if (!$stmt = mysqli_prepare($conn, $query)) {
-        $_SESSION['error'] = "database_error";
-        header("location: error.php");
-    }
-
-    //Executing statement
-    if (!mysqli_stmt_execute($stmt)) {
-        $_SESSION['error'] = "database_error";
-        header("location: error.php");
-    }
-
-    //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $id, $statsId, $specsId, $name, $description, $imagePath);
-
-    while (mysqli_stmt_fetch($stmt)) {
-        $arr[] = ['id' => $id, 'statsId' => $statsId, 'specsId' => $specsId, 'name' => $name, 'description' => $description, 'imagePath' => $imagePath];
-    }
-
-    return $arr;
+    return stmtExec($query);
 }
