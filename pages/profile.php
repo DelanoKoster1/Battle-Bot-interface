@@ -8,8 +8,9 @@ if (!isset($_SESSION['email'])) {
 }
 
 if (isset($_POST['save'])) {
-    $success = false;
     $results = getProfileInfo();
+    $success = false;
+    $success2 = false;
     if ($email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
         if ($username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
             if ($results["username"][0] != $username || $results["email"][0] != $email) {
@@ -31,20 +32,26 @@ if (isset($_POST['save'])) {
     }
 
     if ($curPassword = filter_input(INPUT_POST, 'curpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
-        if ($newPassword = filter_input(INPUT_POST, 'newpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
-            if ($repeatPassword = filter_input(INPUT_POST, 'newpassword2', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                if (checkProfilePassword($newPassword, $repeatPassword)) {
-                    if (password_verify($newPassword, $results['password'][0])) {
-                        $hashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                        $query = "UPDATE    account
-                                  SET       `password` = ?
-                                  WHERE     id = ?  
-                            ";
-                        stmtExec($query, 0, $hashPassword, $_SESSION['id']);
-                        $success = true;
-                    } 
-                }
-            }
+        if (password_verify($curPassword, $results['password'][0])) {
+            if ($newPassword = filter_input(INPUT_POST, 'newpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
+                if ($repeatPassword = filter_input(INPUT_POST, 'newpassword2', FILTER_SANITIZE_SPECIAL_CHARS)) {
+                    if (checkProfilePassword($newPassword, $repeatPassword)) {
+                        if (!password_verify($newPassword, $results['password'][0]) && !password_verify($repeatPassword, $results['password'][0])) {
+                            $hashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                            $query = "UPDATE    account
+                                    SET       `password` = ?
+                                    WHERE     id = ?  
+                                ";
+                            stmtExec($query, 0, $hashPassword, $_SESSION['id']);
+                            $success2 = true;
+                        } else {
+                            $error[] = 'Het nieuwe en herhaal wachtwoord mogen niet overeen komen met het huidige wachtwoord!';
+                        }
+                    }
+                } 
+            } 
+        } else {
+            $error[] = 'Het huidige wachtwoord is incorrect!';
         }
     } 
 }
@@ -94,12 +101,22 @@ $results = getProfileInfo();
                             if ($success == true) {
                                 ?>
                                 <div class="col-md-12 p-0">
-                                    <div class="alert alert-success text-black fw-bold p-4 mb-3 rounded" role="alert">
+                                    <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
                                         <?php echo "De gegevens zijn succesvol geüpdate!" ?>
                                     </div>
                                 </div>
                                 <?php
-                            }
+                            } 
+                            if ($success2 == true) {
+                               ?>
+                               <div class="col-md-12 p-0">
+                                   <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                                       <?php echo "Het wachtwoord is succesvol geüpdate!" ?>
+                                   </div>
+                               </div>
+                               <?php
+                           }
+                           
                         }
                         ?>
                     </div>
@@ -142,8 +159,8 @@ $results = getProfileInfo();
                     <div class="col-12 bg-white">
                         <div class="input-group w-lg-50 mb-3 pb-2">
                             <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">lock</span></span>
-                            <input name="newpassword2" id="rpassword" type="password" class="form-control bg-light" placeholder="Herhaal Wachtwoord">
-                            <span class="input-group-text bg-light" id="basic-addon1"><span id="toggleRPassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
+                            <input name="newpassword2" id="newpassword2" type="password" class="form-control bg-light" placeholder="Herhaal Wachtwoord">
+                            <span class="input-group-text bg-light" id="basic-addon1"><span id="toggleRepeatPassword" class="pointer material-icons ml-8 mr-8 verticalmid">visibility_off</span></span>
                         </div>
                     </div>
                 </div>
@@ -161,7 +178,7 @@ $results = getProfileInfo();
         <?php include_once("../components/footer.php"); ?>
     </div>
     <script>
-        // Change eye icon for current password field
+        //Change eye icon for the current password field
         const toggleCurPassword = document.querySelector('#toggleCurPassword');
         const curpassword = document.querySelector('#curpassword');
 
@@ -178,10 +195,10 @@ $results = getProfileInfo();
             curpassword.setAttribute('type', type);
         });
 
-        // Change eye icon for new password field
+        //Change eye icon for the new password field
         const toggleNewPassword = document.querySelector('#toggleNewPassword');
         const newpassword = document.querySelector('#newpassword');
-
+        
         let isVisibleNew = false;
         toggleNewPassword.addEventListener('click', function(e) {
             if (isVisibleNew == false) {
@@ -195,21 +212,21 @@ $results = getProfileInfo();
             newpassword.setAttribute('type', type);
         });
 
-        // Change eye icon for repeat password field
-        const toggleRPassword = document.querySelector('#toggleRPassword');
-        const rpassword = document.querySelector('#rpassword');
+        //Change eye icon for the repeat password field
+        const toggleRepeatPassword = document.querySelector('#toggleRepeatPassword');
+        const newpassword2 = document.querySelector('#newpassword2');
 
-        let isVisibleR = false;
-        toggleRPassword.addEventListener('click', function(e) {
-            if (isVisibleR == false) {
-                isVisibleR = true;
-                document.getElementById("toggleRPassword").textContent = "visibility";
+        let isVisibleRepeat = false;
+        toggleRepeatPassword.addEventListener('click', function(e) {
+            if (isVisibleRepeat == false) {
+                isVisibleRepeat = true;
+                document.getElementById("toggleRepeatPassword").textContent = "visibility";
             } else {
-                isVisibleR = false;
-                document.getElementById("toggleRPassword").textContent = "visibility_off";
+                isVisibleRepeat = false;
+                document.getElementById("toggleRepeatPassword").textContent = "visibility_off";
             }
-            const type = rpassword.getAttribute('type') === 'password' ? 'text' : 'password';
-            rpassword.setAttribute('type', type);
+            const type = newpassword2.getAttribute('type') === 'password' ? 'text' : 'password';
+            newpassword2.setAttribute('type', type);
         });
     </script>
 </body>
