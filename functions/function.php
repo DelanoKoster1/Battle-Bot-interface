@@ -263,7 +263,7 @@ function checkLoginFields(String $username, String $password) {
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'De gebruikersnaam is niet correct!';
+        $error[] = 'De gebruikersnaam is incorrect!';
     }
     if (strlen($username) > 50) {
         $error[] = 'De gebruikersnaam is te lang!';
@@ -446,7 +446,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
             $username = $results['username'][$i];
 
             if ($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam!';
+                $error[] = 'Er bestaat al een account met deze gebruikersnaam!';
             }
         }
 
@@ -828,33 +828,33 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
     $conn = connectDB();
     $arr = array();
     if (!$eventDate && empty($eventDate)) {
-        $error[] = 'Event datum mag niet leeg zijn!';
+        $error[] = 'De evenement datum mag niet leeg zijn!';
     } else {
         if (!checkValidDate($eventDate)) {
-            $error[] = 'Event datum is ongeldig!';
+            $error[] = 'De evenement datum is ongeldig!';
         }
     }
     if (!$eventName && empty($eventName)) {
-        $error[] = 'Event naam mag niet leeg zijn!';
+        $error[] = 'De evenement naam mag niet leeg zijn!';
     }
     if (!$eventType && empty($eventType)) {
-        $error[] = 'Event type mag niet leeg zijn!';
+        $error[] = 'Het evenement type mag niet leeg zijn!';
     } else {
         if ($eventType == 'public' || $eventType == 'private') {
             //Do nothing 
         } else {
-            $error[] = 'Event type klopt niet';
+            $error[] = 'Het evenement type is ongeldig!';
         }
     }
 
     if (!$eventDescription && empty($eventDescription)) {
-        $error[] = 'Event omschrijving mag niet leeg zijn!';
+        $error[] = 'De evenement omschrijving mag niet leeg zijn!';
     }
     if (strlen($eventName) > 255) {
-        $error[] = 'Event naam is te lang!';
+        $error[] = 'De evenement naam is te lang!';
     }
     if (strlen($eventDescription) > 255) {
-        $error[] = 'Event omschrijving is te lang!';
+        $error[] = 'De evenement omschrijving is te lang!';
     }
 
     if (empty($error)) {

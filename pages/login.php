@@ -45,10 +45,10 @@ if (isset($_POST['login'])) {
                 header('location: ../index.php');
                 exit();
             } else {
-                $error[] = 'Inloggegevens zijn incorrect.';
+                $error[] = 'Deze inloggegevens zijn incorrect!';
             }
         } else {
-            $error[] = 'Geen gebruiker gevonden met deze gebruikersnaam.';
+            $error[] = 'Er is geen gebruiker gevonden met deze gebruikersnaam!';
         }
     }
 }
@@ -75,7 +75,7 @@ if (isset($_POST['register'])) {
             $sql = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
 
             if (!stmtExec($sql, 0, $teamid, $role, $username, $password, $email)) {
-                $_SESSION['error'] = "Cannot create account";
+                $_SESSION['error'] = "Er is iets misgegaan bij het aanmaken van het account, probeer het opnieuw!";
                 header("location: ../components/error.php");
             }
 
