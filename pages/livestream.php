@@ -55,7 +55,7 @@
                                                         <button class="btn btn-outline-secondary" type="button" id="button-addon2"><span class="material-icons align-middle">send</span></button>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 d-flex justify-content-between mb-3">
+                                                <div class="col-12 d-flex justify-content-between mb-3 buttons-group">
                                                     <div class="btn w-33 btn-success">1000</div>
                                                     <button class="btn text-right btn-success">Scorebord</button>
                                                     <button class="btn text-right btn-success vote-button">Stemmen</button>
