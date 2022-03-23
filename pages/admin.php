@@ -106,10 +106,39 @@ if (isset($_POST['event'])) {
     }
 }
 
+foreach($_POST as $radioTeamId => $assignedPoints) {
+    if(isset($_POST[$radioTeamId])) {
+        $conn = connectDB();
+        $pointsPerTeam = array();
+
+            $pointsPerTeam += [$radioTeamId => $assignedPoints];
+            $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+
+            if(!$stmt) {
+                header("location: ../components/error.php");
+            }
+
+            if(!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)){
+                header('location: ../components/error.php');
+            }
+
+            if(!mysqli_stmt_execute($stmt)) {
+                header('location ../components/error.php');
+            }
+            mysqli_stmt_close($stmt);   
+        
+
+        mysqli_close($conn);
+        $_SESSION['succes'] = 'Punten toegevoegd';  
+        $revertPoints = $assignedPoints;  
+    }
+}
+
 if(isset($_GET['points'])) {
     $conn = connectDB();
     $teams = array();
-    $eventTeams = array();
+    $eventIds = array();
     $teamPoints = array();
 
     if(isset($_GET['eventId'])) {
@@ -133,41 +162,9 @@ if(isset($_GET['points'])) {
         while(mysqli_stmt_fetch($stmt)) {
             $teams += [$teamId => $teamName];
             $teamPoints += [$teamId => $points];
+            $eventIds += [$teamId => $eventId];
         }
         mysqli_stmt_close($stmt);
-    }
-    
-}
-
-foreach($_POST as $radioTeamId => $assignedPoints) {
-    if(isset($_POST[$radioTeamId])) {
-        $conn = connectDB();
-        $poinsPerTeam = array();
-
-        //Get all values from the radiobuttons
-        
-            $poinsPerTeam += [$radioTeamId => $assignedPoints];
-            $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
-            $stmt = mysqli_prepare($conn, $sql);
-
-            if(!$stmt) {
-                header("location: ../components/error.php");
-            }
-
-            if(!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)){
-                header('location: ../components/error.php');
-            }
-
-            if(!mysqli_stmt_execute($stmt)) {
-                header('location ../components/error.php');
-            }
-            mysqli_stmt_close($stmt);   
-        
-
-        mysqli_close($conn);
-        $_SESSION['succes'] = 'Punten toegevoegd';
-        
-        header('location: admin.php?points');
     }
 }
 ?>

@@ -16,7 +16,7 @@ if(isset($_GET['eventId'])) {
 
 <div class="row" id="eventPoints">
     <div class="col-4">  
-        <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post" id="points-form">
+        <form action="" method="post" id="points-form">
         <?php foreach($teams as $teamId => $team) { ?>
             <div class="form-group row mt-2">
                 <div class="col-4 d-flex align-items-center">
@@ -37,6 +37,9 @@ if(isset($_GET['eventId'])) {
 
                     <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '4'?>" value="10" autocomplete="off">
                     <label class="btn btn-secondary" for="<?=$team . '4'?>">10</label>     
+
+                    <input type="submit" class="btn-check" onclick="this.form.submit()" name="revert" id="<?=$team . '5'?>" value="1" autocomplete="off">
+                    <label class="btn btn-secondary" for="<?=$team . '5'?>">Revert  </label>
                 </div>
             </div>
         <?php } ?>

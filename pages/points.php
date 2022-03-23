@@ -4,7 +4,7 @@
 
     $pointsPerTeam = array();
     $progress = array();
-    $maxPoints = 80;
+    $maxPoints = 75;
 
     $sql = "SELECT teamId, points, `name` FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
     $stmt = mysqli_prepare($conn, $sql);
