@@ -36,7 +36,7 @@ include_once('../functions/function.php');
     $historyResults = stmtExec($query);
     ?>
 
-    <video width="840" height="600" controls>
+    <video width="840" height="600" autoplay muted controls>
         <source src="/Project Battle Bot/Battle-Bot-interface/assets/video/Purple_Disco_Machine,_Sophie_and_the_Giants_-_In_The_Dark.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
