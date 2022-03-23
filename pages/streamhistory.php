@@ -21,25 +21,28 @@ include_once('../functions/function.php');
         <?php includeHeader('page'); ?>
     </section>
 
-    <main id='streamhistory'>
-        <div class="container">
-            <div class="row mt-4">
-                
-            <?php
-              $query = "SELECT id, name, weburl,
+    <?php
+
+    /**
+     * Function to show events as HTML
+     * 
+     */
+
+    $query = "SELECT id, name, weburl
               FROM streamhistory 
               WHERE date > now()
               ORDER BY date ASC
               limit 5";
 
-    $streamhistory = stmtExec($query);
+    $historyResults = stmtExec($query);
+    debug($historyResults);
 
-    if (!empty($streamhistory["id"])) {
-        $ids = $streamhistory["id"];
+    if (!empty($historyResults["id"])) {
+        $ids = $historyResults["id"];
 
         for ($i = 0; $i < count($ids); $i++) {
-            $name = $streamhistory["name"][$i];
-            $weburl = $streamhistory["weburl"][$i];
+            $name = $historyResults["name"][$i];
+            $weburl = $historyResults["url"][$i];
 
             echo '
             <div class="col-sm-3 mb-4">
@@ -52,13 +55,9 @@ include_once('../functions/function.php');
             </div>
             ';
         }
-    }
- ?>
-    </main>
+    } else { echo "test"; }
 
-
-    </div>
-    </div>
+    ?>
 
     <footer class="navbar">
         <?php include_once('../components/footer.php') ?>
