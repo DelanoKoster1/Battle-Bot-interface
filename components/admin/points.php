@@ -22,7 +22,7 @@ if(isset($_GET['eventId'])) {
                 <div class="col-4 d-flex align-items-center">
                     <span><?= $team ?></span>
                 </div>
-                    <div class="col-8 d-flex justify-content-around">
+                <div class="col-8 d-flex justify-content-around">
                     <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team?>" value="25" autocomplete="off">
                     <label class="btn btn-secondary" for="<?=$team?>">25</label>
 
@@ -40,10 +40,16 @@ if(isset($_GET['eventId'])) {
                 </div>
             </div>
         <?php } ?>
-            <input class="btn btn-danger mt-3" type="submit" name="submitPoints" id="submitPoints" value="Punten toevoegen">
         </form>
     </div>
-    <div class="col-8">
+    <div class="col-8 d-flex align-content-around">
+        <div class="row mt-2">
+            <?php foreach($teamPoints as $teamId => $points) { ?>
+                <div class="col-12 d-block d-flex text-left align-items-center">
+                    <span>Points: <?= $points ?></span>
+                </div>
+            <?php } ?>
+        </div>
     </div>
 </div>
 
