@@ -2,8 +2,7 @@
 session_start();
 
 // $type:   1 for print_r(), 0 or empty for var_dump()
-function debug($var, int $type = 0)
-{
+function debug($var, int $type = 0) {
     echo "<pre>";
     if ($type) {
         print_r($var);
@@ -17,8 +16,7 @@ function debug($var, int $type = 0)
  * Function to connect to Database
  * 
  */
-function connectDB()
-{
+function connectDB() {
     //Require ENV
     require_once('env.php');
 
@@ -34,8 +32,7 @@ function connectDB()
     return $conn;
 }
 
-function fail(?string $code = NULL, ?string $info = NULL)
-{
+function fail(?string $code = NULL, ?string $info = NULL) {
     switch ($code) {
             // Database Fail: Common
         case 'DB00':
@@ -78,7 +75,6 @@ function fail(?string $code = NULL, ?string $info = NULL)
     }
 }
 
-
 /*
  *                         
  * @param string $sql: Give the sql query to execute                                                                                    
@@ -86,9 +82,7 @@ function fail(?string $code = NULL, ?string $info = NULL)
  * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                                                                                                 
  *                                                                                                   
  */
-
-function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
-{
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
 
     //Require env.php
     require_once('env.php');
@@ -131,6 +125,7 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
             }
 
             if (mysqli_stmt_execute($stmt)) {
+                $_SESSION['lastInsertedId'] = mysqli_insert_id($conn); // sets lastinserted id back into the session
                 mysqli_stmt_store_result($stmt);
                 if (mysqli_stmt_num_rows($stmt) > 0) {
 
@@ -254,11 +249,220 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
 }
 
 /**
+ * Function checkLoginFields
+ * Function to check if fields are correct and not empty.
+ * Display Error message if needed.
+ * @param String $username Filled in username
+ * @param String $password Filled in password
+ * @param array $error Array with errors
+ * @return String/boolean $error False or error message
+ */
+function checkLoginFields(String $username, String $password) {
+    //Call global variable(s)
+    global $error;
+
+    //If statements so the error messages will be displayed all at once instead of each individual.
+    if (!$username && empty($username)) {
+        $error[] = 'De gebruikersnaam is niet correct!';
+    }
+    if (strlen($username) > 50) {
+        $error[] = 'De gebruikersnaam is te lang!';
+    }
+    if (!$password && empty($password)) {
+        $error[] = 'Het wachtwoord mag niet leeg zijn!';
+    }
+    if (strlen($password) > 200) {
+        $error[] = 'Het wachtwoord is te lang!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $error;
+    }
+}
+
+/**
+ * Function checkRegisterFields.
+ * Function to check if fields are correct and not empty.
+ * Display Error message if needed.
+ * @param string    $username  Filled in username
+ * @param string    $email  Filled in email
+ * @param string    $password  Filled in password
+ * @param string    $password2  Filled in password2
+ * @param array     $error  Array with errors
+ * @return string/boolean  $error  False or error message
+ */
+function checkRegisterFields(string $username, string $email, string $password, string $password2) {
+    //Call global variable(s)
+    global $error;
+
+    //If statements so the error messages will be displayed all at once instead of each individual.
+    if (!$username && empty($username)) {
+        $error[] = 'De gebruikersnaam mag niet leeg zijn!';
+    }
+    if (!$email && empty($email)) {
+        $error[] = 'Het e-mailadres is onjuist!';
+    }
+    if (!$password && empty($password)) {
+        $error[] = 'Het wachtwoord mag niet leeg zijn!';
+    }
+    if (!$password2 && empty($password2)) {
+        $error[] = 'Het herhaal wachtwoord mag niet leeg zijn!';
+    }
+    if ($password != $password2) {
+        $error[] = 'De wachtwoorden komen niet overeen!';
+    }
+    if (strlen($email) > 200) {
+        $error[] = 'Het e-mailadres is te lang!';
+    }
+    if (strlen($username) > 50) {
+        $error[] = 'De gebruikersnaam is te lang!';
+    }
+    if (strlen($password) > 255) {
+        $error[] = 'Het wachtwoord is te lang!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $error;
+    }
+}
+
+/**
+ * Function checkProfileFields.
+ * Function to check if fields are correct and not empty.
+ * Display Error message if needed.
+ * @param string    $username  Filled in username
+ * @param string    $email  Filled in email
+ * @param string    $password  Filled in password
+ * @param string    $password2  Filled in password2
+ * @param array     $error  Array with errors
+ * @return string/boolean  $error  False or error message
+ */
+
+function checkProfileFields(string $username, string $email, string $password, string $password2) {
+    //Call global variable(s)
+    global $error;
+
+    //If statements so the error messages will be displayed all at once instead of each individual.
+    if (!$username && empty($username)) {
+        $error[] = 'De gebruikersnaam mag niet leeg zijn!';
+    }
+    if (!$email && empty($email)) {
+        $error[] = 'Het e-mailadres mag niet leeg zijn!';
+    }
+    if (!$password && empty($password)) {
+        $error[] = 'Het wachtwoord mag niet leeg zijn!';
+    }
+    if (!$password2 && empty($password2)) {
+        $error[] = 'Het herhaal wachtwoord mag niet leeg zijn!';
+    }
+    if ($password != $password2) {
+        $error[] = 'De wachtwoorden komen niet overeen!';
+    }
+    if (strlen($email) > 200) {
+        $error[] = 'Het e-mailadres is te lang!';
+    }
+    if (strlen($username) > 50) {
+        $error[] = 'De gebruikersnaam is te lang!';
+    }
+    if (strlen($password) > 255) {
+        $error[] = 'Het wachtwoord is te lang!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $error;
+    }
+}
+
+
+/**
+ * Function checkProfilePassword.
+ * Function to check if fields are correct and not empty.
+ * Display Error message if needed.
+ * @param string    $newPassword  Filled in newPassword
+ * @param string    $repeatPassword  Filled in repeatPassword
+ * @param array     $error  Array with errors
+ * @return string/boolean  $error  False or error message
+ */
+function checkProfilePassword($newPassword, $repeatPassword) {
+    //Call global variable(s)
+    global $error;
+
+    if ($newPassword == $repeatPassword) {
+    } else {
+        $error[] = 'Het nieuwe wachtwoord en het herhaal wachtwoord komen niet overeen!';
+    }
+    if (!$newPassword && empty($newPassword)) {
+        $error[] = 'Het nieuwe wachtwoord mag niet leeg zijn!';
+    }
+    if (!$repeatPassword && empty($repeatPassword)) {
+        $error[] = 'Het herhaal wachtwoord mag niet leeg zijn!';
+    }
+
+    if (empty($error)) {
+        return true;
+    } else {
+        return $error;
+    }
+}
+/**
+ * Function checkUserInDatabase
+ * Function to check if user already exists in database
+ * Return Error message if needed.
+ * @param   string          $username  Filled in username
+ * @param   string          $email     Filled in email
+ * @param   boolean         $profile   check if this is profile page
+ * @return  string/boolean  $error  False or error message
+ */
+function checkUserInDataBase(string $username, string $email, $profile = false) {
+    //Call global variable(s)
+    global $error;
+
+    //SQL Query for selecting all users where an email is in DB
+    if ($profile) {
+        $sql = "SELECT username, email FROM account WHERE username = ? AND email = ?";
+    } else {
+        $sql = "SELECT username, email FROM account WHERE username = ? OR email = ?";
+    }
+
+    $results = stmtExec($sql, 0, $username, $email);
+
+    //Check if a result has been found
+    if (is_array($results) && count($results) > 0) {
+        for ($i = 0; $i < count($results["email"]); $i++) {
+            $email = $results['email'][$i];
+
+            if ($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
+                $error[] = 'Er bestaat al een account met dit e-mailadres!';
+            }
+        }
+
+        for ($i = 0; $i < count($results["username"]); $i++) {
+            $username = $results['username'][$i];
+
+            if ($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
+                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam!';
+            }
+        }
+
+        foreach ($error as $errorMsg) {
+            return $errorMsg;
+        }
+    } else {
+        return false;
+    }
+}
+
+/**
  * Function to include header with correct map structure
  * 
  */
-function includeHeader(String $sort)
-{
+function includeHeader(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');
@@ -271,8 +475,7 @@ function includeHeader(String $sort)
  * Function to check if date is valid
  * 
  */
-function checkValidDate(String $date)
-{
+function checkValidDate(String $date) {
     $today = date('Y-m-d\TH:i');
 
     //Check if filled in date is older then today.
@@ -292,8 +495,7 @@ function checkValidDate(String $date)
  * Function to format a date
  * 
  */
-function formatdate(string $date): string
-{
+function formatdate(string $date): string {
     switch (date("F", strtotime($date))) {
         case "January":
             $month = "\\J\\a\\n\\u\\a\\r\\i";
@@ -330,14 +532,14 @@ function formatdate(string $date): string
  * Function to show events as HTML
  * 
  */
-function showEvents()
-{
+function showEvents(bool $limit = false, bool $admin = false) {
     $query = "SELECT id, name, date, description
               FROM event 
-              WHERE date > now()
+              WHERE date > NOW()
+              AND `type` = 'public'
               ORDER BY date ASC
-              limit 5";
-
+              ";
+    $query .= ($limit) ? "LIMIT 4" : "";
     $eventResults = stmtExec($query);
 
     if (!empty($eventResults["id"])) {
@@ -347,18 +549,31 @@ function showEvents()
             $name = $eventResults["name"][$i];
             $eventDate = $eventResults["date"][$i];
             $description = $eventResults["description"][$i];
-
-            echo '
-            <div class="col-sm-3 mb-4">
-                <div class="card eventsCard">
-                    <div class="card-body">
-                        <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                        <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
-                        <span class="calendarInfo mt-4 d-block">' . $description . '</span>
+            $id = $eventResults["id"][$i];
+            if (!$admin) {
+                echo '
+                <div class="col-sm-3 mb-4">
+                    <div class="card eventsCard">
+                        <div class="card-body">
+                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                            <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
+                            <span class="calendarInfo mt-4 d-block">' . $description . '</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            ';
+                ';
+            } else {
+                echo '
+                <div class="col-sm-3 mb-4">
+                    <div class="card eventsCard">
+                        <div class="card-body">
+                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                            <span class="calendarTitle d-block text-capitalize"><a class="stretched-link" href="admin.php?point&amp;eventId=' . $id . '">' . $name . '</span>
+                        </div>
+                    </div>
+                </div>
+                ';
+            }
         }
     } else {
         echo '
@@ -374,8 +589,7 @@ function showEvents()
 }
 
 //function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
-function eventTimeDescent()
-{
+function eventTimeDescent() {
     $query = "SELECT    date
               FROM      `event`
               WHERE     NOW() <= date;
@@ -389,16 +603,11 @@ function eventTimeDescent()
     }
 }
 
-function getLivestream()
-{
+function getLivestream() {
     return '
-            <iframe
-            id="ytplayer"
-            type="text/html"
-            src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true"
-            frameborder="0">
-            </iframe>
-            ';
+        <img
+        src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
+        ';
 }
 
 function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
@@ -555,3 +764,209 @@ function pollQuestionAnswer($postQuestion) {
     return $progressBar;
 
 }
+
+function getProfileInfo() {
+    $query = "SELECT    username,
+                        email,
+                        password
+                FROM    `account`
+                WHERE   id = ?
+            ";
+    return stmtExec($query, 0, $_SESSION['id']);
+}
+/**
+ * Function to get all events
+ * 
+ * @return Array Array of all events with names from db
+ */
+function getAllEvents()
+{
+    $conn = connectDB();
+    $arr = array();
+
+    //Creating a table
+    $query = "SELECT * FROM event";
+
+    //Prpeparing SQL Query with database connection
+    if (!$stmt = mysqli_prepare($conn, $query)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Executing statement
+    if (!mysqli_stmt_execute($stmt)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Bind the STMT results(sql statement) to variables
+    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type);
+
+    while (mysqli_stmt_fetch($stmt)) {
+        $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type];
+    }
+
+    return $arr;
+}
+
+/**
+ * Function to get all robots
+ * 
+ * @return Array Array of all robots with names from db
+ */
+
+function getAllRobots() {
+     //Creating a table
+    $query = "SELECT * FROM bot";
+
+    return stmtExec($query);
+}
+
+//Post submissions
+function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
+    global $error;
+    $conn = connectDB();
+    $arr = array();
+    if (!$eventDate && empty($eventDate)) {
+        $error[] = 'Event datum mag niet leeg zijn!';
+    } else {
+        if (!checkValidDate($eventDate)) {
+            $error[] = 'Event datum is ongeldig!';
+        }
+    }
+    if (!$eventName && empty($eventName)) {
+        $error[] = 'Event naam mag niet leeg zijn!';
+    }
+    if (!$eventType && empty($eventType)) {
+        $error[] = 'Event type mag niet leeg zijn!';
+    } else {
+        if ($eventType == 'public' || $eventType == 'private') {
+            //Do nothing 
+        } else {
+            $error[] = 'Event type klopt niet';
+        }
+    }
+
+    if (!$eventDescription && empty($eventDescription)) {
+        $error[] = 'Event omschrijving mag niet leeg zijn!';
+    }
+    if (strlen($eventName) > 255) {
+        $error[] = 'Event naam is te lang!';
+    }
+    if (strlen($eventDescription) > 255) {
+        $error[] = 'Event omschrijving is te lang!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $error;
+    }
+    return $arr;
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
+function checkIfFile($file)
+{
+    return is_uploaded_file($file["tmp_name"]);
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
+function checkFileSize($file)
+{
+    if ($file["size"] <= 5000000) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @return: true or false
+ */
+
+function checkFileType($file)
+{
+    $mimeArray = ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf", "video/mp4"];
+    $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file["tmp_name"]);
+    if (in_array($fileInfo, $mimeArray)) {
+        if (!$file["error"] > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+/**
+ * @param: $id: returns id
+ * @param: $path: returns file path
+ * @return: true or false
+ */
+
+function makeFolder(int $id, string $path)
+{
+    $directory = $path . $id;
+    if (!file_exists($directory)) {
+        mkdir($directory, 0777);
+    }
+
+    return true;
+}
+
+/**
+ * @param: $directory: returns directory to file
+ * @param: $fileName: returns file name
+ * @return: true or false
+ */
+
+function checkFileExist(string $directory, string $fileName)
+{
+    return file_exists($directory . $fileName);
+}
+
+/**
+ * @param: $directory: returns directory to file
+ * @return: true
+ */
+
+function deleteFile(string $directory)
+{
+    $files = glob($directory . '*'); // get all file names
+    foreach ($files as $file) { // iterate files
+        if (is_file($file)) {
+            unlink($file); // delete file
+        }
+    }
+
+    return true;
+}
+
+/**
+ * @param: $file: returns file object with properties
+ * @param: $Id int: relation ID
+ * @param: $directory: returns directory
+ * @return: true or false
+ */
+
+function uploadFile($file, string $query, int $id, string $directory)
+{
+    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory,$id)) {
+        return true;
+    } else {
+        return false;
+    }
+
+}
+

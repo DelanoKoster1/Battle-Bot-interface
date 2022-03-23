@@ -6,6 +6,7 @@
     include_once('../components/head.html');
     include_once('../functions/function.php');
     ?>
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/robots.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
@@ -16,6 +17,7 @@
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
+
     <div class="container-fluid">
         <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
@@ -77,11 +79,11 @@
                     $id = $teamId;
                     $botId = $dbResults["bot.id"][$teamId - 1];
                     $botName = $dbResults["bot.name"][$teamId - 1];
-                    $teamName = $dbResults["team.name"][$teamId - 1]; 
+                    $teamName = $dbResults["team.name"][$teamId - 1];
                     $specsBoard = $dbResults["specs.board"][$botId - 1];
                     $specsInterface = $dbResults["specs.interface"][$botId - 1];;
                     $gamesWon = $dbResults["stats.wins"][$botId - 1];;
-                    $gamesPlayed = $dbResults["stats.playedMatches"][$botId - 1];; 
+                    $gamesPlayed = $dbResults["stats.playedMatches"][$botId - 1];;
                     echo ' 
                         <div class="tab-pane" id="' . $botName . '" role="tabpanel" aria-labelledby="' . $botName . '">
                             <div class="row">

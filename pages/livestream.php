@@ -6,6 +6,7 @@
     include_once('../components/head.html');
     include_once('../functions/function.php');
     ?>
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/playback.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
@@ -55,7 +56,7 @@
                                                         <button class="btn btn-outline-secondary" type="button" id="button-addon2"><span class="material-icons align-middle">send</span></button>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 d-flex justify-content-between mb-3">
+                                                <div class="col-12 d-flex justify-content-between mb-3 buttons-group">
                                                     <div class="btn w-33 btn-success">1000</div>
                                                     <button class="btn text-right btn-success">Scorebord</button>
                                                     <button class="btn text-right btn-success vote-button">Stemmen</button>
