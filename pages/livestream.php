@@ -6,6 +6,7 @@
     include_once('../components/head.html');
     include_once('../functions/function.php');
     ?>
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/playback.css">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
