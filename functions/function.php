@@ -536,7 +536,7 @@ function formatdate(string $date): string
  * Function to show events as HTML
  * 
  */
-function showEvents()
+function showEvents($admin = false)
 {
     $query = "SELECT id, name, date, description
               FROM event 
@@ -553,7 +553,8 @@ function showEvents()
             $name = $eventResults["name"][$i];
             $eventDate = $eventResults["date"][$i];
             $description = $eventResults["description"][$i];
-
+            $id = $eventResults["id"][$i];
+            if(!$admin) {
             echo '
             <div class="col-sm-3 mb-4">
                 <div class="card eventsCard">
@@ -565,6 +566,20 @@ function showEvents()
                 </div>
             </div>
             ';
+            }else {
+                echo '
+            <a href="../pages/admin.php?points&eventId=' . $id .'" class="text-decoration-none">
+                <div class="col-sm-3 mb-4">
+                    <div class="card eventsCard">
+                        <div class="card-body">
+                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                            <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            '; 
+            }
         }
     } else {
         echo '
