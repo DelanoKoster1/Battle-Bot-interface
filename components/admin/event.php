@@ -1,5 +1,5 @@
 <div class="eventBox">
-    <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+    <form action="<?= htmlentities($_SERVER['PHP_SELF']) . '?'.http_build_query($_GET); ?>" method="post">
         <div class="form-group">
             <input class="form-control mt-3" min="<?php echo $today ?>" type="datetime-local" name="date" value="<?php if (isset($_POST['event'])) {echo htmlentities($_POST['date']); } ?>">
             <input class="form-control mt-3" placeholder="Event naam" type="text" name="eventNaam" value="<?php if (isset($_POST['event'])) {echo htmlentities($_POST['eventNaam']); } ?>">

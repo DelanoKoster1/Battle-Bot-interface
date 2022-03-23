@@ -17,21 +17,25 @@ switch (true) {
         $headerTitle = 'Poll toevoegen';
         $content = "../components/admin/poll.php";
         break;
+
     case isset($_GET['game']):
         $headerTitle = 'Games';
         $content = "../components/admin/game.php";
         break;
+
     case isset($_GET['points']);
         $headerTitle = 'Punten toevoegen';
         $content = "../components/admin/points.php";
         break;
+
     case isset($_GET['director']);
         $headerTitle = 'Ressigeur pagina';
         $content = "../components/admin/director.php";
         break;
-    case isset($_GET['addRobotToEvent']);
-        $headerTitle = 'Robot aan event toevoegen';
-        $content = "../components/admin/addRobotToEvent.php";
+
+    case isset($_GET['addTeamToEvent']);
+        $headerTitle = 'Team aan event toevoegen';
+        $content = "../components/admin/addTeamToEvent.php";
         break;
 
     default:
@@ -40,7 +44,35 @@ switch (true) {
         break;
 }
 
+/**
+ * Add event section
+ */
+function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
+    global $error;
 
+    if (!$eventDate && empty($eventDate)) {
+        $error[] = 'Event datum mag niet leeg zijn!';
+    } else {
+        if (!checkValidDate($eventDate)) {
+            $error[] = 'Event datum is ongeldig!';
+        }
+    }
+    if (!$eventDescription && empty($eventDescription)) {
+        $error[] = 'Event omschrijving mag niet leeg zijn!';
+    }
+    if (!$eventName && empty($eventName)) {
+        $error[] = 'Event naam mag niet leeg zijn!';
+    }
+    if (!$eventType && empty($eventType)) {
+        $error[] = 'Event type mag niet leeg zijn!';
+    } else {
+        if ($eventType == 'public' || $eventType == 'private') {
+            //Do nothing
+        } else {
+            $error[] = 'Event type klopt niet';
+        }
+    }
+}
 
 if (isset($_POST['event'])) {
     //Submitted form data validation
@@ -66,6 +98,10 @@ if (isset($_POST['event'])) {
         exit();
     }
 }
+
+/**
+ * ??
+ */
 
 if (isset($_GET['points'])) {
     $teams = array();
@@ -96,6 +132,54 @@ if (isset($_POST['submitPoints'])) {
 
     header('location: admin.php?points');
 }
+
+/**
+ * Add team to robot section
+ */
+if (isset($_POST['selectedTeam'])) {
+    $selectedTeam = filter_input(INPUT_POST, 'selectedTeam', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (!checkSelectedTeam($selectedTeam)) {
+        $_SESSION['selectedTeam'] = $selectedTeam;
+    }
+
+    header('location: admin.php?addTeamToEvent');
+}
+
+if (isset($_POST['selectedEvent'])) {
+    $selectedEvent = filter_input(INPUT_POST, 'selectedEvent', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (!checkSelectedEvent($selectedEvent)) {
+        //check if event & team id are already in database
+        $sql = "SELECT eventId, teamId, points FROM `team-event` WHERE eventId = ? AND teamId = ?";
+
+        //Get results from the database
+        $results = stmtExec($sql, 0, $selectedEvent, $_SESSION['selectedTeam']);
+
+        //Check if no result has been found
+        if (is_array($results) && count($results) > 0) {
+            $error[] = 'Dit team is al toegevoegd aan dit event';
+            unset($_SESSION['selectedTeam']);
+        } else {
+            //Insert into database
+            $sql = "INSERT INTO `team-event` (eventId, teamId) VALUES (?,?)";
+            
+            if (!stmtExec($sql, 0, $selectedEvent, $_SESSION['selectedTeam'])) {
+                $_SESSION['error'] = "database_error";
+                header("location: ../components/error.php");
+            }
+
+            unset($_SESSION['selectedTeam']);
+
+            //Set succes message
+            $_SESSION['succes'] = 'Team aan event toegevoegd!';
+
+            //Send user to admin.php?addTeamToEvent
+            header('location: admin.php?addTeamToEvent');
+            exit();
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -124,7 +208,7 @@ if (isset($_POST['submitPoints'])) {
                 <nav class="navbar">
                     <ul class="nav w-100 nav-fill pt-2">
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?event">Event toevoegen</a>
+                            <a class="nav-link text-white" href="admin.php">Event toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?poll">Poll toevoegen</a>
@@ -139,7 +223,7 @@ if (isset($_POST['submitPoints'])) {
                             <a class="nav-link text-white" href="admin.php?director">Regisseur pagina</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?addRobotToEvent">Robot toevoegen aan event</a>
+                            <a class="nav-link text-white" href="admin.php?addTeamToEvent">Team toevoegen aan event</a>
                         </li>
                     </ul>
                 </nav>
