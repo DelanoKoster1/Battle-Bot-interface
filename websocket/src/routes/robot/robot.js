@@ -17,17 +17,28 @@ wss.on('connection', (client, req) => {
             console.log(wsKey);
             let body = JSON.parse(clientReq);
 
-            if ( clientIsBot(wsKey) || clientIsAdmin(wsKey)) {
-                if(body.action && clientIsAdmin(wsKey)){
-                    sendActionToAllBots(body)
-                }else{
-                    sendMsgToClient(client, {"error": "INVALID_COMMAND"})
+            if (clientIsBot(wsKey) || clientIsAdmin(wsKey)) {
+                if (body.action && clientIsAdmin(wsKey)) {
+                    switch (body.for) {
+                        case "all":
+                            sendActionToAllBots(body);
+                            break;
+                        case "single":
+                            // sendActionToBot(body);
+                            break;
+                        default:
+                    }
+
+                } else {
+                    sendMsgToClient(client, {
+                        "error": "INVALID_COMMAND"
+                    })
                 }
 
-                if(body.status){
-                    bots.setStatus(wsKey, body.status); 
-                    console.log(this.getAllBots());
-                } 
+                if (body.status) {
+                    bots.setStatus(wsKey, body.status);
+                    //send to admin status of all bots that are preparing
+                }
 
             } else {
                 login(body, wsKey, client);
@@ -62,12 +73,12 @@ wss.on('connection', (client, req) => {
 })
 
 
-function clientIsAdmin(wsKey){
+function clientIsAdmin(wsKey) {
     return admins.hasOwnProperty(wsKey)
 }
 
-function clientIsBot(wsKey){
-    bots.getAllBots().hasOwnProperty(wsKey)
+function clientIsBot(wsKey) {
+    return bots.getAllBots().hasOwnProperty(wsKey)
 }
 
 
@@ -78,7 +89,7 @@ function login(req, wsKey, client) {
     } else {
         if (bots.saveBot(req.id, wsKey, client)) {
             // console.log(bots.getAllBots());
-            sendMsgToClient(client, { 
+            sendMsgToClient(client, {
                 "loggedin": true
             })
         } else {
@@ -87,7 +98,7 @@ function login(req, wsKey, client) {
             })
         }
     }
-} 
+}
 
 
 function sendActionToAllBots(body) {
@@ -103,6 +114,17 @@ function sendActionToAllBots(body) {
     } else {
         //geen bots conn
     }
+}
+
+function sendActionToBot(body){
+    let bot = bots.getBotById(body.id);
+
+    bots.setAction(bot.wsKey, body.action);
+    sendMsgToClient({
+        "status": body.action,
+        "game": body.game
+    })
+
 }
 
 
