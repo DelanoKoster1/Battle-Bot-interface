@@ -24,8 +24,8 @@
             <div class="row py-5">
                 <div class="col-lg-6 col-12">
                     <h1>Welkom bij Battlebots</h1>
-                    <p>Battle Bots is een evenement georganiseerd door de eerste jaar studenten van het NHL Stenden Hogeschool te Emmen. Er doen 5 robots mee aan het event. Elke robot moet 5 spellen kunnen spelen. De robot die de meeste spellen wint, wint het evenement.</p>
-                    <p>Het evenement vind plaats op donderdag 14 April.</p>
+                    <p>Battle Bots is een evenement georganiseerd door de eerste jaars studenten ICT van de NHL Stenden Hogeschool te Emmen. Er zullen diverse spellen gespeeld worden en de robot die de meeste spellen wint, wint het evenement.</p>
+                    <p>Het evenement zal plaatsvinden op donderdag 14 April 2022.</p>
                 </div>
                 <div class="col-lg-6 col-12 text-center livestream">
                     <a class="livestream" href="./pages/livestream.php">

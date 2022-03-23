@@ -549,7 +549,7 @@ function showEvents() {
             $description = $eventResults["description"][$i];
 
             echo '
-            <div class="col-sm-3 mb-4">
+            <div class="col-sm-5 d-flex mb-4">
                 <div class="card eventsCard">
                     <div class="card-body">
                         <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
@@ -565,7 +565,7 @@ function showEvents() {
         <div class="col-sm-12 mb-4">
             <div class="card eventsCard">
                 <div class="card-body text-center">
-                    <span class="calendarTitle d-block text-white">Nog geen opkomende evenementen</span>
+                    <span class="calendarTitle d-block text-white">Er zijn op het moment geen opkomende evenementen</span>
                 </div>
             </div>
         </div>

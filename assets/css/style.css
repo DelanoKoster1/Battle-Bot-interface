@@ -55,7 +55,8 @@ header .menu,
 }
 #bots .card {
   margin: 0 1.5rem;
-  min-width: 185px;
+  min-width: 75px;
+  min-height: 75px;
   padding: 10px;
 }
 #bots .no-bots {
@@ -252,5 +253,13 @@ header .menu,
 @media (max-width: 1332px) {
   header .nav-link {
     padding: 0.5rem;
+  }
+}
+@media (max-width: 576px) {
+  #bots .card {
+    height: 80%;
+  }
+  #bots .card-title {
+    font-size: 11px;
   }
 }
