@@ -39,6 +39,7 @@
     include_once('../components/head.html');
     include_once('../functions/function.php');
     ?>
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
 
@@ -60,7 +61,7 @@
     <div class="row pt-3">
         <div class="col-2"></div>
         <div class="col-8">
-            <?php foreach($pointsPerTeam as $team => $point) { ?>
+            <?php foreach ($pointsPerTeam as $team => $point) { ?>
             <div class="row">
                 <div class="col-md-2 col-12 d-flex align-items-end mt-4">
                     <img class="img-fluid scoreImg" src="../assets/img/battlebotlogo.png" alt="<?= $team ?>">

@@ -40,46 +40,7 @@ switch (true) {
         break;
 }
 
-//Post submissions
-function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
-    global $error;
 
-    if (!$eventDate && empty($eventDate)) {
-        $error[] = 'Event datum mag niet leeg zijn!';
-    } else {
-        if (!checkValidDate($eventDate)) {
-            $error[] = 'Event datum is ongeldig!';
-        }
-    }
-    if (!$eventName && empty($eventName)) {
-        $error[] = 'Event naam mag niet leeg zijn!';
-    }
-    if (!$eventType && empty($eventType)) {
-        $error[] = 'Event type mag niet leeg zijn!';
-    } else {
-        if ($eventType == 'public' || $eventType == 'private') {
-            //Do nothing 
-        } else {
-            $error[] = 'Event type klopt niet';
-        }
-    }
-
-    if (!$eventDescription && empty($eventDescription)) {
-        $error[] = 'Event omschrijving mag niet leeg zijn!';
-    }
-    if (strlen($eventName) > 255) {
-        $error[] = 'Event naam is te lang!';
-    }
-    if (strlen($eventDescription) > 255) {
-        $error[] = 'Event omschrijving is te lang!';
-    }
-
-    if (empty($error)) {
-        return false;
-    } else {
-        return $error;
-    }
-}
 
 if (isset($_POST['event'])) {
     //Submitted form data validation
@@ -144,7 +105,7 @@ if (isset($_POST['submitPoints'])) {
     <?php
     include_once('../components/head.html');
     ?>
-
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/admin.css">

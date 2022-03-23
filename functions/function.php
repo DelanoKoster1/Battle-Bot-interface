@@ -2,8 +2,7 @@
 session_start();
 
 // $type:   1 for print_r(), 0 or empty for var_dump()
-function debug($var, int $type = 0)
-{
+function debug($var, int $type = 0) {
     echo "<pre>";
     if ($type) {
         print_r($var);
@@ -17,8 +16,7 @@ function debug($var, int $type = 0)
  * Function to connect to Database
  * 
  */
-function connectDB()
-{
+function connectDB() {
     //Require ENV
     require_once('env.php');
 
@@ -34,8 +32,7 @@ function connectDB()
     return $conn;
 }
 
-function fail(?string $code = NULL, ?string $info = NULL)
-{
+function fail(?string $code = NULL, ?string $info = NULL) {
     switch ($code) {
             // Database Fail: Common
         case 'DB00':
@@ -85,8 +82,7 @@ function fail(?string $code = NULL, ?string $info = NULL)
  * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                                                                                                 
  *                                                                                                   
  */
-function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
-{
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
 
     //Require env.php
     require_once('env.php');
@@ -260,8 +256,7 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
  * @param array $error Array with errors
  * @return String/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password)
-{
+function checkLoginFields(String $username, String $password) {
     //Call global variable(s)
     global $error;
 
@@ -297,8 +292,7 @@ function checkLoginFields(String $username, String $password)
  * @param array     $error  Array with errors
  * @return string/boolean  $error  False or error message
  */
-function checkRegisterFields(string $username, string $email, string $password, string $password2)
-{
+function checkRegisterFields(string $username, string $email, string $password, string $password2) {
     //Call global variable(s)
     global $error;
 
@@ -347,8 +341,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
  * @return string/boolean  $error  False or error message
  */
 
-function checkProfileFields(string $username, string $email, string $password, string $password2)
-{
+function checkProfileFields(string $username, string $email, string $password, string $password2) {
     //Call global variable(s)
     global $error;
 
@@ -395,8 +388,7 @@ function checkProfileFields(string $username, string $email, string $password, s
  * @param array     $error  Array with errors
  * @return string/boolean  $error  False or error message
  */
-function checkProfilePassword($newPassword, $repeatPassword)
-{
+function checkProfilePassword($newPassword, $repeatPassword) {
     //Call global variable(s)
     global $error;
 
@@ -426,8 +418,7 @@ function checkProfilePassword($newPassword, $repeatPassword)
  * @param   boolean         $profile   check if this is profile page
  * @return  string/boolean  $error  False or error message
  */
-function checkUserInDataBase(string $username, string $email, $profile = false)
-{
+function checkUserInDataBase(string $username, string $email, $profile = false) {
     //Call global variable(s)
     global $error;
 
@@ -470,8 +461,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false)
  * Function to include header with correct map structure
  * 
  */
-function includeHeader(String $sort)
-{
+function includeHeader(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');
@@ -484,8 +474,7 @@ function includeHeader(String $sort)
  * Function to check if date is valid
  * 
  */
-function checkValidDate(String $date)
-{
+function checkValidDate(String $date) {
     $today = date('Y-m-d\TH:i');
 
     //Check if filled in date is older then today.
@@ -505,8 +494,7 @@ function checkValidDate(String $date)
  * Function to format a date
  * 
  */
-function formatdate(string $date): string
-{
+function formatdate(string $date): string {
     switch (date("F", strtotime($date))) {
         case "January":
             $month = "\\J\\a\\n\\u\\a\\r\\i";
@@ -543,8 +531,7 @@ function formatdate(string $date): string
  * Function to show events as HTML
  * 
  */
-function showEvents()
-{
+function showEvents() {
     $query = "SELECT id, name, date, description
               FROM event 
               WHERE date > now()
@@ -587,8 +574,7 @@ function showEvents()
 }
 
 //function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
-function eventTimeDescent()
-{
+function eventTimeDescent() {
     $query = "SELECT    date
               FROM      `event`
               WHERE     NOW() <= date;
@@ -602,16 +588,14 @@ function eventTimeDescent()
     }
 }
 
-function getLivestream()
-{
+function getLivestream() {
     return '
         <img
         src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
         ';
 }
 
-function getProfileInfo()
-{
+function getProfileInfo() {
     $query = "SELECT    username,
                         email,
                         password
@@ -621,8 +605,7 @@ function getProfileInfo()
     return stmtExec($query, 0, $_SESSION['id']);
 }
 
-function getBots()
-{
+function getBots() {
    $query = " SELECT   name
                FROM     bot 
              ";
@@ -702,4 +685,45 @@ function getAllRobots() {
     }
 
     return $arr;
+}
+
+//Post submissions
+function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
+    global $error;
+
+    if (!$eventDate && empty($eventDate)) {
+        $error[] = 'Event datum mag niet leeg zijn!';
+    } else {
+        if (!checkValidDate($eventDate)) {
+            $error[] = 'Event datum is ongeldig!';
+        }
+    }
+    if (!$eventName && empty($eventName)) {
+        $error[] = 'Event naam mag niet leeg zijn!';
+    }
+    if (!$eventType && empty($eventType)) {
+        $error[] = 'Event type mag niet leeg zijn!';
+    } else {
+        if ($eventType == 'public' || $eventType == 'private') {
+            //Do nothing 
+        } else {
+            $error[] = 'Event type klopt niet';
+        }
+    }
+
+    if (!$eventDescription && empty($eventDescription)) {
+        $error[] = 'Event omschrijving mag niet leeg zijn!';
+    }
+    if (strlen($eventName) > 255) {
+        $error[] = 'Event naam is te lang!';
+    }
+    if (strlen($eventDescription) > 255) {
+        $error[] = 'Event omschrijving is te lang!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $error;
+    }
 }

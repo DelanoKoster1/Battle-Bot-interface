@@ -1,12 +1,12 @@
 <?php
 require_once "../functions/database.php";
 
-if(isset($_GET['database'])) {
-    if($_GET['database'] === "refresh") {
+if (isset($_GET['database'])) {
+    if ($_GET['database'] === "refresh") {
         $setupdir = array_diff(scandir("./"), array('..', '.'));
 
-        foreach($setupdir as $file) {
-            if(is_file($file) && $file == "database.sql") {
+        foreach ($setupdir as $file) {
+            if (is_file($file) && $file == "database.sql") {
                 $sqlFile = $file;
             }
         }
@@ -16,12 +16,12 @@ if(isset($_GET['database'])) {
         $sqlFileArray = explode(";", $sqlFileContent);
         $sqlFileArray = array_diff($sqlFileArray, array(""));
 
-        foreach($sqlFileArray as $sql) {
-            if(!str_contains($sql, "USE")) {
+        foreach ($sqlFileArray as $sql) {
+            if (!str_contains($sql, "USE")) {
                 stmtExec($sql);
             }
         }
-    } else if($_GET['database'] === "delete") {
+    } else if ($_GET['database'] === "delete") {
         $sql = "DROP DATABASE battlebot";
         stmtExec($sql);
     }
@@ -36,6 +36,7 @@ if(isset($_GET['database'])) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BattleBot Setup</title>
+    <link href="../assets/img/logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>

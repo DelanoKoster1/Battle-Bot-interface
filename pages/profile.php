@@ -8,6 +8,7 @@ if (!isset($_SESSION['email'])) {
 }
 
 if (isset($_POST['save'])) {
+    $success = false;
     $results = getProfileInfo();
     if ($email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
         if ($username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
@@ -19,13 +20,14 @@ if (isset($_POST['save'])) {
                       WHERE     id = ?  
                     ";
                     stmtExec($query, 0, $username, $email, $_SESSION['id']);
+                    $success = true;
                 }
             } 
         } else {
-            $error[] = 'De ingevulde gebruikersnaam is ongeldig!';
+            $error[] = 'De gebruikersnaam is ongeldig!';
         }
     } else {
-        $error[] = 'Het ingevulde e-mailadres is ongeldig!';
+        $error[] = 'Het e-mailadres is ongeldig!';
     }
 
     if ($curPassword = filter_input(INPUT_POST, 'curpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
@@ -39,19 +41,12 @@ if (isset($_POST['save'])) {
                                   WHERE     id = ?  
                             ";
                         stmtExec($query, 0, $hashPassword, $_SESSION['id']);
-                    } else {
-                        $error[] = 'Het huidige en nieuwe wachtwoord komen overeen!';
-                    }
+                        $success = true;
+                    } 
                 }
-            } else {
-                $error[] = 'Het herhaal wachtwoord is ongeldig!';
             }
-        } else {
-            $error[] = 'Het nieuwe wachtwoord is ongeldig!';
         }
-    } else {
-        $error[] = 'Het huidige wachtwoord is ongeldig!';
-    }
+    } 
 }
 
 $results = getProfileInfo();
@@ -63,6 +58,7 @@ $results = getProfileInfo();
     <?php
     include_once('../components/head.html');
     ?>
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/profile.css">
@@ -80,18 +76,29 @@ $results = getProfileInfo();
             <form class="col-md-8 col-12 bg-white" method="post" action="">
                 <div class="row">
                     <div class="col-12">
-                        <h1 class="text-center bg-white w-100 pt-5 pb-5">Welkom, <?= $results['username'][0] ?></h1>
+                        <h1 class="text-center bg-white w-100 pt-5 mb-3">Welkom, <?= $results['username'][0] ?></h1>
                     </div>
                     <div class="col-12">
                         <?php
                         if (isset($_POST['save']) && !empty($error)) {
                             foreach ($error as $errorMsg) { ?>
                                 <div class="col-md-12 p-0">
-                                    <div class="alert alert-danger text-black fw-bold p-4 mb-3 rounded" role="alert">
-                                        <?php echo $errorMsg; ?>
+                                    <div class="alert alert-danger text-center text-black fw-bold p-4 mt-3 mb-3 rounded" role="alert">
+                                        <?php echo $errorMsg ?>
                                     </div>
                                 </div>
-                        <?php
+                            <?php
+                            }   
+                        }
+                        if (isset($_POST['save'])) {
+                            if ($success == true) {
+                                ?>
+                                <div class="col-md-12 p-0">
+                                    <div class="alert alert-success text-black fw-bold p-4 mb-3 rounded" role="alert">
+                                        <?php echo "De gegevens zijn succesvol geüpdate!" ?>
+                                    </div>
+                                </div>
+                                <?php
                             }
                         }
                         ?>
