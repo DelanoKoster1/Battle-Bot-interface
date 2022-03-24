@@ -740,6 +740,41 @@ function pollAddUser($username, $givenAnswer) {
     
     stmtExec($query, 0, $username, $givenAnswer);
 
+    $getInsertedUser = "SELECT  userName
+                        FROM    `poll-outcome`   
+                       ";
+    
+    $users = stmtExec($getInsertedUser);
+
+    $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
+
+    foreach ($users['userName'] as $user) {
+        stmtExec($insertPoints, 0, $user);
+    }
+
+}
+
+function endPoll() {
+
+    $changeActive = "UPDATE `poll` SET active = NULL WHERE active = 1";
+
+    stmtExec($changeActive,0);
+}
+
+function checkIfPoll() {
+    $checkIfPoll = "SELECT  active
+                    FROM    poll    
+                   ";
+
+    $getActive = stmtExec($checkIfPoll);
+
+    foreach ($getActive['active'] as $active) {
+        if ($active == 1) {
+            return '<input type="submit" name="endPoll" class="btn btn-danger mt-3" value="eindig poll" />';
+        } else {
+            return "geen poll aanwezig";
+        }
+    }
 }
 
 function pollQuestionAnswer() {

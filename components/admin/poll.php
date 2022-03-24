@@ -13,6 +13,11 @@
         </div>
     </div>
 </div>
+<?php 
+    if (isset($_POST['endPoll'])) {
+        endPoll();
+    }
+?>
 <div class="row">
     <div class="col-md-6">
         <form method="post" action="">
@@ -28,6 +33,7 @@
                 <div id="pollTypes">
                 </div>
                 <input type="submit" name="submitPull" class="btn btn-primary mt-3" value="submit poll" />
+                <?php echo checkIfPoll(); ?>
             </div>
         </form>
     </div>
