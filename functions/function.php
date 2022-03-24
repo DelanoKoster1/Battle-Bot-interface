@@ -584,12 +584,14 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
             }else {
                 echo '
                 <div class="col-sm-3 mb-4">
-                    <div class="card eventsCard">
-                        <div class="card-body">
-                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                            <span class="calendarTitle d-block text-capitalize"><a class="stretched-link" href="admin.php?point&amp;eventId=' . $id . '">' . $name . '</a></span>
-                        </div>
-                        ';
+                <div class="card eventsCard">
+                    <div class="card-body">
+                        <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                        <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
+                        <span class="calendarInfo mt-4 d-block">' . $description . '</span>
+                    </div>
+                </div>
+            </div>';
             }
         }
     } else {
@@ -1070,7 +1072,7 @@ function deleteFile(string $directory)
 
 function uploadFile($file, string $query, int $id, string $directory)
 {
-    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory, $id)) {
+    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory.$file["name"], $id)) {
         return true;
     } else {
         return false;

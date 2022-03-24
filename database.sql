@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `bot` (
     name VARCHAR(50) NOT NULL,
     description VARCHAR(999),
     imagePath VARCHAR(50),
-
+    macAddress VARCHAR(18),
     CONSTRAINT pk_bot PRIMARY KEY (id)
     
     );
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `account` (
 CREATE TABLE IF NOT EXISTS `event` (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
-    date date NOT NULL,
+    date dateTime NOT NULL,
     description VARCHAR(999) NOT NULL,
     type enum('public','private') NOT NULL,
 

@@ -85,12 +85,37 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
         }
     }
 
-    if(empty($error)) {
+    if (empty($error)) {
         return false;
     } else {
         return $_SESSION['ERROR_MESSAGE'] = $error;
     }
+}
+function checkRobotFields($botName, $botDiscription, $macAdress, $botBoard, $botInterface)
+{
+    $error = array();
 
+    if (!$botName && empty($botName)) {
+        $error[] = 'Bot naam mag niet leeg zijn';
+    }
+    if (!$botDiscription && empty($botDiscription)) {
+        $error[] = 'bot omschrijving mag niet leeg zijn!';
+    }
+    if (!$macAdress && empty($macAdress)) {
+        $error[] = 'Mac adres mag niet leeg zijn!';
+    }
+    if (!$botBoard && empty($botBoard)) {
+        $error[] = 'besturingsboard mag niet leeg zijn!';
+    }
+    if (!$botInterface && empty($botInterface)) {
+        $error[] = 'interface mag niet leeg zijn!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $_SESSION['ERROR_MESSAGE'] = $error;
+    }
 }
 
 if (isset($_POST['event'])) {
@@ -119,113 +144,90 @@ if (isset($_POST['event'])) {
 }
 
 if (isset($_POST['bot'])) {
-    if (isset($_POST['botName']) && $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS)) {
-        if (isset($_POST['botDiscription']) && $botDiscription = filter_input(INPUT_POST, 'botDiscription', FILTER_SANITIZE_SPECIAL_CHARS)) {
-            if (isset($_POST['macAddress']) && $macAdress = filter_input(INPUT_POST, 'macAddress', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                if (isset($_POST['board']) && $botBoard = filter_input(INPUT_POST, 'board', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                    if (isset($_POST['interface']) && $botInterface = filter_input(INPUT_POST, 'interface', FILTER_SANITIZE_SPECIAL_CHARS)) {
+    $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
+    $botDiscription = filter_input(INPUT_POST, 'botDiscription', FILTER_SANITIZE_SPECIAL_CHARS);
+    $macAdress = filter_input(INPUT_POST, 'macAddress', FILTER_SANITIZE_SPECIAL_CHARS);
+    $botBoard = filter_input(INPUT_POST, 'board', FILTER_SANITIZE_SPECIAL_CHARS);
+    $botInterface = filter_input(INPUT_POST, 'interface', FILTER_SANITIZE_SPECIAL_CHARS);
 
-                        $sql = "INSERT INTO bot (name, description, macAddress) VALUES (?,?,?)";
+    if (!checkRobotFields($botName, $botDiscription, $macAdress, $botBoard, $botInterface)) {
+        $sql = "INSERT INTO bot (name, description, macAddress) VALUES (?,?,?)";
 
-                        if (!stmtExec($sql, 0, $botName, $botDiscription, $macAdress)) {
-                            $_SESSION['error'] = "Voer alle velden in";
-                            header("location: ../components/error.php");
-                        }
+        if (!stmtExec($sql, 0, $botName, $botDiscription, $macAdress)) {
+            $_SESSION['ERROR_MESSAGE'] = "Voer alle velden in";
+            header("location: ../components/error.php");
+            exit();
+        }
 
-                        $sql = "INSERT INTO specs (board, interface) VALUES (?,?)";
+        $sql = "INSERT INTO specs (board, interface) VALUES (?,?)";
 
-                        if (!stmtExec($sql, 0, $botBoard, $botInterface)) {
-                            $_SESSION['error'] = "Voer alle velden in";
-                            header("location: ../components/error.php");
-                        }
-                        $wins = 0;
-                        $playedMatches = 0;
+        if (!stmtExec($sql, 0, $botBoard, $botInterface)) {
+            $_SESSION['ERROR_MESSAGE'] = "Voer alle velden in";
+            header("location: ../components/error.php");
+            exit();
+        }
 
-                        $sql = "INSERT INTO stats (wins, playedMatches) VALUES (?,?)";
+        $sql = "INSERT INTO stats (wins, playedMatches) VALUES (?,?)";
 
-                        if (!stmtExec($sql, 0, $wins, $playedMatches)) {
-                            $_SESSION['error'] = "Voer alle velden in";
-                            header("location: ../components/error.php");
-                        }
+        if (!stmtExec($sql, 0, 0, 0)) {
+            $_SESSION['ERROR_MESSAGE'] = "Voer alle velden in";
+            header("location: ../components/error.php");
+            exit();
+        }
 
 
-                        if (checkIfFile($_FILES['botPic'])) {
-                            if (checkFileSize($_FILES['botPic'])) {
-                                if (checkFileType($_FILES['botPic'])) {
-                                    $botId = $_SESSION['lastInsertedId'];
-                                    if (makeFolder($botId, "../assets/img/bots/")) {
-                                        if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botPic']['name'])) {
-                                            $query = "UPDATE `bot`
+        if (checkIfFile($_FILES['botPic'])) {
+            if (checkFileSize($_FILES['botPic'])) {
+                if (checkFileType($_FILES['botPic'])) {
+                    $botId = $_SESSION['lastInsertedId'];
+                    if (makeFolder($botId, "../assets/img/bots/")) {
+                        if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botPic']['name'])) {
+                            $query = "UPDATE `bot`
                                                     SET imagePath = ?
                                                     WHERE id = ?
                                             ";
 
-                                            if (uploadFile($_FILES['botPic'], $query, $botId, "/assets/img/bots/{$botId}/")) {
-                                                $_SESSION['succes'] = 'Bot aangemaakt!';
-                                                header("location:../pages/admin.php?bot");
-                                            } else {
-                                                $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
-                                                $_SESSION['ERROR_MESSAGE'] = $error;
-                                                header('location: admin.php?bot');
-                                                exit();
-                                            }
-                                        } else {
-                                            $error[] = "Het bestand bestaat al";
-                                            $_SESSION['ERROR_MESSAGE'] = $error;
-                                            header('location: admin.php?bot');
-                                            exit();
-                                        }
-                                    } else {
-                                        $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
-                                        $_SESSION['ERROR_MESSAGE'] = $error;
-                                        header('location: admin.php?bot');
-                                        exit();
-                                    }
-                                } else {
-                                    $error[] = "Het bestandstype wordt niet geaccepteerd";
-                                    $_SESSION['ERROR_MESSAGE'] = $error;
-                                    header('location: admin.php?bot');
-                                    exit();
-                                }
+                            if (uploadFile($_FILES['botPic'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                                $_SESSION['succes'] = 'Bot aangemaakt';
+                                header("location:../pages/admin.php?bot");
+                                exit();
                             } else {
-                                $error[] = "Bestand is te groot";
+                                $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
                                 $_SESSION['ERROR_MESSAGE'] = $error;
                                 header('location: admin.php?bot');
                                 exit();
                             }
                         } else {
-                            $_SESSION['succes'] =  "Bot aangemaakt";
+                            $error[] = "Het bestand bestaat al";
                             $_SESSION['ERROR_MESSAGE'] = $error;
                             header('location: admin.php?bot');
                             exit();
                         }
                     } else {
-                        $error[] = "Het Interface veld is niet goed ingevuld";
+                        $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
                         $_SESSION['ERROR_MESSAGE'] = $error;
                         header('location: admin.php?bot');
                         exit();
                     }
                 } else {
-                    $error[] = "Het Board veld is niet goed ingevuld";
+                    $error[] = "Het bestandstype wordt niet geaccepteerd";
                     $_SESSION['ERROR_MESSAGE'] = $error;
                     header('location: admin.php?bot');
                     exit();
                 }
             } else {
-                $error[] = "Mac addres niet correct";
+                $error[] = "Bestand is te groot";
                 $_SESSION['ERROR_MESSAGE'] = $error;
                 header('location: admin.php?bot');
                 exit();
             }
         } else {
-            $error[] = "Bot beschrijving niet goed ingevuld";
+            $_SESSION['succes'] =  "Bot aangemaakt";
             $_SESSION['ERROR_MESSAGE'] = $error;
             header('location: admin.php?bot');
             exit();
         }
     } else {
-        $error[] =  "Bot naam niet goed ingevuld";
-        $_SESSION['ERROR_MESSAGE'] = $error;
         header('location: admin.php?bot');
         exit();
     }
@@ -322,17 +324,17 @@ if (isset($_POST['startEvent'])) {
     // sets all events to inactive
     $query = "UPDATE event SET active = 0";
     $result = stmtExec($query);
-    
+
     // update event on active
     $query = "UPDATE event SET active = 1 WHERE id = ?";
-    $id = filter_input(INPUT_POST,"startEvent",FILTER_SANITIZE_NUMBER_INT);
-    $result = stmtExec($query, 0 , $id);
+    $id = filter_input(INPUT_POST, "startEvent", FILTER_SANITIZE_NUMBER_INT);
+    $result = stmtExec($query, 0, $id);
 }
 
 if (isset($_POST['stopEvent'])) {
     $query = "UPDATE event SET active = 0 WHERE id = ?";
-    $id = filter_input(INPUT_POST,"stopEvent",FILTER_SANITIZE_NUMBER_INT);
-    $result = stmtExec($query, 0 , $id);
+    $id = filter_input(INPUT_POST, "stopEvent", FILTER_SANITIZE_NUMBER_INT);
+    $result = stmtExec($query, 0, $id);
 }
 ?>
 
@@ -413,7 +415,7 @@ if (isset($_POST['stopEvent'])) {
 
                 if (!empty($_SESSION['ERROR_MESSAGE'])) {
                 ?>
-                    <div class="row">
+                    <div class="row" id="errorBar">
                         <div class="col-md-12">
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">

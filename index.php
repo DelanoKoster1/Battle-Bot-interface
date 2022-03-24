@@ -90,7 +90,7 @@
             </div>
 
             <div class="row m-auto eventShowBox">
-                <?php showEvents(false); 
+                <?php showEvents(); 
                 ?>
             </div>
         </div>
