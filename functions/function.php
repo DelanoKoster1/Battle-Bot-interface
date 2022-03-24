@@ -2,7 +2,8 @@
 session_start();
 
 // $type:   1 for print_r(), 0 or empty for var_dump()
-function debug($var, int $type = 0) {
+function debug($var, int $type = 0)
+{
     echo "<pre>";
     if ($type) {
         print_r($var);
@@ -16,7 +17,8 @@ function debug($var, int $type = 0) {
  * Function to connect to Database
  * 
  */
-function connectDB() {
+function connectDB()
+{
     //Require ENV
     require_once('env.php');
 
@@ -32,7 +34,8 @@ function connectDB() {
     return $conn;
 }
 
-function fail(?string $code = NULL, ?string $info = NULL) {
+function fail(?string $code = NULL, ?string $info = NULL)
+{
     switch ($code) {
             // Database Fail: Common
         case 'DB00':
@@ -82,7 +85,8 @@ function fail(?string $code = NULL, ?string $info = NULL) {
  * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                                                                                                 
  *                                                                                                   
  */
-function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
+{
 
     //Require env.php
     require_once('env.php');
@@ -253,26 +257,28 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
  * Function to check if fields are correct and not empty.
  * Display Error message if needed.
  * @param String $username Filled in username
- * @param String $password Filled in password
+ * @param String $email Filled in email
+ * @param String $password1 Filled in password
  * @param array $error Array with errors
  * @return String/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password) {
+function checkLoginFields(String $username, String $password)
+{
     //Call global variable(s)
     global $error;
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'De gebruikersnaam is incorrect!';
+        $error[] = 'Gebruikersnaam is niet correct!';
     }
     if (strlen($username) > 50) {
-        $error[] = 'De gebruikersnaam is te lang!';
+        $error[] = 'Gebruikersnaam is te lang!';
     }
     if (!$password && empty($password)) {
-        $error[] = 'Het wachtwoord mag niet leeg zijn!';
+        $error[] = 'Wachtwoord mag niet leeg zijn!';
     }
     if (strlen($password) > 200) {
-        $error[] = 'Het wachtwoord is te lang!';
+        $error[] = 'Wachtwoord is te lang!';
     }
 
     if (empty($error)) {
@@ -286,41 +292,43 @@ function checkLoginFields(String $username, String $password) {
  * Function checkRegisterFields.
  * Function to check if fields are correct and not empty.
  * Display Error message if needed.
- * @param string    $username  Filled in username
  * @param string    $email  Filled in email
+ * @param string    $firstname  Filled in firstname
+ * @param string    $lastname  Filled in lastname
  * @param string    $password  Filled in password
  * @param string    $password2  Filled in password2
  * @param array     $error  Array with errors
  * @return string/boolean  $error  False or error message
  */
-function checkRegisterFields(string $username, string $email, string $password, string $password2) {
+function checkRegisterFields(string $username, string $email, string $password, string $password2)
+{
     //Call global variable(s)
     global $error;
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'De gebruikersnaam mag niet leeg zijn!';
+        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
     }
     if (!$email && empty($email)) {
-        $error[] = 'Het e-mailadres is onjuist!';
+        $error[] = 'Email is onjuist!';
     }
     if (!$password && empty($password)) {
-        $error[] = 'Het wachtwoord mag niet leeg zijn!';
+        $error[] = 'Wachtwoord mag niet leeg zijn!';
     }
     if (!$password2 && empty($password2)) {
-        $error[] = 'Het herhaal wachtwoord mag niet leeg zijn!';
+        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
     }
     if ($password != $password2) {
-        $error[] = 'De wachtwoorden komen niet overeen!';
+        $error[] = 'Wachtwoorden komen niet overeen!';
     }
     if (strlen($email) > 200) {
-        $error[] = 'Het e-mailadres is te lang!';
+        $error[] = 'E-mail is te lang!';
     }
     if (strlen($username) > 50) {
-        $error[] = 'De gebruikersnaam is te lang!';
+        $error[] = 'Gebruikersnaam is te lang!';
     }
     if (strlen($password) > 255) {
-        $error[] = 'Het wachtwoord is te lang!';
+        $error[] = 'Wachtwoord is te lang!';
     }
 
     if (empty($error)) {
@@ -331,45 +339,47 @@ function checkRegisterFields(string $username, string $email, string $password, 
 }
 
 /**
- * Function checkProfileFields.
+ * Function checkRegisterFields.
  * Function to check if fields are correct and not empty.
  * Display Error message if needed.
- * @param string    $username  Filled in username
  * @param string    $email  Filled in email
+ * @param string    $firstname  Filled in firstname
+ * @param string    $lastname  Filled in lastname
  * @param string    $password  Filled in password
  * @param string    $password2  Filled in password2
  * @param array     $error  Array with errors
  * @return string/boolean  $error  False or error message
  */
 
-function checkProfileFields(string $username, string $email, string $password, string $password2) {
+function checkProfileFields(string $username, string $email, string $password, string $password2)
+{
     //Call global variable(s)
     global $error;
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'De gebruikersnaam mag niet leeg zijn!';
+        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
     }
     if (!$email && empty($email)) {
-        $error[] = 'Het e-mailadres mag niet leeg zijn!';
+        $error[] = 'Email is onjuist!';
     }
     if (!$password && empty($password)) {
-        $error[] = 'Het wachtwoord mag niet leeg zijn!';
+        $error[] = 'Wachtwoord mag niet leeg zijn!';
     }
     if (!$password2 && empty($password2)) {
-        $error[] = 'Het herhaal wachtwoord mag niet leeg zijn!';
+        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
     }
     if ($password != $password2) {
-        $error[] = 'De wachtwoorden komen niet overeen!';
+        $error[] = 'Wachtwoorden komen niet overeen!';
     }
     if (strlen($email) > 200) {
-        $error[] = 'Het e-mailadres is te lang!';
+        $error[] = 'E-mail is te lang!';
     }
     if (strlen($username) > 50) {
-        $error[] = 'De gebruikersnaam is te lang!';
+        $error[] = 'Gebruikersnaam is te lang!';
     }
     if (strlen($password) > 255) {
-        $error[] = 'Het wachtwoord is te lang!';
+        $error[] = 'Wachtwoord is te lang!';
     }
 
     if (empty($error)) {
@@ -379,29 +389,20 @@ function checkProfileFields(string $username, string $email, string $password, s
     }
 }
 
-
-/**
- * Function checkProfilePassword.
- * Function to check if fields are correct and not empty.
- * Display Error message if needed.
- * @param string    $newPassword  Filled in newPassword
- * @param string    $repeatPassword  Filled in repeatPassword
- * @param array     $error  Array with errors
- * @return string/boolean  $error  False or error message
- */
-function checkProfilePassword($newPassword, $repeatPassword) {
+function checkProfilePassword($newPassword, $repeatPassword)
+{
     //Call global variable(s)
     global $error;
 
     if ($newPassword == $repeatPassword) {
     } else {
-        $error[] = 'Het nieuwe wachtwoord en het herhaal wachtwoord komen niet overeen!';
+        $error[] = 'Het nieuwe wachtwoord en de herhaal wachtwoord velden komen niet overeen.';
     }
     if (!$newPassword && empty($newPassword)) {
-        $error[] = 'Het nieuwe wachtwoord mag niet leeg zijn!';
+        $error[] = 'Nieuw wachtwoord mag niet leeg zijn!';
     }
     if (!$repeatPassword && empty($repeatPassword)) {
-        $error[] = 'Het herhaal wachtwoord mag niet leeg zijn!';
+        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
     }
 
     if (empty($error)) {
@@ -419,7 +420,8 @@ function checkProfilePassword($newPassword, $repeatPassword) {
  * @param   boolean         $profile   check if this is profile page
  * @return  string/boolean  $error  False or error message
  */
-function checkUserInDataBase(string $username, string $email, $profile = false) {
+function checkUserInDataBase(string $username, string $email, $profile = false)
+{
     //Call global variable(s)
     global $error;
 
@@ -438,7 +440,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
             $email = $results['email'][$i];
 
             if ($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
-                $error[] = 'Er bestaat al een account met dit e-mailadres!';
+                $error[] = 'Er bestaat al een account met deze email';
             }
         }
 
@@ -446,7 +448,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
             $username = $results['username'][$i];
 
             if ($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                $error[] = 'Er bestaat al een account met deze gebruikersnaam!';
+                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
             }
         }
 
@@ -462,7 +464,8 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
  * Function to include header with correct map structure
  * 
  */
-function includeHeader(String $sort) {
+function includeHeader(String $sort)
+{
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');
@@ -475,7 +478,8 @@ function includeHeader(String $sort) {
  * Function to check if date is valid
  * 
  */
-function checkValidDate(String $date) {
+function checkValidDate(String $date)
+{
     $today = date('Y-m-d\TH:i');
 
     //Check if filled in date is older then today.
@@ -495,7 +499,8 @@ function checkValidDate(String $date) {
  * Function to format a date
  * 
  */
-function formatdate(string $date): string {
+function formatdate(string $date): string
+{
     switch (date("F", strtotime($date))) {
         case "January":
             $month = "\\J\\a\\n\\u\\a\\r\\i";
@@ -532,14 +537,14 @@ function formatdate(string $date): string {
  * Function to show events as HTML
  * 
  */
-function showEvents(bool $limit = false, bool $admin = false) {
+function showEvents()
+{
     $query = "SELECT id, name, date, description
               FROM event 
-              WHERE date > NOW()
-              AND `type` = 'public'
+              WHERE date > now()
               ORDER BY date ASC
-              ";
-    $query .= ($limit) ? "LIMIT 4" : "";
+              limit 5";
+
     $eventResults = stmtExec($query);
 
     if (!empty($eventResults["id"])) {
@@ -549,31 +554,18 @@ function showEvents(bool $limit = false, bool $admin = false) {
             $name = $eventResults["name"][$i];
             $eventDate = $eventResults["date"][$i];
             $description = $eventResults["description"][$i];
-            $id = $eventResults["id"][$i];
-            if (!$admin) {
-                echo '
-                <div class="col-sm-3 mb-4">
-                    <div class="card eventsCard">
-                        <div class="card-body">
-                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                            <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
-                            <span class="calendarInfo mt-4 d-block">' . $description . '</span>
-                        </div>
+
+            echo '
+            <div class="col-sm-3 mb-4">
+                <div class="card eventsCard">
+                    <div class="card-body">
+                        <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                        <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
+                        <span class="calendarInfo mt-4 d-block">' . $description . '</span>
                     </div>
                 </div>
-                ';
-            } else {
-                echo '
-                <div class="col-sm-3 mb-4">
-                    <div class="card eventsCard">
-                        <div class="card-body">
-                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                            <span class="calendarTitle d-block text-capitalize"><a class="stretched-link" href="admin.php?point&amp;eventId=' . $id . '">' . $name . '</span>
-                        </div>
-                    </div>
-                </div>
-                ';
-            }
+            </div>
+            ';
         }
     } else {
         echo '
@@ -589,7 +581,8 @@ function showEvents(bool $limit = false, bool $admin = false) {
 }
 
 //function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
-function eventTimeDescent() {
+function eventTimeDescent()
+{
     $query = "SELECT    date
               FROM      `event`
               WHERE     NOW() <= date;
@@ -603,7 +596,8 @@ function eventTimeDescent() {
     }
 }
 
-function getLivestream() {
+function getLivestream()
+{
     return '
         <img
         src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
@@ -775,17 +769,79 @@ function getProfileInfo() {
     return stmtExec($query, 0, $_SESSION['id']);
 }
 /**
- * Function to get all events
+ * Function to get all robots
+ * 
+ * @return Array Array of all robots with names from db
+ */
+function getAllRobots() {
+    $conn = connectDB();
+    $arr = array();
+    
+    //Creating a table
+    $query = "SELECT * FROM bot";
+
+    //Prpeparing SQL Query with database connection
+    if (!$stmt = mysqli_prepare($conn, $query)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Executing statement
+    if (!mysqli_stmt_execute($stmt)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Bind the STMT results(sql statement) to variables
+    mysqli_stmt_bind_result($stmt, $id, $statsId, $specsId, $name, $description, $imagePath);
+
+    while (mysqli_stmt_fetch($stmt)) {
+        $arr[] = ['id' => $id, 'statsId' => $statsId, 'specsId' => $specsId, 'name' => $name, 'description' => $description, 'imagePath' => $imagePath];
+    }
+
+    return $arr;
+}
+
+function getAllTeams() {
+    $conn = connectDB();
+    $arr = array();
+    
+    //Creating a table
+    $query = "SELECT * FROM team";
+
+    //Prpeparing SQL Query with database connection
+    if (!$stmt = mysqli_prepare($conn, $query)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Executing statement
+    if (!mysqli_stmt_execute($stmt)) {
+        $_SESSION['error'] = "database_error";
+        header("location: error.php");
+    }
+
+    //Bind the STMT results(sql statement) to variables
+    mysqli_stmt_bind_result($stmt, $id, $botId, $name);
+
+    while (mysqli_stmt_fetch($stmt)) {
+        $arr[] = ['id' => $id, 'statsbotIdId' => $botId, 'name' => $name, 'name' => $name];
+    }
+
+    return $arr;
+}
+
+/**
+ * Function to get all avaiable events based on robot id
  * 
  * @return Array Array of all events with names from db
  */
-function getAllEvents()
-{
+function getAllEvents() {
     $conn = connectDB();
     $arr = array();
-
+    
     //Creating a table
-    $query = "SELECT * FROM event";
+    $query = "SELECT * FROM `event`";
 
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
@@ -810,59 +866,47 @@ function getAllEvents()
 }
 
 /**
- * Function to get all robots
+ * Function to check selected team ID
  * 
- * @return Array Array of all robots with names from db
  */
-
-function getAllRobots() {
-     //Creating a table
-    $query = "SELECT * FROM bot";
-
-    return stmtExec($query);
-}
-
-//Post submissions
-function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
+function checkSelectedTeam ($teamID) {
     global $error;
-    $conn = connectDB();
-    $arr = array();
-    if (!$eventDate && empty($eventDate)) {
-        $error[] = 'De evenement datum mag niet leeg zijn!';
-    } else {
-        if (!checkValidDate($eventDate)) {
-            $error[] = 'De evenement datum is ongeldig!';
-        }
-    }
-    if (!$eventName && empty($eventName)) {
-        $error[] = 'De evenement naam mag niet leeg zijn!';
-    }
-    if (!$eventType && empty($eventType)) {
-        $error[] = 'Het evenement type mag niet leeg zijn!';
-    } else {
-        if ($eventType == 'public' || $eventType == 'private') {
-            //Do nothing 
-        } else {
-            $error[] = 'Het evenement type is ongeldig!';
-        }
+
+    if (!$teamID && empty($teamID)) {
+        $error[] = 'Kies een robot';
     }
 
-    if (!$eventDescription && empty($eventDescription)) {
-        $error[] = 'De evenement omschrijving mag niet leeg zijn!';
-    }
-    if (strlen($eventName) > 255) {
-        $error[] = 'De evenement naam is te lang!';
-    }
-    if (strlen($eventDescription) > 255) {
-        $error[] = 'De evenement omschrijving is te lang!';
-    }
+    //Check if ID is indeed in database
+    //Must come here...
+    //.....
 
     if (empty($error)) {
         return false;
     } else {
         return $error;
     }
-    return $arr;
+}
+
+
+/**
+ * Function to check selected event ID
+ */
+function checkSelectedEvent ($eventID) {
+    global $error;
+
+    if (!$eventID && empty($eventID)) {
+        $error[] = 'Kies een robot';
+    }
+
+    //Check if ID is indeed in database
+    //Must come here...
+    //.....
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $error;
+    }
 }
 
 /**
