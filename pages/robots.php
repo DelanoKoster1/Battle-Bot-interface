@@ -53,29 +53,24 @@
             <div class="col-12">
                 <h1>Team</h1>
             </div>
-
-            <div class="row">
-                <div class="col-12">
-                    <h1>Team</h1>
-                </div>
-                <div class="tab-content">
-                    <?php
-                    $sql = "SELECT  team.id,
-                                team.name,
-                                bot.name,
-                                bot.id,
-                                bot.specsId,
-                                specs.board,
-                                specs.interface,
-                                stats.wins,
-                                stats.playedMatches
-                        FROM    team
-                        INNER JOIN bot 
-                        ON team.botId = bot.id 
-                        INNER JOIN specs 
-                        ON specs.id = bot.specsId  
-                        INNER JOIN stats
-                        ON stats.id = bot.statsId         
+            <div class="tab-content">
+                <?php
+                $sql = "SELECT  team.id,
+                            team.name,
+                            bot.name,
+                            bot.id,
+                            bot.specsId,
+                            specs.board,
+                            specs.interface,
+                            stats.wins,
+                            stats.playedMatches
+                    FROM    team
+                    INNER JOIN bot 
+                    ON team.botId = bot.id 
+                    INNER JOIN specs 
+                    ON specs.id = bot.specsId  
+                    INNER JOIN stats
+                    ON stats.id = bot.statsId         
                 ";
                 $dbResults = stmtExec($sql);
                 // debug($dbResults);
@@ -150,7 +145,7 @@
                                 </div>
                             </div>
                         </div>
-                        ';
+                    ';
                 }
                 ?>
             </div>
