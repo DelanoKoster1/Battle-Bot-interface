@@ -21,6 +21,18 @@ include_once('../functions/function.php');
         <?php includeHeader('page'); ?>
     </section>
 
+    <main id='events'>
+        <div class='containter py-4'>
+            <div class="row">
+                <div class="col-12 mb-2 text-center">
+                    <h3>Geschiedenis</h3>
+                </div>
+            </div>
+
+            <div class="row m-auto eventShowBox">
+                <?php showHistory(); ?>
+            </div>
+    </main>
     <?php
 
     /**
@@ -28,31 +40,35 @@ include_once('../functions/function.php');
      * 
      */
 
-    $query = "SELECT id, name
+    function showHistory()
+    {
+
+        $query = "SELECT id, name
               FROM streamhistory 
               where id = 1
               ";
 
-    $historyResults = stmtExec($query);
+        $historyResults = stmtExec($query);
 
-   
 
-    if (!empty($historyResults["id"])) {
-        $ids = $historyResults["id"];
 
-        for ($i = 0; $i < count($ids); $i++) {
-            $name = $historyResults["name"][$i];
-            $id = $historyResults["id"][$i];
+        if (!empty($historyResults["id"])) {
+            $ids = $historyResults["id"];
 
-            echo '
+            for ($i = 0; $i < count($ids); $i++) {
+                $name = $historyResults["name"][$i];
+                $id = $historyResults["id"][$i];
+
+                echo '
             <div class="col-sm-3 mb-4 pt-5">
                 <div class="card eventsCard">
                     <div class="card-body">
-                        <span class="calendarTitle d-block text-capitalize"><a class="stretched-link" href="watchBack.php?id='.$id.'">' . $name . '</a></span>
+                        <span class="calendarTitle d-block text-capitalize"><a class="stretched-link" href="watchBack.php?id=' . $id . '">' . $name . '</a></span>
                     </div>
                 </div>
             </div>
             ';
+            }
         }
     }
 
