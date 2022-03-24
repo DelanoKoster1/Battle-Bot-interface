@@ -5,7 +5,7 @@
 <div class="row">
     <?php 
         if(!isset($_GET['eventId'])) {
-            showEvents($admin = true); 
+            showEvents(false,true); 
         }
     ?>
 </div>  

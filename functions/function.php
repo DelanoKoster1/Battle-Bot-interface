@@ -560,8 +560,7 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                     <div class="card eventsCard">
                         <div class="card-body">
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                            <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
-                            <span class="calendarInfo mt-4 d-block">' . $description . '</span>
+                            <span class="calendarTitle d-block text-capitalize"><a href="../pages/admin.php?points&eventId=' . $id .'" class="text-white stretched-link">' . $name . '</a></span>
                         </div>
                     </div>
                 </div>
