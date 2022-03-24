@@ -610,6 +610,161 @@ function getLivestream() {
         ';
 }
 
+function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
+    
+    require_once("database.php");
+
+    if (!empty($question)) {
+        if ($questionType == "multiChoice") {
+            multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4);
+        } else if ($questionType == "yesOrNo") {
+            yesOrNoPoll($question, $questionType, $answer1, $answer2);
+        } else if ($questionType == "voteForBot") {
+            voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5);
+        } else {
+            return "Deze optie bestaat niet";
+        }
+    } else {
+        return "de vraag kan niet leeg zijn";
+    }
+
+}
+
+function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4) {
+
+    if (!empty($answer1)) {
+        if (!empty($answer2)) {
+            if (!empty($answer3)) {
+                if (!empty($answer4)) {
+                    $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
+                                VALUES (?,?,?,?,?,?,NULL,NULL,1)";
+
+                    stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4);
+                } else {
+                    return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                }
+            } else {
+                return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            }
+        } else {
+            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        }
+    } else {
+        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+    }
+
+}
+
+function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
+    
+    if (!empty($answer1)) {
+        if (!empty($answer2)) {
+            $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
+            VALUES (?,?,?,?,NULL,NULL,NULL,NULL,1)";
+
+            stmtExec($query, 0, $questionType, $question, $answer1, $answer2);
+        } else {
+            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        }
+    } else {
+        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+    }
+}
+
+function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
+
+    if (!empty($answer1)) {
+        if (!empty($answer2)) {
+            if (!empty($answer3)) {
+                if (!empty($answer4)) {
+                    if (!empty($answer5)) {
+                        $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
+                        VALUES (?,?,?,?,?,?,?,NULL,1)";
+
+                        stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4, $answer5);
+
+                    } else {
+                        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                    }
+                } else {
+                    return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                }
+            } else {
+                return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            }
+        } else {
+            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        }
+    } else {
+        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+    }
+}
+
+function retrieveQuestionInfo() {
+    require_once("database.php");
+
+    $query = "SELECT    question, answer1, answer2, answer3, answer4, answer5, active 
+              FROM      poll
+              WHERE     active = 1
+             ";
+
+    $results = stmtExec($query);
+
+    $questionnaire = "";
+    
+    if ($results['active'][0] != NULL) {
+
+        $questionnaire .= '<h4>De vraag luid: '. $results['question'][0] .'</h4>';
+        $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer1'][0] .'">';
+        $questionnaire .= '<label class="custom-control-label" for="question1">'. $results['answer1'][0] .'</label> <br>';
+        $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer2'][0] .'">';
+        $questionnaire .= '<label class="custom-control-label" for="question2">'. $results['answer2'][0] .'</label> <br>';
+        if ($results['answer3'][0] != NULL) {
+            $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer3'][0] .'">';
+            $questionnaire .= '<label class="custom-control-label" for="question3">'. $results['answer3'][0] .'</label> <br>';
+        }
+        if ($results['answer4'][0] != NULL) {
+            $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer4'][0] .'">';
+            $questionnaire .= '<label class="custom-control-label" for="question4">'. $results['answer4'][0] .'</label> <br>';
+        }
+        if ($results['answer4'][0] != NULL) {
+            $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer5'][0] .'">';
+            $questionnaire .= '<label class="custom-control-label" for="question5">'. $results['answer5'][0] .'</label> <br>';
+        }
+
+        return $questionnaire;
+
+    } else {
+        return "<h4>Er is momenteel geen pull gaande.</h4>";
+    }
+
+}
+
+function pollQuestionAnswer($postQuestion) {
+
+    $voteArray = ["test1", "test3", "test1", "test2"];
+
+    array_push($voteArray, $postQuestion);
+
+    $values = array_count_values($voteArray);
+
+    $progressBar = '';
+
+    foreach ($values as $test) {
+
+        $percentage = ( $test / 100 ) * 100;
+
+        $progressBar .= '<div class="progress mt-3">';
+            $progressBar .= '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="'. $percentage .'" aria-valuemin="0" aria-valuemax="100" style="width:'. $percentage .'%">';
+                $progressBar .= $percentage . "%";
+            $progressBar .= '</div>';
+        $progressBar .= '</div>';
+    }    
+
+    return $progressBar;
+
+}
+
 function getProfileInfo() {
     $query = "SELECT    username,
                         email,
@@ -619,21 +774,6 @@ function getProfileInfo() {
             ";
     return stmtExec($query, 0, $_SESSION['id']);
 }
-
-function getBots() {
-   $query = " SELECT   name
-               FROM     bot 
-             ";
-
-    $results = stmtExec($query);
-
-    foreach ($results as $botArray) {
-        foreach ($botArray as $bot) {
-            return $bot;
-        }
-    }
-}
-
 /**
  * Function to get all events
  * 

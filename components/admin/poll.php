@@ -1,8 +1,32 @@
+<?php include_once('../functions/function.php'); ?>
+<div class="row">
+    <div class="col-md-6">
+        <div class="mt-3">
+            <?php
+                if (isset($_POST['submitPull'])) {
+                    $answer3 = empty($_POST['answer3']) ? NULL : $_POST['answer3'];
+                    $answer4 = empty($_POST['answer4']) ? NULL : $_POST['answer4'];
+                    $answer5 = empty($_POST['answer5']) ? NULL : $_POST['answer5'];
+                    multiPoll($_POST['pullQuestion'], $_POST['pullQuestionType'], $_POST['answer1'], $_POST['answer2'], $answer3, $answer4, $answer5);
+                } 
+            ?>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-6">
         <form method="post" action="">
             <div class="form-group">
                 <input type="text" name="pullQuestion" class="form-control mt-3" placeholder="poll vraag..." />
+                <label for="questionType" class="mt-3">kies de vraag type:</label>
+                <select name="pullQuestionType" onchange="differentTypes.call(this, event)" id="questionType" class="form-control mt-3">
+                    <option value="">---</option>
+                    <option value="multiChoice" id="multiChoice">multiChoice</option>
+                    <option value="yesOrNo" id="yesOrNo">yesOrNo</option>
+                    <option value="voteForBot" id="voteForBot">voteForBot</option>
+                </select>
+                <div id="pollTypes">
+                </div>
                 <input type="submit" name="submitPull" class="btn btn-primary mt-3" value="submit poll" />
             </div>
         </form>
@@ -10,31 +34,22 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <span>poll uitslag</span>
-        <div class="progress mt-3">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                bot1
+        <form method="post" action="">
+            <div class="custom-control custom-radio">
+                <?php echo retrieveQuestionInfo(); ?>
             </div>
-        </div>
-        <div class="progress mt-3">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                bot2
-            </div>
-        </div>
-        <div class="progress mt-3">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                bot3
-            </div>
-        </div>
-        <div class="progress mt-3">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                bot4
-            </div>
-        </div>
-        <div class="progress mt-3">
-            <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                bot5
-            </div>
-        </div>
+        </form>
     </div>
 </div>
+<div class="row">
+    <div class="col-md-6">
+        <span class="mt-3">poll uitslag</span>
+        <?php 
+            if (isset($_POST['submitAnswer'])) {
+                echo pollQuestionAnswer($_POST['test']); 
+            }
+        ?>
+    </div>
+</div>
+<script src="../assets/js/poll.js"></script>
+
