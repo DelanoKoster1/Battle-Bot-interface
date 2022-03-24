@@ -72,18 +72,34 @@ if (isset($_POST['event'])) {
 if (isset($_POST['bot'])) {
     if (isset($_POST['botName']) && $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (isset($_POST['botDiscription']) && $botDiscription = filter_input(INPUT_POST, 'botDiscription', FILTER_SANITIZE_SPECIAL_CHARS)) {
-            if (isset($_POST['macAddress']) && preg_match('^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$^',$_POST['macAddress'])) {
+            if (isset($_POST['macAddress']) && $macAdress = filter_input(INPUT_POST, 'macAddress', FILTER_SANITIZE_SPECIAL_CHARS)) {
                 if (isset($_POST['board']) && $botBoard = filter_input(INPUT_POST, 'board', FILTER_SANITIZE_SPECIAL_CHARS)) {
                     if (isset($_POST['interface']) && $botInterface = filter_input(INPUT_POST, 'interface', FILTER_SANITIZE_SPECIAL_CHARS)) {
 
-                        $macAdress = $_POST['macAddress'];
                         $sql = "INSERT INTO bot (name, description, macAddress) VALUES (?,?,?)";
-
+                        
                         if (!stmtExec($sql, 0, $botName, $botDiscription, $macAdress)) {
                             $_SESSION['error'] = "Voer alle velden in";
                             header("location: ../components/error.php");
                         }
+
+                        $sql = "INSERT INTO specs (board, interface) VALUES (?,?)";
+
+                        if (!stmtExec($sql, 0, $botBoard, $botInterface)) {
+                            $_SESSION['error'] = "Voer alle velden in";
+                            header("location: ../components/error.php");
+                        }
+                        $wins = 0;
+                        $playedMatches = 0;
+
+                        $sql = "INSERT INTO stats (wins, playedMatches) VALUES (?,?)";
                         
+                        if (!stmtExec($sql, 0, $wins, $playedMatches)) {
+                            $_SESSION['error'] = "Voer alle velden in";
+                            header("location: ../components/error.php");
+                        }
+
+
                         if (checkIfFile($_FILES['botPic'])) {
                             if (checkFileSize($_FILES['botPic'])) {
                                 if (checkFileType($_FILES['botPic'])) {
@@ -115,7 +131,7 @@ if (isset($_POST['bot'])) {
                                 $error[] = "Bestand is te groot";
                             }
                         } else {
-                            $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
+                            $_SESSION['succes'] =  "Bot aangemaakt";
                         }
                     } else {
                         $error[] = "Het Interface veld is niet goed ingevuld";
