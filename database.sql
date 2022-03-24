@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `account` (
 CREATE TABLE IF NOT EXISTS `event` (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
-    date TIMESTAMP NOT NULL,
+    date date NOT NULL,
     description VARCHAR(999) NOT NULL,
     type enum('public','private') NOT NULL,
 
