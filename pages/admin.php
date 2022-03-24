@@ -268,6 +268,8 @@ if (isset($_POST['selectedEvent'])) {
             $error[] = 'Dit team is al toegevoegd aan dit event';
             $_SESSION['ERROR_MESSAGE'] = $error;
             unset($_SESSION['selectedTeam']);
+            header('location: admin.php?addTeamToEvent');
+            exit();
         } else {
             //Insert into database
             $sql = "INSERT INTO `team-event` (eventId, teamId) VALUES (?,?)";
