@@ -1,8 +1,7 @@
-const ws = new WebSocket(`ws://${getDomainName()}:3002/websocket/src/websocket/chat`);
+const ws = new WebSocket(`ws://${getDomainName()}:3002/websocket/client/chat`);
 let chatInput = document.getElementById('chatMessage');
 let chatButton = document.getElementById('button-addon2');
 let username = document.getElementById('username').value;
-
 ws.addEventListener("open", () => {
 
     chatInput.addEventListener("keyup", (e) => {
@@ -32,6 +31,9 @@ ws.addEventListener("open", () => {
 
 })
 
+function getDomainName() {
+    return window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+}
 
 function sendMsgToWS() {
     if (chatInput.value.trim() != "") {
@@ -45,11 +47,6 @@ function sendMsgToWS() {
         showMessage(body);
         ws.send(JSON.stringify(body));
     }
-}
-
-
-function showAmoutnOfWatchers(watchers) {
-
 }
 
 function showMessage(data) {

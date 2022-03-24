@@ -8,7 +8,7 @@ const app = express();
 app.use(express.json({ extended: false }));
 
 app.use("/client/chat", require("./routes/client/chat"));
-app.use("/robot/robot", require("./routes/robot/robot"));
+app.use("/robot", require("./routes/robot/robot"));
 
 app.get("/api/robot-list", (req, res) => {
   const robotId = {
