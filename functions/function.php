@@ -888,13 +888,22 @@ function getAllEvents() {
 function checkSelectedTeam ($teamID) {
     global $error;
 
-    if (!$teamID && empty($teamID)) {
-        $error[] = 'Kies een robot';
+    if (!$teamID && empty($teamID) || $teamID == 0) {
+        $error[] = 'Kies een team!';
     }
 
-    //Check if ID is indeed in database
-    //Must come here...
-    //.....
+    //Check if ID is in database
+    $sql = "SELECT id, botId, name FROM team WHERE id = ?";
+
+    //Get results from the database
+    $results = stmtExec($sql, 0, $teamID);
+
+    //Check if no result has been found
+    if (is_array($results) && count($results) > 0) {
+        //Do nothing
+    } else {
+        $error[] = 'Dit team bestaat niet!';
+    }
 
     if (empty($error)) {
         return false;
@@ -910,13 +919,22 @@ function checkSelectedTeam ($teamID) {
 function checkSelectedEvent ($eventID) {
     global $error;
 
-    if (!$eventID && empty($eventID)) {
-        $error[] = 'Kies een robot';
+    if (!$eventID && empty($eventID) || $eventID == 0) {
+        $error[] = 'Kies een event!';
     }
 
-    //Check if ID is indeed in database
-    //Must come here...
-    //.....
+    //Check if ID is in database
+    $sql = "SELECT id, name, date, description, type FROM event WHERE id = ?";
+
+    //Get results from the database
+    $results = stmtExec($sql, 0, $eventID);
+
+    //Check if no result has been found
+    if (is_array($results) && count($results) > 0 && empty($error)) {
+        //Do nothing
+    } else {
+        $error[] = 'Dit event bestaat niet!';
+    }
 
     if (empty($error)) {
         return false;

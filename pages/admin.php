@@ -225,9 +225,8 @@ if (isset($_POST['selectedTeam'])) {
 
     if (!checkSelectedTeam($selectedTeam)) {
         $_SESSION['selectedTeam'] = $selectedTeam;
+        header('location: admin.php?addTeamToEvent');
     }
-
-    header('location: admin.php?addTeamToEvent');
 }
 
 if (isset($_POST['selectedEvent'])) {
@@ -263,6 +262,11 @@ if (isset($_POST['selectedEvent'])) {
             exit();
         }
     }
+}
+
+if (isset($_POST['robotEventAnnuleren'])) {
+    unset($_SESSION['selectedTeam']);
+    header('location: admin.php?addTeamToEvent');
 }
 ?>
 
