@@ -118,27 +118,29 @@ if (isset($_POST['register'])) {
     </section>
 
     <section id="content" class="container mb-3">
-        <div class="row">
-            <div class="col-md-12 text-center mt-2">
-                <h1>Login/Register</h1>
+        <div class="height">
+            <div class="row">
+                <div class="col-md-12 text-center mt-2">
+                    <h1>Login/Register</h1>
+                </div>
             </div>
-        </div>
 
-        <div class="row">
-            <div class="col-md-6 text-center mt-2">
-                <?php
-                if (isset($_POST['login']) && !empty($error)) {
-                ?>
-                    <div class="row">
-                        <div class="col-md-12 p-0">
-                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
-                                <ul>
-                                    <?php
-                                    foreach ($error as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
-                                    ?>
-                                </ul>
+            <div class="row">
+                <div class="col-md-6 text-center mt-2">
+                    <?php
+                    if (isset($_POST['login']) && !empty($error)) {
+                    ?>
+                        <div class="row">
+                            <div class="col-md-12 p-0">
+                                <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
+                                    <ul>
+                                        <?php
+                                        foreach ($error as $errorMsg) {
+                                            echo '<li>' . $errorMsg . '</li>';
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -158,22 +160,22 @@ if (isset($_POST['register'])) {
                         </form>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-6 text-center mt-2">
-                <?php
-                if (isset($_POST['register']) && !empty($error)) {
-                ?>
-                    <div class="row">
-                        <div class="col-md-12 p-0">
-                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
-                                <ul>
-                                    <?php
-                                    foreach ($error as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
-                                    ?>
-                                </ul>
+                <div class="col-md-6 text-center mt-2">
+                    <?php
+                    if (isset($_POST['register']) && !empty($error)) {
+                    ?>
+                        <div class="row">
+                            <div class="col-md-12 p-0">
+                                <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
+                                    <ul>
+                                        <?php
+                                        foreach ($error as $errorMsg) {
+                                            echo '<li>' . $errorMsg . '</li>';
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

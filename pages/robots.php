@@ -53,9 +53,14 @@
             <div class="col-12">
                 <h1>Team</h1>
             </div>
-            <div class="tab-content">
-                <?php
-                $sql = "SELECT  team.id,
+
+            <div class="row">
+                <div class="col-12">
+                    <h1>Team</h1>
+                </div>
+                <div class="tab-content">
+                    <?php
+                    $sql = "SELECT  team.id,
                                 team.name,
                                 bot.name,
                                 bot.id,

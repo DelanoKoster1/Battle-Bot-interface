@@ -28,6 +28,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <?php
     include_once('../components/head.html');
@@ -42,9 +43,9 @@
 
 
 <body>
-<section id="header">
-    <?php includeHeader('page'); ?>
-</section>
+    <section id="header">
+        <?php includeHeader('page'); ?>
+    </section>
 
 <div class="container">
     <div class="row">
@@ -69,8 +70,11 @@
                         <div class="progress-bar" style="width: <?=$progress[$team]?>" role="progressbar" data-bs-toggle="tooltip" title="<?= $pointsPerTeam[$team]?>"></div>
                     </div>
                 </div>
+                <div class="col-2"></div>
             </div>
-            <?php } ?>
+            <?php
+            }
+            ?>
         </div>
     </div>
 </div>

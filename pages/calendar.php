@@ -6,8 +6,8 @@ include_once('../functions/function.php');
 <html lang="en">
 
 <head>
-    <?php 
-        include_once('../components/head.html');
+    <?php
+    include_once('../components/head.html');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -20,7 +20,7 @@ include_once('../functions/function.php');
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
-    
+
     <main id='events'>
         <div class='containter py-4'>
             <div class="row">
@@ -35,7 +35,6 @@ include_once('../functions/function.php');
             <div class="row m-auto eventShowBox">
                 <?php showEvents(); ?>
             </div>
-        </div>
     </main>
 
     <footer class="navbar">
