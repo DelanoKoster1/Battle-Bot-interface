@@ -580,7 +580,7 @@ function showEvents(bool $limit = false, bool $admin = false) {
         <div class="col-sm-12 mb-4">
             <div class="card eventsCard">
                 <div class="card-body text-center">
-                    <span class="calendarTitle d-block text-white">Nog geen opkomende evenementen</span>
+                    <span class="calendarTitle d-block text-white">Er zijn op het moment geen opkomende evenementen</span>
                 </div>
             </div>
         </div>
