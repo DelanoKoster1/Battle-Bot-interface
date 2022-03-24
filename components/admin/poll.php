@@ -1,1 +1,53 @@
-<p>poll test</p>
+<?php include_once('../functions/function.php'); ?>
+<div class="row">
+    <div class="col-md-6">
+        <div class="mt-3">
+            <?php
+                if (isset($_POST['submitPull'])) {
+                    $answer3 = empty($_POST['answer3']) ? NULL : $_POST['answer3'];
+                    $answer4 = empty($_POST['answer4']) ? NULL : $_POST['answer4'];
+                    $answer5 = empty($_POST['answer5']) ? NULL : $_POST['answer5'];
+                    multiPoll($_POST['pullQuestion'], $_POST['pullQuestionType'], $_POST['answer1'], $_POST['answer2'], $answer3, $answer4, $answer5);
+                } 
+            ?>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" action="">
+            <div class="form-group">
+                <input type="text" name="pullQuestion" class="form-control mt-3" placeholder="poll vraag..." />
+                <label for="questionType" class="mt-3">kies de vraag type:</label>
+                <select name="pullQuestionType" onchange="differentTypes.call(this, event)" id="questionType" class="form-control mt-3">
+                    <option value="">---</option>
+                    <option value="multiChoice" id="multiChoice">multiChoice</option>
+                    <option value="yesOrNo" id="yesOrNo">yesOrNo</option>
+                    <option value="voteForBot" id="voteForBot">voteForBot</option>
+                </select>
+                <div id="pollTypes">
+                </div>
+                <input type="submit" name="submitPull" class="btn btn-primary mt-3" value="submit poll" />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <form method="post" action="">
+            <div class="custom-control custom-radio">
+                <?php echo retrieveQuestionInfo(); ?>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <span class="mt-3">poll uitslag</span>
+        <?php 
+            echo pollQuestionAnswer(); 
+        ?>
+    </div>
+</div>
+<script src="../assets/js/poll.js"></script>
+

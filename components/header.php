@@ -1,12 +1,12 @@
 <header class="bg-dark">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-xl-4 col-lg-2 col-9">
+      <div class="col-xl-1 col-lg-2 col-9">
         <a href="<?= ($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php'; ?>">
           <img class="img-fluid logo" src="<?= ($_SESSION['sort'] == 'page') ? '..\assets\img\logo\logo(1).svg' : 'assets\img\logo\logo(1).svg' ?>" alt="logo">
         </a>
       </div>
-      <div class="col-xl-8 col-lg-10 my-auto d-none d-lg-block">
+      <div class="col-xl-11 col-lg-10 my-auto d-none d-lg-block">
         <nav class="navbar">
           <ul class="nav w-100 nav-fill">
             <li class="nav-item">
@@ -23,6 +23,9 @@
             </li>
             <li class="nav-item">
               <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/livestream.php' : 'pages/livestream.php' ?>">Livestream</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/streamhistory.php' : 'pages/streamhistory.php' ?>">Geschiedenis</a>
             </li>
             <?php if (!isset($_SESSION['email'])) { ?>
               <li class="nav-item">
@@ -84,6 +87,11 @@
             <li class="menu-item">
               <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/livestream.php' : 'pages/livestream.php' ?>">
                 <span>Livestream</span>
+              </a>
+            </li>
+            <li class="menu-item">
+              <a href="<?= ($_SESSION['sort'] == 'page') ? '../pages/streamhistory.php' : 'pages/streamhistory.php' ?>">
+                <span>Geschiedenis</span>
               </a>
             </li>
             <?php if (!isset($_SESSION['email'])) { ?>
