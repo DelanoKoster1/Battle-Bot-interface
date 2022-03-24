@@ -233,34 +233,37 @@ if (isset($_POST['bot'])) {
     }
 }
 
-if (isset($_GET['points'])) {
+if(isset($_GET['points'])) {
+    $conn = connectDB();
     $teams = array();
+    $eventIds = array();
+    $teamPoints = array();
 
-    //Get all the teams from database
-    $sql = "SELECT teamId, name FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
-    $results = stmtExec($sql);
+    if(isset($_GET['eventId'])) {
+        $eventId = $_GET['eventId'];
 
-    for ($i = 1; $i < count($results); $i++) {
-        $teams += [$results['teamId'][$i - 1] => $results['name'][$i - 1]];
-    }
-}
+        $sql = "SELECT teamId, `name`, eventId, points FROM `team-event` JOIN team ON team.id = `team-event`.teamId WHERE eventId = ?";
+        $stmt = mysqli_prepare($conn, $sql);
 
-if (isset($_POST['submitPoints'])) {
-    $poinsPerTeam = array();
+        mysqli_stmt_bind_param($stmt, 'i', $eventId);
 
-    //Get all values from the radiobuttons
-    foreach ($_POST as $radioTeamId => $assignedPoints) {
-        $poinsPerTeam += [$radioTeamId => $assignedPoints];
-        $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
-
-        if (!stmtExec($sql, 0, $assignedPoints, $radioTeamId)) {
+        if(!$stmt) {
             header("location: ../components/error.php");
         }
+
+        if(!mysqli_stmt_execute($stmt)) {
+            header("location: ../components/error.php");
+        }
+
+        mysqli_stmt_bind_result($stmt, $teamId, $teamName, $eventId, $points);
+        mysqli_stmt_store_result($stmt);
+        while(mysqli_stmt_fetch($stmt)) {
+            $teams += [$teamId => $teamName];
+            $teamPoints += [$teamId => $points];
+            $eventIds += [$teamId => $eventId];
+        }
+        mysqli_stmt_close($stmt);
     }
-
-    $_SESSION['succes'] = 'Punten toegevoegd';
-
-    header('location: admin.php?points');
 }
 
 /**
