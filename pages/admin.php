@@ -48,6 +48,10 @@ switch (true) {
         $headerTitle = 'Evenement starten';
         $content = "../components/admin/startEvent.php";
         break;
+    case isset($_GET['edit']);
+        $headerTitle = 'Informatie wijzigen';
+        $content = "../components/admin/edit.php";
+        break;
 
     default:
         $headerTitle = 'Event toevoegen';
@@ -417,6 +421,9 @@ if (isset($_POST['stopEvent'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?startEvent">Event activeren</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?edit">Informatie wijzigen</a>
                         </li>
                     </ul>
                 </nav>
