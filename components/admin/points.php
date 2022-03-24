@@ -2,7 +2,7 @@
     include_once('../functions/function.php');
 ?>
 
-<div>
+<div class="row">
     <?php 
         if(!isset($_GET['eventId'])) {
             showEvents($admin = true); 
@@ -42,8 +42,8 @@ if(isset($_GET['eventId'])) {
         <?php } ?>
         </form>
     </div>
-    <div class="col-8 d-flex">
-        <div class="row mt-2 align-content-around">
+    <div class="col-8 <?php if(count($teamPoints) > 1) { echo 'd-flex';}?>">
+        <div class="row mt-2 d-flex align-content-around">
             <?php foreach($teamPoints as $teamId => $points) { ?>
                 <div class="col-6 d-block d-flex text-left align-items-center">
                     <span>Points: <?= $points ?></span>
