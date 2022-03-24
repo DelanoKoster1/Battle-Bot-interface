@@ -233,37 +233,65 @@ if (isset($_POST['bot'])) {
     }
 }
 
-if(isset($_GET['points'])) {
+if (isset($_GET['points']) && isset($_GET['eventId'])) {
     $conn = connectDB();
     $teams = array();
     $eventIds = array();
     $teamPoints = array();
+    $eventId = $_GET['eventId'];
+    
+    foreach ($_POST as $radioTeamId => $assignedPoints) {
+        if (isset($_POST[$radioTeamId])) {
+            $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
+        }
 
-    if(isset($_GET['eventId'])) {
-        $eventId = $_GET['eventId'];
+        if (isset($_POST[$radioTeamId . 'submit'])) {
+            if (is_numeric($_POST[$radioTeamId])) {
+                $assignedPoints = $_POST[$radioTeamId];
+                $sql = "UPDATE `team-event` SET points = ? WHERE teamId = ?";
+            } else {
+                $error[] = "Vul een getal in";
+            }
+        }
 
-        $sql = "SELECT teamId, `name`, eventId, points FROM `team-event` JOIN team ON team.id = `team-event`.teamId WHERE eventId = ?";
         $stmt = mysqli_prepare($conn, $sql);
 
-        mysqli_stmt_bind_param($stmt, 'i', $eventId);
-
-        if(!$stmt) {
+        if (!$stmt) {
             header("location: ../components/error.php");
         }
 
-        if(!mysqli_stmt_execute($stmt)) {
-            header("location: ../components/error.php");
+        if (!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)) {
+            header('location: ../components/error.php');
         }
 
-        mysqli_stmt_bind_result($stmt, $teamId, $teamName, $eventId, $points);
-        mysqli_stmt_store_result($stmt);
-        while(mysqli_stmt_fetch($stmt)) {
-            $teams += [$teamId => $teamName];
-            $teamPoints += [$teamId => $points];
-            $eventIds += [$teamId => $eventId];
+        if (!mysqli_stmt_execute($stmt)) {
+            header('location ../components/error.php');
         }
+
         mysqli_stmt_close($stmt);
     }
+
+    $sql = "SELECT teamId, `name`, eventId, points FROM `team-event` JOIN team ON team.id = `team-event`.teamId WHERE eventId = ?";
+    $stmt = mysqli_prepare($conn, $sql);
+
+    mysqli_stmt_bind_param($stmt, 'i', $eventId);
+
+    if (!$stmt) {
+        header("location: ../components/error.php");
+    }
+
+    if (!mysqli_stmt_execute($stmt)) {
+        header("location: ../components/error.php");
+    }
+
+    mysqli_stmt_bind_result($stmt, $teamId, $teamName, $eventId, $points);
+    mysqli_stmt_store_result($stmt);
+    while (mysqli_stmt_fetch($stmt)) {
+        $teams += [$teamId => $teamName];
+        $teamPoints += [$teamId => $points];
+        $eventIds += [$teamId => $eventId];
+    }
+    mysqli_stmt_close($stmt);
 }
 
 /**
