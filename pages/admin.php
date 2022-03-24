@@ -44,6 +44,10 @@ switch (true) {
         $headerTitle = 'Team aan event toevoegen';
         $content = "../components/admin/addTeamToEvent.php";
         break;
+    case isset($_GET['startEvent']);
+        $headerTitle = 'Evenement starten';
+        $content = "../components/admin/startEvent.php";
+        break;
 
     default:
         $headerTitle = 'Event toevoegen';
@@ -80,6 +84,13 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
             $error[] = 'Event type klopt niet';
         }
     }
+
+    if(empty($error)) {
+        return false;
+    }else {
+        return true;
+    }
+
 }
 
 if (isset($_POST['event'])) {
@@ -315,6 +326,9 @@ if (isset($_POST['robotEventAnnuleren'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addTeamToEvent">Team toevoegen aan event</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?startEvent">Event activeren</a>
                         </li>
                     </ul>
                 </nav>
