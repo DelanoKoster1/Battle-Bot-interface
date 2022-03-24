@@ -310,9 +310,6 @@ if (isset($_POST['selectedEvent'])) {
                             <a class="nav-link text-white" href="admin.php?bot">Bot toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?addRobotToEvent">Robot toevoegen aan event</a>
-                        </li>
-                        <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addTeamToEvent">Team toevoegen aan event</a>
                         </li>
                     </ul>
