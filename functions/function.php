@@ -262,10 +262,9 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
  * @param array $error Array with errors
  * @return String/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password)
-{
+function checkLoginFields(String $username, String $password) {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
@@ -284,7 +283,7 @@ function checkLoginFields(String $username, String $password)
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -303,7 +302,7 @@ function checkLoginFields(String $username, String $password)
 function checkRegisterFields(string $username, string $email, string $password, string $password2)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
@@ -334,7 +333,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -354,7 +353,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
 function checkProfileFields(string $username, string $email, string $password, string $password2)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
@@ -385,14 +384,14 @@ function checkProfileFields(string $username, string $email, string $password, s
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
 function checkProfilePassword($newPassword, $repeatPassword)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     if ($newPassword == $repeatPassword) {
     } else {
@@ -408,7 +407,7 @@ function checkProfilePassword($newPassword, $repeatPassword)
     if (empty($error)) {
         return true;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 /**
@@ -423,7 +422,7 @@ function checkProfilePassword($newPassword, $repeatPassword)
 function checkUserInDataBase(string $username, string $email, $profile = false)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //SQL Query for selecting all users where an email is in DB
     if ($profile) {
@@ -452,9 +451,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false)
             }
         }
 
-        foreach ($error as $errorMsg) {
-            return $errorMsg;
-        }
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     } else {
         return false;
     }
@@ -916,9 +913,8 @@ function getAllEvents()
  * Function to check selected team ID
  * 
  */
-function checkSelectedTeam($teamID)
-{
-    global $error;
+function checkSelectedTeam ($teamID) {
+    $error = array();
 
     if (!$teamID && empty($teamID) || $teamID == 0) {
         $error[] = 'Kies een team!';
@@ -940,7 +936,7 @@ function checkSelectedTeam($teamID)
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -950,7 +946,7 @@ function checkSelectedTeam($teamID)
  */
 function checkSelectedEvent($eventID)
 {
-    global $error;
+    $error = array();
 
     if (!$eventID && empty($eventID) || $eventID == 0) {
         $error[] = 'Kies een event!';
@@ -972,7 +968,7 @@ function checkSelectedEvent($eventID)
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 

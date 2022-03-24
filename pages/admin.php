@@ -60,7 +60,7 @@ switch (true) {
  */
 function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
 {
-    global $error;
+    $error = array();
 
     if (!$eventDate && empty($eventDate)) {
         $error[] = 'Event datum mag niet leeg zijn!';
@@ -87,8 +87,8 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
 
     if(empty($error)) {
         return false;
-    }else {
-        return true;
+    } else {
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 
 }
@@ -165,36 +165,47 @@ if (isset($_POST['bot'])) {
                                                 header("location:../pages/admin.php?bot");
                                             } else {
                                                 $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
+                                                $_SESSION['ERROR_MESSAGE'] = $error;
                                             }
                                         } else {
                                             $error[] = "Het bestand bestaat al";
+                                            $_SESSION['ERROR_MESSAGE'] = $error;
                                         }
                                     } else {
                                         $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
+                                        $_SESSION['ERROR_MESSAGE'] = $error;
                                     }
                                 } else {
                                     $error[] = "Het bestandstype wordt niet geaccepteerd";
+                                    $_SESSION['ERROR_MESSAGE'] = $error;
                                 }
                             } else {
                                 $error[] = "Bestand is te groot";
+                                $_SESSION['ERROR_MESSAGE'] = $error;
                             }
                         } else {
                             $_SESSION['succes'] =  "Bot aangemaakt";
+                            $_SESSION['ERROR_MESSAGE'] = $error;
                         }
                     } else {
                         $error[] = "Het Interface veld is niet goed ingevuld";
+                        $_SESSION['ERROR_MESSAGE'] = $error;
                     }
                 } else {
                     $error[] = "Het Board veld is niet goed ingevuld";
+                    $_SESSION['ERROR_MESSAGE'] = $error;
                 }
             } else {
                 $error[] = "Mac addres niet correct";
+                $_SESSION['ERROR_MESSAGE'] = $error;
             }
         } else {
             $error[] = "Bot beschrijving niet goed ingevuld";
+            $_SESSION['ERROR_MESSAGE'] = $error;
         }
     } else {
         $error[] =  "Bot naam niet goed ingevuld";
+        $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -238,6 +249,8 @@ if (isset($_POST['selectedTeam'])) {
         $_SESSION['selectedTeam'] = $selectedTeam;
         header('location: admin.php?addTeamToEvent');
     }
+    header('location: admin.php?addTeamToEvent');
+    exit();
 }
 
 if (isset($_POST['selectedEvent'])) {
@@ -253,6 +266,7 @@ if (isset($_POST['selectedEvent'])) {
         //Check if no result has been found
         if (is_array($results) && count($results) > 0) {
             $error[] = 'Dit team is al toegevoegd aan dit event';
+            $_SESSION['ERROR_MESSAGE'] = $error;
             unset($_SESSION['selectedTeam']);
         } else {
             //Insert into database
@@ -356,16 +370,18 @@ if (isset($_POST['robotEventAnnuleren'])) {
                 <?php
                 }
 
-                if (!empty($error)) {
+                if (!empty($_SESSION['ERROR_MESSAGE'])) {
                 ?>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">
                                     <?php
-                                    foreach ($error as $errorMsg) {
+                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
                                         echo '<li>' . $errorMsg . '</li>';
                                     }
+
+                                    unset($_SESSION['ERROR_MESSAGE']);
                                     ?>
                                 </ul>
                             </div>

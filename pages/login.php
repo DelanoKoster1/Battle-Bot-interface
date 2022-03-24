@@ -128,16 +128,17 @@ if (isset($_POST['register'])) {
             <div class="row">
                 <div class="col-md-6 text-center mt-2">
                     <?php
-                    if (isset($_POST['login']) && !empty($error)) {
+                    if (isset($_POST['login']) && !empty($_SESSION['ERROR_MESSAGE'])) {
                     ?>
                         <div class="row">
                             <div class="col-md-12 p-0">
                                 <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
                                     <ul>
                                         <?php
-                                        foreach ($error as $errorMsg) {
+                                        foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
                                             echo '<li>' . $errorMsg . '</li>';
                                         }
+                                        unset($_SESSION['ERROR_MESSAGE']);
                                         ?>
                                     </ul>
                                 </div>
@@ -165,16 +166,17 @@ if (isset($_POST['register'])) {
 
                 <div class="col-md-6 text-center mt-2">
                     <?php
-                    if (isset($_POST['register']) && !empty($error)) {
+                    if (isset($_POST['register']) && !empty($_SESSION['ERROR_MESSAGE'])) {
                     ?>
                         <div class="row">
                             <div class="col-md-12 p-0">
                                 <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
                                     <ul>
                                         <?php
-                                        foreach ($error as $errorMsg) {
+                                        foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
                                             echo '<li>' . $errorMsg . '</li>';
                                         }
+                                        unset($_SESSION['ERROR_MESSAGE']);
                                         ?>
                                     </ul>
                                 </div>
