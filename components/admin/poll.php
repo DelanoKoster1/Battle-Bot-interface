@@ -45,9 +45,7 @@
     <div class="col-md-6">
         <span class="mt-3">poll uitslag</span>
         <?php 
-            if (isset($_POST['submitAnswer'])) {
-                echo pollQuestionAnswer($_POST['test']); 
-            }
+            echo pollQuestionAnswer(); 
         ?>
     </div>
 </div>
