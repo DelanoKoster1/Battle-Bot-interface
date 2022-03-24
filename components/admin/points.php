@@ -37,22 +37,30 @@ if(isset($_GET['eventId'])) {
 
                     <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '4'?>" value="10" autocomplete="off">
                     <label class="btn btn-secondary" for="<?=$team . '4'?>">10</label>     
-
-                    <input type="submit" class="btn-check" onclick="this.form.submit()" name="revert" id="<?=$team . '5'?>" value="1" autocomplete="off">
-                    <label class="btn btn-secondary" for="<?=$team . '5'?>">Revert  </label>
                 </div>
             </div>
         <?php } ?>
         </form>
     </div>
-    <div class="col-8 d-flex align-content-around">
-        <div class="row mt-2">
+    <div class="col-8 d-flex">
+        <div class="row mt-2 align-content-around">
             <?php foreach($teamPoints as $teamId => $points) { ?>
-                <div class="col-12 d-block d-flex text-left align-items-center">
+                <div class="col-6 d-block d-flex text-left align-items-center">
                     <span>Points: <?= $points ?></span>
+                </div>
+                <div class="col-6 align-items-center">
+                    <form action="" method="post" class="h-100">
+                        <input type="text" class="h-100" name="<?= $teamId ?>" id="<?= $teamId . '5'?>">
+                        <input type="submit" class="btn btn-secondary h-100" name="<?= $teamId . 'submit'?>" id="<?= $teamId . '5'?>" value="Set">
+                    </form>
                 </div>
             <?php } ?>
         </div>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-12">
+        <a href="admin.php?points" class="btn btn-secondary btn-sm" role="button"> Ga terug</a>
     </div>
 </div>
 
