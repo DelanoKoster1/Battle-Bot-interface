@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Mappeldorn/battle-bot-websocket#readme",
   "dependencies": {
     "express": "^4.17.3",
+    "forever": "^4.0.3",
     "https": "^1.0.0",
     "nodemon": "^2.0.15",
     "watch": "^1.0.2",
