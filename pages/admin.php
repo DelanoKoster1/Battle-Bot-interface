@@ -166,46 +166,68 @@ if (isset($_POST['bot'])) {
                                             } else {
                                                 $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
                                                 $_SESSION['ERROR_MESSAGE'] = $error;
+                                                header('location: admin.php?bot');
+                                                exit();
                                             }
                                         } else {
                                             $error[] = "Het bestand bestaat al";
                                             $_SESSION['ERROR_MESSAGE'] = $error;
+                                            header('location: admin.php?bot');
+                                            exit();
                                         }
                                     } else {
                                         $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand";
                                         $_SESSION['ERROR_MESSAGE'] = $error;
+                                        header('location: admin.php?bot');
+                                        exit();
                                     }
                                 } else {
                                     $error[] = "Het bestandstype wordt niet geaccepteerd";
                                     $_SESSION['ERROR_MESSAGE'] = $error;
+                                    header('location: admin.php?bot');
+                                    exit();
                                 }
                             } else {
                                 $error[] = "Bestand is te groot";
                                 $_SESSION['ERROR_MESSAGE'] = $error;
+                                header('location: admin.php?bot');
+                                exit();
                             }
                         } else {
                             $_SESSION['succes'] =  "Bot aangemaakt";
                             $_SESSION['ERROR_MESSAGE'] = $error;
+                            header('location: admin.php?bot');
+                            exit();
                         }
                     } else {
                         $error[] = "Het Interface veld is niet goed ingevuld";
                         $_SESSION['ERROR_MESSAGE'] = $error;
+                        header('location: admin.php?bot');
+                        exit();
                     }
                 } else {
                     $error[] = "Het Board veld is niet goed ingevuld";
                     $_SESSION['ERROR_MESSAGE'] = $error;
+                    header('location: admin.php?bot');
+                    exit();
                 }
             } else {
                 $error[] = "Mac addres niet correct";
                 $_SESSION['ERROR_MESSAGE'] = $error;
+                header('location: admin.php?bot');
+                exit();
             }
         } else {
             $error[] = "Bot beschrijving niet goed ingevuld";
             $_SESSION['ERROR_MESSAGE'] = $error;
+            header('location: admin.php?bot');
+            exit();
         }
     } else {
         $error[] =  "Bot naam niet goed ingevuld";
         $_SESSION['ERROR_MESSAGE'] = $error;
+        header('location: admin.php?bot');
+        exit();
     }
 }
 
