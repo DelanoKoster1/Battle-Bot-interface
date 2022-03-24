@@ -16,4 +16,9 @@
     .commandLine {
         width: 100%;
     }
+    .buttons-group {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
 }

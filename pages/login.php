@@ -1,7 +1,6 @@
 <?php
 //Includes
 include_once('../functions/function.php');
-include_once('../functions/database.php');
 
 //Check if user is logged
 if (isset($_SESSION['email'])) {
@@ -10,41 +9,6 @@ if (isset($_SESSION['email'])) {
 
 //Define global variable(s)
 $error = array();
-
-/**
- * Function checkLoginFields
- * Function to check if fields are correct and not empty.
- * Display Error message if needed.
- * @param String $username Filled in username
- * @param String $email Filled in email
- * @param String $password1 Filled in password
- * @param array $error Array with errors
- * @return String/boolean $error False or error message
- */
-function checkLoginFields(String $username, String $password) {
-    //Call global variable(s)
-    global $error;
-
-    //If statements so the error messages will be displayed all at once instead of each individual.
-    if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam is niet correct!';
-    }
-    if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
-    }
-    if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
-    }
-    if (strlen($password) > 200) {
-        $error[] = 'Wachtwoord is te lang!';
-    }
-
-    if (empty($error)) {
-        return false;
-    } else {
-        return $error;
-    }
-}
 
 //Check if submitted login
 if (isset($_POST['login'])) {
@@ -71,7 +35,7 @@ if (isset($_POST['login'])) {
                 $email = $results['email'][0];
                 $role = $results['roleId'][0];
                 $id = $results['id'][0];
-                
+
                 //Put value's in session
                 $_SESSION['username'] = $username;
                 $_SESSION['email'] = $email;
@@ -81,97 +45,11 @@ if (isset($_POST['login'])) {
                 header('location: ../index.php');
                 exit();
             } else {
-                $error[] = 'Inloggegevens zijn incorrect.';
+                $error[] = 'Deze inloggegevens zijn incorrect!';
             }
         } else {
-            $error[] = 'Geen gebruiker gevonden met deze gebruikersnaam.';
+            $error[] = 'Er is geen gebruiker gevonden met deze gebruikersnaam!';
         }
-    }
-}
-
-/**
- * Function checkRegisterFields.
- * Function to check if fields are correct and not empty.
- * Display Error message if needed.
- * @param string    $email  Filled in email
- * @param string    $firstname  Filled in firstname
- * @param string    $lastname  Filled in lastname
- * @param string    $password  Filled in password
- * @param string    $password2  Filled in password2
- * @param array     $error  Array with errors
- * @return string/boolean  $error  False or error message
- */
-function checkRegisterFields(string $username, string $email, string $password, string $password2) {
-    //Call global variable(s)
-    global $error;
-
-    //If statements so the error messages will be displayed all at once instead of each individual.
-    if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
-    }
-    if (!$email && empty($email)) {
-        $error[] = 'Email is onjuist!';
-    }
-    if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
-    }
-    if (!$password2 && empty($password2)) {
-        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
-    }
-    if ($password != $password2) {
-        $error[] = 'Wachtwoorden komen niet overeen!';
-    }
-    if (strlen($email) > 200) {
-        $error[] = 'E-mail is te lang!';
-    }
-    if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
-    }
-    if (strlen($password) > 255) {
-        $error[] = 'Wachtwoord is te lang!';
-    }
-
-    if (empty($error)) {
-        return false;
-    } else {
-        return $error;
-    }
-}
-
-/**
- * Function checkUserInDatabase
- * Function to check if user already exists in database
- * Return Error message if needed.
- * @param   string          $username  Filled in username
- * @return  string/boolean  $error  False or error message
- */
-function checkUserInDataBase(string $username, string $email) {
-    //Call global variable(s)
-    global $error;
-
-    //SQL Query for selecting all users where an email is in DB
-    $sql = "SELECT username, email FROM account WHERE username = ? OR email = ?";
-
-    $results = stmtExec($sql, 0, $username, $email);
-
-    //Check if a result has been found
-    if (is_array($results) && count($results) > 0) {
-        for($i = 0; $i < count($results); $i++) {
-            $email = $results['email'][0];
-            $username = $results['username'][0];
-
-            if($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
-                $error[] = 'Er bestaat al een account met deze email';
-            }
-            if($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
-            }
-        }  
-        foreach($error as $errorMsg) {
-            return $errorMsg;
-        }
-    } else {
-        return false;
     }
 }
 
@@ -197,21 +75,19 @@ if (isset($_POST['register'])) {
             $sql = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
 
             if (!stmtExec($sql, 0, $teamid, $role, $username, $password, $email)) {
-                $_SESSION['error'] = "Cannot create account";
+                $_SESSION['error'] = "Er is iets misgegaan bij het aanmaken van het account, probeer het opnieuw!";
                 header("location: ../components/error.php");
             }
 
-            $lastInsertedID = mysqli_insert_id($conn);
+            $sql = "SELECT id FROM account WHERE username = ?";
+            $result = stmtExec($sql, 0, $username);
+            $lastInsertedID = $result["id"][0];
 
             // log user in
             $_SESSION['username'] = $username;
             $_SESSION['email'] = $email;
             $_SESSION['role'] = $role;
             $_SESSION['id'] = $lastInsertedID;
-
-            //Close the statement and connection
-            mysqli_stmt_close($stmt);
-            mysqli_close($conn);
 
             //Send user to index.php
             header('location: ../index.php');
@@ -228,7 +104,7 @@ if (isset($_POST['register'])) {
     <?php
     include_once('../components/head.html');
     ?>
-
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/loginregister.css">
@@ -242,83 +118,93 @@ if (isset($_POST['register'])) {
     </section>
 
     <section id="content" class="container mb-3">
-        <div class="row">
-            <div class="col-md-12 text-center mt-2">
-                <h1>Login/Register</h1>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-6 text-center mt-2">
-                <?php
-                if (isset($_POST['login']) && !empty($error)) {
-                ?>
-                    <div class="row">
-                        <div class="col-md-12 p-0">
-                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
-                                <ul>
-                                    <?php
-                                    foreach ($error as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
-                                    ?>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                <?php
-                }
-                ?>
-
-                <div class="box row rounded">
-                    <div class="col-md-12">
-                        <h2 class="form-heading mt-3">Inloggen</h2>
-                        <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-                            <div class="form-group">
-                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['login'])) {echo htmlentities($_POST['username']); } ?>">
-                                <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password">
-                                <input class="btn btn-danger mt-3" type="submit" name="login" value="Inloggen">
-                            </div>
-                        </form>
-                    </div>
+        <div class="height">
+            <div class="row">
+                <div class="col-md-12 text-center mt-2">
+                    <h1>Login/Register</h1>
                 </div>
             </div>
 
-            <div class="col-md-6 text-center mt-2">
-                <?php
-                if (isset($_POST['register']) && !empty($error)) {
-                ?>
-                    <div class="row">
-                        <div class="col-md-12 p-0">
-                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
-                                <ul>
-                                    <?php
-                                    foreach ($error as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
-                                    ?>
-                                </ul>
+            <div class="row">
+                <div class="col-md-6 text-center mt-2">
+                    <?php
+                    if (isset($_POST['login']) && !empty($_SESSION['ERROR_MESSAGE'])) {
+                    ?>
+                        <div class="row">
+                            <div class="col-md-12 p-0">
+                                <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
+                                    <ul>
+                                        <?php
+                                        foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
+                                            echo '<li>' . $errorMsg . '</li>';
+                                        }
+                                        unset($_SESSION['ERROR_MESSAGE']);
+                                        ?>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php
-                }
-                ?>
+                    <?php
+                    }
+                    ?>
 
-                <div class="box row rounded">
-                    <div class="col-md-12">
-                        <h2 class="form-heading mt-3">Registeren</h2>
-                        <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-                            <div class="form-group">
-                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['username']); } ?>">
-                                <input class="form-control mt-3" placeholder="E-mail" type="email" name="email" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['email']); } ?>">
-                                <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password1">
-                                <input class="form-control mt-3" placeholder="Wachtwoord bevestigen" type="password" name="password2">
-                                <input class="btn btn-danger mt-3" type="submit" name="register" value="Registreren">
-                            </div>
-                        </form>
+                    <div class="box row rounded">
+                        <div class="col-md-12">
+                            <h2 class="form-heading mt-3">Inloggen</h2>
+                            <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+                                <div class="form-group">
+                                    <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['login'])) {
+                                                                                                                                            echo htmlentities($_POST['username']);
+                                                                                                                                        } ?>">
+                                    <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password">
+                                    <input class="btn btn-danger mt-3" type="submit" name="login" value="Inloggen">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
+
+                <div class="col-md-6 text-center mt-2">
+                    <?php
+                    if (isset($_POST['register']) && !empty($_SESSION['ERROR_MESSAGE'])) {
+                    ?>
+                        <div class="row">
+                            <div class="col-md-12 p-0">
+                                <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3" role="alert">
+                                    <ul>
+                                        <?php
+                                        foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
+                                            echo '<li>' . $errorMsg . '</li>';
+                                        }
+                                        unset($_SESSION['ERROR_MESSAGE']);
+                                        ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                
+            <?php
+                    }
+            ?>
+
+            <div class="box row rounded">
+                <div class="col-md-12">
+                    <h2 class="form-heading mt-3">Registeren</h2>
+                    <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+                        <div class="form-group">
+                            <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {
+                                                                                                                                    echo htmlentities($_POST['username']);
+                                                                                                                                } ?>">
+                            <input class="form-control mt-3" placeholder="E-mail" type="email" name="email" value="<?php if (isset($_POST['register'])) {
+                                                                                                                        echo htmlentities($_POST['email']);
+                                                                                                                    } ?>">
+                            <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password1">
+                            <input class="form-control mt-3" placeholder="Wachtwoord bevestigen" type="password" name="password2">
+                            <input class="btn btn-danger mt-3" type="submit" name="register" value="Registreren">
+                        </div>
+                    </form>
+                </div>
+            </div>
             </div>
         </div>
     </section>

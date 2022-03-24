@@ -46,7 +46,8 @@ header .img-fluid.logo {
   height: 100px;
   padding: 16px 0;
 }
-header .menu, #open-btn {
+header .menu,
+#open-btn {
   font-size: 3rem;
 }
 .frontpageIMG {
@@ -54,6 +55,9 @@ header .menu, #open-btn {
 }
 #bots .card {
   margin: 0 1.5rem;
+  min-width: 75px;
+  min-height: 75px;
+  padding: 10px;
 }
 #bots .no-bots {
   background-color: #707070;
@@ -100,7 +104,6 @@ header .menu, #open-btn {
   .eventsCard:hover {
     transform: scale(1.1);
     transition: ease-in-out 0.4s;
-    
   }
 }
 
@@ -109,10 +112,16 @@ header .menu, #open-btn {
 }
 .calendarTitle {
   font-size: 20px;
-  color: #BFC9D3;
+  color: #bfc9d3;
 }
 .calendarInfo {
   font-size: 12px;
+}
+
+/* Footer */
+
+.height {
+  min-height: 445px;
 }
 
 /* Mobile menu */
@@ -188,7 +197,7 @@ header .menu, #open-btn {
   padding: 0;
 }
 .nav-link {
-  padding: 0.2rem 1rem;
+  padding: 0.2rem .8rem;
 }
 .navbar-collapse .nav-item span {
   color: white;
@@ -231,7 +240,7 @@ header .menu, #open-btn {
 .close-btn .material-icons {
   font-size: 30px;
 }
- @media (min-width : 992px) {
+@media (min-width: 992px) {
   .input-group.w-lg-50 {
     width: 50%;
     margin: 0 auto;
@@ -242,8 +251,21 @@ header .menu, #open-btn {
     margin: 0 0.4rem;
   }
 }
+@media (max-width: 768px) {
+  .img-fluid.scoreImg {
+    height: 60px;
+  }
+}
 @media (max-width: 1332px) {
   header .nav-link {
     padding: 0.5rem;
+  }
+}
+@media (max-width: 576px) {
+  #bots .card {
+    height: 80%;
+  }
+  #bots .card-title {
+    font-size: 11px;
   }
 }

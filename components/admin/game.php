@@ -58,11 +58,7 @@
 
     </div>
 
-    <footer>
-        <?php include_once('../components/footer.php') ?>
-    </footer>
-    <script src="../assets/js/functions.js"></script>
-    <script src="../assets/js/game.js"></script>
-</body>
-
-</html>
+        </div>
+</div>
+<script src="../assets/js/functions.js"></script>
+<script src="../assets/js/game.js"></script>

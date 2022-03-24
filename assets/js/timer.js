@@ -15,24 +15,31 @@ document.addEventListener('DOMContentLoaded', function() {
         var distance = countDownDate - now;
             
         // Time calculations for days, hours, minutes and seconds
+        
         var days = Math.floor(distance / (1000 * 60 * 60 * 24));
         var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            
-        // Output the result in an element with id="timeUntilEvent"
-        document.getElementById("timeUntilEvent").innerHTML = "Dagen tot evenement: " + days + "d " + hours + "h "
-        + minutes + "m " + seconds + "s ";
+        
+        if (!Number.isNaN(seconds)) {   
+            // Output the result in an element with id="timeUntilEvent"
+            document.getElementById("timeUntilEvent").innerHTML = "Dagen tot evenement: " + days + "d " + hours + "h "
+            + minutes + "m " + seconds + "s ";
+        }else {
+            clearInterval(interval);
+            document.getElementById("timeUntilEvent").innerHTML = "Geen evenement ingepland.";
+        }
             
         // If the count down is over, write some text 
-        if (distance < 0) {
+        if (hours > -3 && hours < 0 && days >= 0) {
             clearInterval(interval);
-            document.getElementById("timeUntilEvent").innerHTML = "EVENEMENT VERLOPEN";
+            document.getElementById("timeUntilEvent").innerHTML = "Evenement is bezig";
+            console.log(distance);
         }
     }, 1000);
 
-        let test = document.getElementById("eventTimeDisplay");
-        test.innerHTML += '<span class="material-icons align-middle test">local_fire_department</span>';
-        test.innerHTML += '<span class="fw-bold" id="timeUntilEvent"></span>';
-        test.innerHTML += '<span class="material-icons align-middle test">local_fire_department</span>';
+        let timer = document.getElementById("eventTimeDisplay");
+        timer.innerHTML += '<span class="material-icons align-middle timer">local_fire_department</span>';
+        timer.innerHTML += '<span class="fw-bold" id="timeUntilEvent"></span>';
+        timer.innerHTML += '<span class="material-icons align-middle timer">local_fire_department</span>';
     }, false);
