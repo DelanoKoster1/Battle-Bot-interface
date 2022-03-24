@@ -31,10 +31,6 @@ ws.addEventListener("open", () => {
 
 })
 
-function getDomainName() {
-    return window.location.href.replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-}
-
 function sendMsgToWS() {
     if (chatInput.value.trim() != "") {
         let body = {

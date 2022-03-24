@@ -8,20 +8,7 @@ const wss = new WebSocket.Server({
 
 const bots = new Bots();
 let admins = {};
-let games = {
-    "maze": {
-        "status": "offline",
-        "bots": [] 
-    },
-    "race": {
-        "status": "offline",
-        "bots": []
-    },
-    "butler": {
-        "status": "offline",
-        "bots": []
-    }
-    }
+let games = {};
 
 
 wss.on('connection', (client, req) => {
@@ -30,10 +17,24 @@ wss.on('connection', (client, req) => {
     client.on('message', clientReq => {
         if (isValidJSONString(clientReq)) {
             let wsKey = req.headers['sec-websocket-key'];
-            // console.log(wsKey);
             let body = JSON.parse(clientReq);
             if (clientIsBot(wsKey) || clientIsAdmin(wsKey)) {
                 if (body.action && clientIsAdmin(wsKey)) {
+                    // 1.) check of game bestaat
+                    // 2.) check of game nog niet word gespeeld door geselecteerde bots of 
+                    // dat de robot nog niet in een andere game zit
+                    // 3.) send prepare naar geselecteerde bots
+                    // 4.) update status van bots die true terug sturen
+                    // 5.) wanneer alle bots ready zijn msg naar admins om het spel te starten
+                    // 6.) update status van de geselecteerde bots
+                    // 7.) send start naar geselecteerde bots
+                    // 8.) update status van bots die true terug sturen
+                    // 9.) wanneer alle bots ready zijn msg naar admins om het spel te kunnen stoppen
+                    // 10.) update status van geselecteerde bots die gefinished zijn
+                    // 11.) wanneer alle bots klaar zijn msg naar admins om het spel opnieuw te starten
+
+
+
                     switch (body.for) {
                         case "all":
                             sendActionToAllBots(body);
