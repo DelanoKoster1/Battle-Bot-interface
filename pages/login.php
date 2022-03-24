@@ -35,7 +35,7 @@ if (isset($_POST['login'])) {
                 $email = $results['email'][0];
                 $role = $results['roleId'][0];
                 $id = $results['id'][0];
-                
+
                 //Put value's in session
                 $_SESSION['username'] = $username;
                 $_SESSION['email'] = $email;
@@ -143,21 +143,23 @@ if (isset($_POST['register'])) {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <?php
-                }
-                ?>
+                    <?php
+                    }
+                    ?>
 
-                <div class="box row rounded">
-                    <div class="col-md-12">
-                        <h2 class="form-heading mt-3">Inloggen</h2>
-                        <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-                            <div class="form-group">
-                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['login'])) {echo htmlentities($_POST['username']); } ?>">
-                                <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password">
-                                <input class="btn btn-danger mt-3" type="submit" name="login" value="Inloggen">
-                            </div>
-                        </form>
+                    <div class="box row rounded">
+                        <div class="col-md-12">
+                            <h2 class="form-heading mt-3">Inloggen</h2>
+                            <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+                                <div class="form-group">
+                                    <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['login'])) {
+                                                                                                                                            echo htmlentities($_POST['username']);
+                                                                                                                                        } ?>">
+                                    <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password">
+                                    <input class="btn btn-danger mt-3" type="submit" name="login" value="Inloggen">
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
 
@@ -178,25 +180,29 @@ if (isset($_POST['register'])) {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <?php
-                }
-                ?>
+                
+            <?php
+                    }
+            ?>
 
-                <div class="box row rounded">
-                    <div class="col-md-12">
-                        <h2 class="form-heading mt-3">Registeren</h2>
-                        <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
-                            <div class="form-group">
-                                <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['username']); } ?>">
-                                <input class="form-control mt-3" placeholder="E-mail" type="email" name="email" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['email']); } ?>">
-                                <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password1">
-                                <input class="form-control mt-3" placeholder="Wachtwoord bevestigen" type="password" name="password2">
-                                <input class="btn btn-danger mt-3" type="submit" name="register" value="Registreren">
-                            </div>
-                        </form>
-                    </div>
+            <div class="box row rounded">
+                <div class="col-md-12">
+                    <h2 class="form-heading mt-3">Registeren</h2>
+                    <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
+                        <div class="form-group">
+                            <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {
+                                                                                                                                    echo htmlentities($_POST['username']);
+                                                                                                                                } ?>">
+                            <input class="form-control mt-3" placeholder="E-mail" type="email" name="email" value="<?php if (isset($_POST['register'])) {
+                                                                                                                        echo htmlentities($_POST['email']);
+                                                                                                                    } ?>">
+                            <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password1">
+                            <input class="form-control mt-3" placeholder="Wachtwoord bevestigen" type="password" name="password2">
+                            <input class="btn btn-danger mt-3" type="submit" name="register" value="Registreren">
+                        </div>
+                    </form>
                 </div>
+            </div>
             </div>
         </div>
     </section>
