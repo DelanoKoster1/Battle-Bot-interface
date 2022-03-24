@@ -103,45 +103,49 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-md-6">
                                     <h3 class="my-3">Stats</h3>
-                                    <table class="table mb-5">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col"></th>
-                                                <th scope="col">Aantal Spellen Gespeeld</th>
-                                                <th scope="col">Aantal Spellen Gewonnen</th>
-                                                <th scope="col">Aantal Spellen Verloren</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row"></th>
-                                                <td>' . $gamesPlayed . '</td>
-                                                <td>' . $gamesWon . '</td>
-                                                <td>' . $gamesPlayed - $gamesWon . '</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table mb-5">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"></th>
+                                                    <th scope="col">Aantal Spellen Gespeeld</th>
+                                                    <th scope="col">Aantal Spellen Gewonnen</th>
+                                                    <th scope="col">Aantal Spellen Verloren</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row"></th>
+                                                    <td>' . $gamesPlayed . '</td>
+                                                    <td>' . $gamesWon . '</td>
+                                                    <td>' . $gamesPlayed - $gamesWon . '</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
-                                <div class="col-6">
+                                <div class="col-md-6">
                                     <h3 class="my-3">Specs</h3>
-                                    <table class="table mb-5">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col"></th>
-                                                <th scope="col">Board</th>
-                                                <th scope="col">Interface</th>                                           
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <th scope="row"></th>
-                                                <td>' . $specsBoard . '</td>
-                                                <td>' . $specsInterface . '</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table mb-5">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col"></th>
+                                                    <th scope="col">Board</th>
+                                                    <th scope="col">Interface</th>                                           
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <th scope="row"></th>
+                                                    <td>' . $specsBoard . '</td>
+                                                    <td>' . $specsInterface . '</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
