@@ -293,6 +293,23 @@ if (isset($_POST['robotEventAnnuleren'])) {
     unset($_SESSION['selectedTeam']);
     header('location: admin.php?addTeamToEvent');
 }
+
+if (isset($_POST['startEvent'])) {
+    // sets all events to inactive
+    $query = "UPDATE event SET active = 0";
+    $result = stmtExec($query);
+    
+    // update event on active
+    $query = "UPDATE event SET active = 1 WHERE id = ?";
+    $id = filter_input(INPUT_POST,"startEvent",FILTER_SANITIZE_NUMBER_INT);
+    $result = stmtExec($query, 0 , $id);
+}
+
+if (isset($_POST['stopEvent'])) {
+    $query = "UPDATE event SET active = 0 WHERE id = ?";
+    $id = filter_input(INPUT_POST,"stopEvent",FILTER_SANITIZE_NUMBER_INT);
+    $result = stmtExec($query, 0 , $id);
+}
 ?>
 
 <!DOCTYPE html>

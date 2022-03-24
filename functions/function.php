@@ -534,13 +534,14 @@ function formatdate(string $date): string
  * Function to show events as HTML
  * 
  */
-function showEvents(bool $limit = false, bool $admin = false, $start = false)
-{
+function showEvents(bool $limit = false, bool $admin = false, $start = false) {
     $query = "SELECT id, name, date, description
               FROM event 
-              WHERE date > now()
-              ORDER BY date ASC
-              limit 5";
+              WHERE date > NOW()
+              AND type = 'public'
+              ORDER BY date ASC ";
+
+    $query .= ($limit) ? "LIMIT 4" : "";
 
     $eventResults = stmtExec($query);
 
@@ -552,7 +553,7 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false)
             $eventDate = $eventResults["date"][$i];
             $description = $eventResults["description"][$i];
             $id = $eventResults["id"][$i];
-            
+
             if ($admin) {
                 echo '
                 <div class="col-sm-3 mb-4">
@@ -573,8 +574,8 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false)
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
                             <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
                             <form action="" method="post">
-                                <button type="submit" value="'.$id.'">Start</button>
-                                <button type="submit" value="'.$id.'">Stop</button>
+                                <button type="submit" name="startEvent" value="'.$id.'">Start</button>
+                                <button type="submit" name="stopEvent" value="'.$id.'">Stop</button>
                             </form>
                         </div>
                     </div>
