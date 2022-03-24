@@ -1,12 +1,28 @@
 const router = require("express").Router();
-const Bots = require('../../../classes/bots.js')
+const Bots = require('../../classes/bots.js')
 const WebSocket = require("ws");
 
-const bots = new Bots();
-let admins = {};
 const wss = new WebSocket.Server({
     port: 3003
 });
+
+const bots = new Bots();
+let admins = {};
+let games = {
+    "maze": {
+        "status": "offline",
+        "bots": [] 
+    },
+    "race": {
+        "status": "offline",
+        "bots": []
+    },
+    "butler": {
+        "status": "offline",
+        "bots": []
+    }
+    }
+
 
 wss.on('connection', (client, req) => {
     console.info("Total connected clients:", wss.clients.size);
@@ -14,9 +30,8 @@ wss.on('connection', (client, req) => {
     client.on('message', clientReq => {
         if (isValidJSONString(clientReq)) {
             let wsKey = req.headers['sec-websocket-key'];
-            console.log(wsKey);
+            // console.log(wsKey);
             let body = JSON.parse(clientReq);
-
             if (clientIsBot(wsKey) || clientIsAdmin(wsKey)) {
                 if (body.action && clientIsAdmin(wsKey)) {
                     switch (body.for) {
@@ -27,17 +42,22 @@ wss.on('connection', (client, req) => {
                             // sendActionToBot(body);
                             break;
                         default:
+                            sendMsgToClient(client, {
+                                "error": "INVALID_COMMAND"
+                            })
                     }
 
-                } else {
-                    sendMsgToClient(client, {
-                        "error": "INVALID_COMMAND"
-                    })
                 }
 
                 if (body.status) {
+                    console.log(body);
+
                     bots.setStatus(wsKey, body.status);
-                    //send to admin status of all bots that are preparing
+                    if (bots.botsReady()) {
+                        sendMsgToAllAdmins({
+                            "status": true
+                        })
+                    }
                 }
 
             } else {
@@ -52,15 +72,15 @@ wss.on('connection', (client, req) => {
     })
 
     client.on('pong', () => {
-        bots.setConnAttempt(req.headers['sec-websocket-key'], 2);
+        bots.setConnAttempt(req.headers['sec-websocket-key'], 0);
     });
 
     setInterval(() => {
         let botsList = bots.getAllBots();
         Object.keys(botsList).forEach(wsKey => {
-            if (botsList[wsKey].connAttempt != 0) {
+            if (botsList[wsKey].connAttempt < 1) {
                 botsList[wsKey].client.ping();
-                bots.setConnAttempt(wsKey, botsList[wsKey].connAttempt - 1);
+                bots.setConnAttempt(wsKey, botsList[wsKey].connAttempt + 1);
             } else {
                 botsList[wsKey].client.terminate();
                 bots.removeBot(wsKey);
@@ -116,14 +136,21 @@ function sendActionToAllBots(body) {
     }
 }
 
-function sendActionToBot(body){
+
+function sendMsgToAllAdmins(body) {
+    Object.keys(admins).forEach(wsKey => {
+        admins[wsKey].send(JSON.stringify(body));
+    })
+}
+
+function sendActionToBot(body) {
     let bot = bots.getBotById(body.id);
 
     bots.setAction(bot.wsKey, body.action);
     sendMsgToClient({
         "status": body.action,
         "game": body.game
-    })
+    });
 
 }
 
