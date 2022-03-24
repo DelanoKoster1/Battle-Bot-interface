@@ -610,9 +610,7 @@ function getLivestream() {
         ';
 }
 
-function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
-    
-    require_once("database.php");
+function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) { 
 
     if (!empty($question)) {
         if ($questionType == "multiChoice") {
@@ -701,7 +699,6 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
 }
 
 function retrieveQuestionInfo() {
-    require_once("database.php");
 
     $query = "SELECT    question, answer1, answer2, answer3, answer4, answer5, active 
               FROM      poll
@@ -735,24 +732,43 @@ function retrieveQuestionInfo() {
         return $questionnaire;
 
     } else {
-        return "<h4>Er is momenteel geen pull gaande.</h4>";
+        return "<h4>Er is momenteel geen poll gaande.</h4>";
     }
 
 }
 
-function pollQuestionAnswer($postQuestion) {
 
-    $voteArray = ["test1", "test3", "test1", "test2"];
+function pollAddUser($username, $givenAnswer) {
 
-    array_push($voteArray, $postQuestion);
+    $query = "INSERT INTO `poll-outcome` (`userName`,`givenAnswer`)
+              VALUES (?,?)
+             ";
+    
+    stmtExec($query, 0, $username, $givenAnswer);
+
+}
+
+function pollQuestionAnswer() {
+
+    $voteArray = [];
+
+    $query = "SELECT    userName, givenAnswer
+              FROM      `poll-outcome`
+             ";
+
+    $results = stmtExec($query);
+
+    foreach ($results['givenAnswer'] as $postQuestion) {
+        array_push($voteArray, $postQuestion);
+    }
 
     $values = array_count_values($voteArray);
 
     $progressBar = '';
 
-    foreach ($values as $test) {
+    foreach ($values as $number) {
 
-        $percentage = ( $test / 100 ) * 100;
+        $percentage = ( $number / 100 ) * 100;
 
         $progressBar .= '<div class="progress mt-3">';
             $progressBar .= '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="'. $percentage .'" aria-valuemin="0" aria-valuemax="100" style="width:'. $percentage .'%">';
@@ -969,4 +985,3 @@ function uploadFile($file, string $query, int $id, string $directory)
     }
 
 }
-
