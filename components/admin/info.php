@@ -161,9 +161,11 @@ if (isset($_POST['change2'])) {
     <div class="col-md-6">
     <h3>Bot info</h3>
     <form method="POST" action="">
-        <input type="hidden" value="<?php echo $id; ?>" name="botId" id="id">
-        <input type="text" value="<?php echo $name; ?>" name="name">Bot name<br>
-        <input type="text" value="<?php echo $description; ?>" name="description">Bot description<br>
+        <p><input type="hidden" class="form-control mt-3" value="<?php echo $id; ?>" name="botId" id="id"></p>
+        <h6>Bot name</h6>
+        <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="name"></p>
+        <h6>Bot description</h6>
+        <p><input type="text" class="form-control mt-3" value="<?php echo $description; ?>" name="description"></p>
         <input type="submit" name="change" value="wijzig">
     </form>
     </div>
@@ -173,8 +175,9 @@ if (isset($_POST['change2'])) {
     <div class="col-md-6">
     <h3>Team info</h3>
     <form method="POST" action="">
-        <input type="hidden" value="<?php echo $id; ?>" name="teamId" id="id">
-        <input type="text" value="<?php echo $name; ?>" name="name">Team name<br>
+        <input type="hidden" class="form-control mt-3" value="<?php echo $id; ?>" name="teamId" id="id">
+        <h6>Team name</h6>
+        <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="name"></p>
         <input type="submit" name="change2" value="wijzig">
     </form>
     </div>
