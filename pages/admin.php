@@ -53,6 +53,11 @@ switch (true) {
         $content = "../components/admin/info.php";
         break;
 
+    case isset($_GET['createTeam']);
+        $headerTitle = 'Team aanmaken';
+        $content = "../components/admin/createTeam.php";
+        break;
+
     default:
         $headerTitle = 'Event toevoegen';
         $content = "../components/admin/event.php";
@@ -146,6 +151,8 @@ if (isset($_POST['event'])) {
         exit();
     }
 }
+
+// Code for add bot page
 
 if (isset($_POST['bot'])) {
     $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -350,6 +357,24 @@ if (isset($_POST['selectedEvent'])) {
     }
 }
 
+//code for create team page
+
+if (isset($_POST['submitTeam'])) {
+    if (isset($_POST['teamName']) && $teamName = filter_input(INPUT_POST, 'teamName', FILTER_SANITIZE_SPECIAL_CHARS)) {
+        if (isset($_POST['bots']) && $botId = filter_input(INPUT_POST, 'bots', FILTER_SANITIZE_NUMBER_INT)) {
+            $sql = "INSERT INTO team (name, botId) VALUES (?,?)";
+
+            if (!stmtExec($sql, 0, $teamName, $botId)) {
+                $_SESSION['error'] = "Voer alle velden in";
+                header("location: ../components/error.php");
+            } else {
+                $_SESSION['succes'] = "Team aangemaakt!";
+            }
+        }
+    }
+}
+
+
 if (isset($_POST['robotEventAnnuleren'])) {
     unset($_SESSION['selectedTeam']);
     header('location: admin.php?addTeamToEvent');
@@ -424,6 +449,9 @@ if (isset($_POST['stopEvent'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?info">Informatie bot en team</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?createTeam">Team aanmaken</a>
                         </li>
                     </ul>
                 </nav>
