@@ -21,10 +21,12 @@ if (isset($_POST['change'])) {
             mysqli_stmt_close($stmt);
             
             } else {
+                echo "<a href='admin.php?info'><h6>Return</h6></a>";
                 die("Description not empty");
             }
         
         } else {
+            echo "<a href='admin.php?info'><h6>Return</h6></a>";
             die("Name not empty");
 
     }
@@ -45,7 +47,8 @@ if (isset($_POST['change2'])) {
         mysqli_stmt_close($stmt);
 
     } else {
-        die("Name not empty");
+        echo "<a href='admin.php?info'><h6>Return</h6></a>";
+        die("<h4>Name not empty</h4>"); 
     }
 }
 
@@ -66,7 +69,6 @@ if (isset($_POST['change2'])) {
         mysqli_stmt_store_result($stmt);
 
         if (mysqli_stmt_num_rows($stmt) > 0) {
-            echo "Number of rows: " . mysqli_stmt_num_rows($stmt);
             echo "<table border='1'>";
             echo "<th style='text-align: left;'>Name</th><th>Description</th><th>Edit</th>";
 
@@ -122,7 +124,6 @@ if (isset($_POST['change2'])) {
 
     if(mysqli_stmt_num_rows($stmt) > 0)
     {
-        echo "Number of rows: " . mysqli_stmt_num_rows($stmt);
         echo "<table border='1'>";
         echo "<th style='text-align: left;'>Name</th><th>Edit</th>";
 
