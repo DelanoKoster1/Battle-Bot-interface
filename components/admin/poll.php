@@ -49,7 +49,7 @@
 </div>
 <div class="row">
     <div class="col-md-6">
-        <span class="mt-3">poll uitslag</span>
+        <h4>Poll Uitslag</h4>
         <?php 
             echo pollQuestionAnswer(); 
         ?>
