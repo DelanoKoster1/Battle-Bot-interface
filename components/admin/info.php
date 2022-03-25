@@ -92,7 +92,7 @@
                 echo "<tr>";
                 echo "<td>" . $name . "</td>";
                 echo "<td>" . $description . "</td>";
-                echo "<td><a href=admin.php?info" . $id . ">Edit</a></td>";
+                echo "<td><a href=admin.php?info&id=" . $id . ">Edit</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
@@ -150,7 +150,7 @@
             while (mysqli_stmt_fetch($stmt)) {
                 echo "<tr>";
                 echo "<td>" . $name . "</td>";
-                echo "<td><a href=admin.php?info" . $id . ">Edit</a></td>";
+                echo "<td><a href=admin.php?info?id" . $id . ">Edit</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
