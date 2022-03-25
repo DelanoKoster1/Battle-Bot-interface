@@ -23,7 +23,7 @@ switch (isset($_SESSION['error'])) {
 
 <head>
     <?php
-    include_once('head.html');
+    include_once('head.php');
     ?>
 
     <link rel="stylesheet" href="../assets/css/style.css">

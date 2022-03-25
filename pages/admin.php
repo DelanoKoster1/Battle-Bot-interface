@@ -379,7 +379,8 @@ if (isset($_POST['stopEvent'])) {
 
 <head>
     <?php
-    include_once('../components/head.html');
+    include_once('../components/functions/function.php');
+    includeHead('page'); 
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">

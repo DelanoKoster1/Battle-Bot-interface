@@ -31,7 +31,7 @@
 
 <head>
     <?php
-    include_once('../components/head.html');
+    includeHead('page'); 
     include_once('../functions/function.php');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">

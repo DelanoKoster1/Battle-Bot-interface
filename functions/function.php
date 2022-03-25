@@ -472,6 +472,20 @@ function includeHeader(String $sort)
 }
 
 /**
+ * Function to include header with correct map structure
+ * 
+ */
+function includeHead(String $sort)
+{
+    $_SESSION['sort'] = $sort;
+    if ($sort == 'page') {
+        require_once('../components/head.php');
+    } else {
+        require_once('components/head.php');
+    }
+}
+
+/**
  * Function to check if date is valid
  * 
  */
@@ -561,6 +575,7 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                         <div class="card-body">
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
                             <span class="calendarTitle d-block text-capitalize"><a href="../pages/admin.php?points&eventId=' . $id .'" class="text-white stretched-link">' . $name . '</a></span>
+                            <span class="calendarInfo mt-4 d-block">' . $description . '</span>    
                         </div>
                     </div>
                 </div>
@@ -573,8 +588,8 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
                             <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
                             <form action="" method="post">
-                                <button type="submit" name="startEvent" value="'.$id.'">Start</button>
-                                <button type="submit" name="stopEvent" value="'.$id.'">Stop</button>
+                                <button class="bg-success border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="startEvent" value="'.$id.'">Start</button>
+                                <button class="bg-danger border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="stopEvent" value="'.$id.'">Stop</button>
                             </form>
                         </div>
                     </div>

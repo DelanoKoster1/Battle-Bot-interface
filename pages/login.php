@@ -102,7 +102,7 @@ if (isset($_POST['register'])) {
 
 <head>
     <?php
-    include_once('../components/head.html');
+    includeHead('page'); 
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">

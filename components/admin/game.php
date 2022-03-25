@@ -3,8 +3,8 @@
 
 <head>
     <?php
-    include_once('../components/head.html');
     include_once('../functions/function.php');
+    includeHead('page'); 
     ?>
 
     <link rel="stylesheet" href="../assets/css/style.css">
