@@ -9,19 +9,19 @@
             if (!empty($_POST['name'])) {
                 if (!empty($_POST['description'])) {
                     
-                    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+                    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
                     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
                     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
                     
 
                     $stmt = mysqli_prepare($conn, "UPDATE bot SET name=?, description=? WHERE id=?") or die (mysqli_error($conn));
                 
-                    mysqli_stmt_bind_param($stmt, "ssi", $id, $name, $description);
+                    mysqli_stmt_bind_param($stmt, "ssi", $name, $description, $id);
 
                     mysqli_stmt_execute($stmt) or die ("<br>unable");
 
                     echo ("Informatie gewijzigd");
-
+                    
                     mysqli_stmt_close($stmt);
                     
                     } else {
@@ -36,15 +36,15 @@
         if (isset($_POST['change2'])) {
             if (!empty($_POST['name'])) {
 
-                $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+                $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
                 $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
 
                 $stmt = mysqli_prepare($conn, "UPDATE team SET name=? WHERE id=?") or die (mysqli_error($conn));
 
-                mysqli_stmt_bind_param($stmt, "si", $id, $name);
+                mysqli_stmt_bind_param($stmt, "si", $name, $id);
 
                 mysqli_stmt_execute($stmt) or die("<br>unable");
-
+                
                 echo ("Informatie gewijzigd");
 
                 mysqli_stmt_close($stmt);
@@ -150,7 +150,7 @@
             while (mysqli_stmt_fetch($stmt)) {
                 echo "<tr>";
                 echo "<td>" . $name . "</td>";
-                echo "<td><a href=admin.php?info?id" . $id . ">Edit</a></td>";
+                echo "<td><a href=admin.php?info&id=" . $id . ">Edit</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
