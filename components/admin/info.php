@@ -9,14 +9,14 @@
             if (!empty($_POST['name'])) {
                 if (!empty($_POST['description'])) {
                     
-                    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+                    $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
                     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
                     $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
                     
 
                     $stmt = mysqli_prepare($conn, "UPDATE bot SET name=?, description=? WHERE id=?") or die (mysqli_error($conn));
                 
-                    mysqli_stmt_bind_param($stmt, "ssi", $id, $name, $description);
+                    mysqli_stmt_bind_param($stmt, "ssi", $name, $description, $id);
 
                     mysqli_stmt_execute($stmt) or die ("<br>unable");
 
@@ -36,12 +36,12 @@
         if (isset($_POST['change2'])) {
             if (!empty($_POST['name'])) {
 
-                $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+                $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
                 $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
 
                 $stmt = mysqli_prepare($conn, "UPDATE team SET name=? WHERE id=?") or die (mysqli_error($conn));
 
-                mysqli_stmt_bind_param($stmt, "si", $id, $name);
+                mysqli_stmt_bind_param($stmt, "si", $name, $id);
 
                 mysqli_stmt_execute($stmt) or die("<br>unable");
 
@@ -117,7 +117,7 @@
         mysqli_close($conn);
         }}
     ?>
-    <form method="POST" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+    <form method="POST" action="">
         <input type="hidden" value="<?php echo $id; ?>" name="id" id="id">
         <input type="text" value="<?php echo $name; ?>" name="name">Bot name<br>
         <input type="text" value="<?php echo $description; ?>" name="description">Bot description<br>
@@ -175,7 +175,7 @@
         mysqli_close($conn);
         }}
     ?>
-    <form method="POST" action="<?php echo htmlentities($_SERVER['PHP_SELF']); ?>">
+    <form method="POST" action="">
         <input type="hidden" value="<?php echo $id; ?>" name="id" id="id">
         <input type="text" value="<?php echo $name; ?>" name="name">Team name<br>
         <input type="submit" name="change2" value="wijzig">
