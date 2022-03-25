@@ -48,9 +48,9 @@ switch (true) {
         $headerTitle = 'Evenement starten';
         $content = "../components/admin/startEvent.php";
         break;
-    case isset($_GET['edit']);
-        $headerTitle = 'Informatie wijzigen';
-        $content = "../components/admin/edit.php";
+    case isset($_GET['info']);
+        $headerTitle = 'Informatie bot en team';
+        $content = "../components/admin/info.php";
         break;
 
     default:
@@ -424,7 +424,7 @@ if (isset($_POST['stopEvent'])) {
                             <a class="nav-link text-white" href="admin.php?startEvent">Event activeren</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?edit">Informatie wijzigen</a>
+                            <a class="nav-link text-white" href="admin.php?info">Informatie bot en team</a>
                         </li>
                     </ul>
                 </nav>
