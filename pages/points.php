@@ -5,22 +5,29 @@
     $progress = array();
     $maxPoints = 75;
 
-    $sql = "SELECT teamId, points, name FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
+    $sql = "SELECT teamId, points, team.`name` 
+    FROM `team-event` 
+    JOIN team ON team.id = `team-event`.teamId
+    JOIN `event` ON `team-event`.eventId = `event`.id
+    WHERE `event`.active = 1";
     $results = stmtExec($sql);
-
-    if(empty($results)) {
-        header("location: ../components/error.php");
+    
+    if(is_array($results)) {
+        $teamIds = $results["teamId"]; 
+        $points = $results["points"];  
+        $teamNames = $results["team.`name`"]; 
+    
+        for($i = 0; $i < count($teamIds); $i++) {
+            $pointsPerTeam += [$teamNames[$i] => $points[$i]];
+            $progressPerTeam = ($pointsPerTeam[$teamNames[$i]] / $maxPoints) * 100 . "%";
+            $progress += [$teamNames[$i] => $progressPerTeam];
+        }
+    } else {
+        $_SESSION['ERROR_MESSAGE'] = "Geen event gaande";   
     }
+    
 
-    $teamIds = $results["teamId"]; 
-    $points = $results["points"];  
-    $teamNames = $results["name"]; 
-
-    for($i = 0; $i < count($teamIds); $i++) {
-        $pointsPerTeam += [$teamNames[$i] => $points[$i]];
-        $progressPerTeam = ($pointsPerTeam[$teamNames[$i]] / $maxPoints) * 100 . "%";
-        $progress += [$teamNames[$i] => $progressPerTeam];
-    }
+    
     
 
 ?>
@@ -54,6 +61,12 @@
         </div>
     </div>
     <div class="row pt-3">
+        <?php 
+        if(!empty($_SESSION['ERROR_MESSAGE'])) {
+            echo "<h3 class='text-center'>" . $_SESSION['ERROR_MESSAGE'] . "</h3>";
+            unset($_SESSION['ERROR_MESSAGE']);
+        }
+        ?>
         <div class="col-2"></div>
         <div class="col-8">
             <?php foreach ($pointsPerTeam as $team => $point) { ?>
