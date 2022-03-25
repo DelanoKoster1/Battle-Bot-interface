@@ -6,20 +6,14 @@ if (!$results) {
     header("location: ../components/error.php");
 }
 
-// if() {
-//     echo "niet nul";
-
-// } else {
-//     echo "geen bots";
-// }
+if ($results == 1) {
+    echo '<div> <a class="text-decoration-none nav-link" href="admin.php?bot">Er zijn geen bots beschikbaar klik hier om eerst een bot toe te voegen</a></div>';
+} else {
+    echo "Kies een bot";
 ?>
-
 <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
     <div class="col-4">
         <input class="form-control mt-3" placeholder="Team Naam" name="teamName" id="teamName" type="text">
-
-        <!-- if zero bots er zijn geen beschivbare bots maak eerst bot aanklik hier hoer -->
-
         <select class="form-select mt-3" name="bots" id="bots">
             <?php
             $ids = $results["bot.id"];
@@ -32,9 +26,12 @@ if (!$results) {
                     <option value=" ' . $botId . '"> ' . $name . '</option>
                 ';
             }
-
+            
             ?>
         </select>
         <input class="btn btn-danger mt-3" type="submit" id="submitTeam" name="submitTeam" value="Team aanmaken">
     </div>
 </form>
+
+<?php
+}
