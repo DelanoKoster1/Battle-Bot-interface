@@ -902,10 +902,10 @@ function getAllEvents()
     }
 
     //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type);
+    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type, $active);
 
     while (mysqli_stmt_fetch($stmt)) {
-        $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type];
+        $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type, 'active' => $active];
     }
 
     return $arr;
