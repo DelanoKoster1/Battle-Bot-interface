@@ -262,10 +262,9 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
  * @param array $error Array with errors
  * @return String/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password)
-{
+function checkLoginFields(String $username, String $password) {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
@@ -284,7 +283,7 @@ function checkLoginFields(String $username, String $password)
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -303,7 +302,7 @@ function checkLoginFields(String $username, String $password)
 function checkRegisterFields(string $username, string $email, string $password, string $password2)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
@@ -334,7 +333,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -354,7 +353,7 @@ function checkRegisterFields(string $username, string $email, string $password, 
 function checkProfileFields(string $username, string $email, string $password, string $password2)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
@@ -385,14 +384,14 @@ function checkProfileFields(string $username, string $email, string $password, s
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
 function checkProfilePassword($newPassword, $repeatPassword)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     if ($newPassword == $repeatPassword) {
     } else {
@@ -408,7 +407,7 @@ function checkProfilePassword($newPassword, $repeatPassword)
     if (empty($error)) {
         return true;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 /**
@@ -423,7 +422,7 @@ function checkProfilePassword($newPassword, $repeatPassword)
 function checkUserInDataBase(string $username, string $email, $profile = false)
 {
     //Call global variable(s)
-    global $error;
+    $error = array();
 
     //SQL Query for selecting all users where an email is in DB
     if ($profile) {
@@ -452,9 +451,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false)
             }
         }
 
-        foreach ($error as $errorMsg) {
-            return $errorMsg;
-        }
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     } else {
         return false;
     }
@@ -537,13 +534,14 @@ function formatdate(string $date): string
  * Function to show events as HTML
  * 
  */
-function showEvents()
-{
+function showEvents(bool $limit = false, bool $admin = false, $start = false) {
     $query = "SELECT id, name, date, description
               FROM event 
-              WHERE date > now()
-              ORDER BY date ASC
-              limit 5";
+              WHERE date > NOW()
+              AND type = 'public'
+              ORDER BY date ASC ";
+
+    $query .= ($limit) ? "LIMIT 4" : "";
 
     $eventResults = stmtExec($query);
 
@@ -554,9 +552,37 @@ function showEvents()
             $name = $eventResults["name"][$i];
             $eventDate = $eventResults["date"][$i];
             $description = $eventResults["description"][$i];
+            $id = $eventResults["id"][$i];
 
-            echo '
-            <div class="col-sm-3 mb-4">
+            if ($admin) {
+                echo '
+                <div class="col-sm-3 mb-4">
+                    <div class="card eventsCard">
+                        <div class="card-body">
+                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                            <span class="calendarTitle d-block text-capitalize"><a href="../pages/admin.php?points&eventId=' . $id .'" class="text-white stretched-link">' . $name . '</a></span>
+                        </div>
+                    </div>
+                </div>
+                ';
+            } else if($start){
+                echo '
+                <div class="col-sm-3 mb-4">
+                    <div class="card eventsCard">
+                        <div class="card-body">
+                            <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
+                            <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
+                            <form action="" method="post">
+                                <button type="submit" name="startEvent" value="'.$id.'">Start</button>
+                                <button type="submit" name="stopEvent" value="'.$id.'">Stop</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                ';
+            }else {
+                echo '
+                <div class="col-sm-3 mb-4">
                 <div class="card eventsCard">
                     <div class="card-body">
                         <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
@@ -564,8 +590,8 @@ function showEvents()
                         <span class="calendarInfo mt-4 d-block">' . $description . '</span>
                     </div>
                 </div>
-            </div>
-            ';
+            </div>';
+            }
         }
     } else {
         echo '
@@ -604,9 +630,8 @@ function getLivestream()
         ';
 }
 
-function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
-    
-    require_once("database.php");
+function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
+{
 
     if (!empty($question)) {
         if ($questionType == "multiChoice") {
@@ -621,10 +646,10 @@ function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answ
     } else {
         return "de vraag kan niet leeg zijn";
     }
-
 }
 
-function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4) {
+function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4)
+{
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -646,11 +671,11 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
     } else {
         return "het antwoord mag niet leeg zijn voor deze vraagtype";
     }
-
 }
 
-function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
-    
+function yesOrNoPoll($question, $questionType, $answer1, $answer2)
+{
+
     if (!empty($answer1)) {
         if (!empty($answer2)) {
             $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
@@ -665,7 +690,8 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
     }
 }
 
-function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
+function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
+{
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -676,7 +702,6 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
                         VALUES (?,?,?,?,?,?,?,NULL,1)";
 
                         stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4, $answer5);
-
                     } else {
                         return "het antwoord mag niet leeg zijn voor deze vraagtype";
                     }
@@ -694,8 +719,8 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
     }
 }
 
-function retrieveQuestionInfo() {
-    require_once("database.php");
+function retrieveQuestionInfo()
+{
 
     $query = "SELECT    question, answer1, answer2, answer3, answer4, answer5, active 
               FROM      poll
@@ -705,61 +730,79 @@ function retrieveQuestionInfo() {
     $results = stmtExec($query);
 
     $questionnaire = "";
-    
+
     if ($results['active'][0] != NULL) {
 
-        $questionnaire .= '<h4>De vraag luid: '. $results['question'][0] .'</h4>';
-        $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer1'][0] .'">';
-        $questionnaire .= '<label class="custom-control-label" for="question1">'. $results['answer1'][0] .'</label> <br>';
-        $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer2'][0] .'">';
-        $questionnaire .= '<label class="custom-control-label" for="question2">'. $results['answer2'][0] .'</label> <br>';
+        $questionnaire .= '<h4>De vraag luid: ' . $results['question'][0] . '</h4>';
+        $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer1'][0] . '">';
+        $questionnaire .= '<label class="custom-control-label" for="question1">' . $results['answer1'][0] . '</label> <br>';
+        $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer2'][0] . '">';
+        $questionnaire .= '<label class="custom-control-label" for="question2">' . $results['answer2'][0] . '</label> <br>';
         if ($results['answer3'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer3'][0] .'">';
-            $questionnaire .= '<label class="custom-control-label" for="question3">'. $results['answer3'][0] .'</label> <br>';
+            $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer3'][0] . '">';
+            $questionnaire .= '<label class="custom-control-label" for="question3">' . $results['answer3'][0] . '</label> <br>';
         }
         if ($results['answer4'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer4'][0] .'">';
-            $questionnaire .= '<label class="custom-control-label" for="question4">'. $results['answer4'][0] .'</label> <br>';
+            $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer4'][0] . '">';
+            $questionnaire .= '<label class="custom-control-label" for="question4">' . $results['answer4'][0] . '</label> <br>';
         }
         if ($results['answer4'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer5'][0] .'">';
-            $questionnaire .= '<label class="custom-control-label" for="question5">'. $results['answer5'][0] .'</label> <br>';
+            $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer5'][0] . '">';
+            $questionnaire .= '<label class="custom-control-label" for="question5">' . $results['answer5'][0] . '</label> <br>';
         }
 
         return $questionnaire;
-
     } else {
-        return "<h4>Er is momenteel geen pull gaande.</h4>";
+        return "<h4>Er is momenteel geen poll gaande.</h4>";
     }
-
 }
 
-function pollQuestionAnswer($postQuestion) {
 
-    $voteArray = ["test1", "test3", "test1", "test2"];
+function pollAddUser($username, $givenAnswer)
+{
 
-    array_push($voteArray, $postQuestion);
+    $query = "INSERT INTO `poll-outcome` (`userName`,`givenAnswer`)
+              VALUES (?,?)
+             ";
+
+    stmtExec($query, 0, $username, $givenAnswer);
+}
+
+function pollQuestionAnswer()
+{
+
+    $voteArray = [];
+
+    $query = "SELECT    userName, givenAnswer
+              FROM      `poll-outcome`
+             ";
+
+    $results = stmtExec($query);
+
+    foreach ($results['givenAnswer'] as $postQuestion) {
+        array_push($voteArray, $postQuestion);
+    }
 
     $values = array_count_values($voteArray);
 
     $progressBar = '';
 
-    foreach ($values as $test) {
+    foreach ($values as $number) {
 
-        $percentage = ( $test / 100 ) * 100;
+        $percentage = ($number / 100) * 100;
 
         $progressBar .= '<div class="progress mt-3">';
-            $progressBar .= '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="'. $percentage .'" aria-valuemin="0" aria-valuemax="100" style="width:'. $percentage .'%">';
-                $progressBar .= $percentage . "%";
-            $progressBar .= '</div>';
+        $progressBar .= '<div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="' . $percentage . '" aria-valuemin="0" aria-valuemax="100" style="width:' . $percentage . '%">';
+        $progressBar .= $percentage . "%";
         $progressBar .= '</div>';
-    }    
+        $progressBar .= '</div>';
+    }
 
     return $progressBar;
-
 }
 
-function getProfileInfo() {
+function getProfileInfo()
+{
     $query = "SELECT    username,
                         email,
                         password
@@ -773,10 +816,11 @@ function getProfileInfo() {
  * 
  * @return Array Array of all robots with names from db
  */
-function getAllRobots() {
+function getAllRobots()
+{
     $conn = connectDB();
     $arr = array();
-    
+
     //Creating a table
     $query = "SELECT * FROM bot";
 
@@ -802,10 +846,11 @@ function getAllRobots() {
     return $arr;
 }
 
-function getAllTeams() {
+function getAllTeams()
+{
     $conn = connectDB();
     $arr = array();
-    
+
     //Creating a table
     $query = "SELECT * FROM team";
 
@@ -836,10 +881,11 @@ function getAllTeams() {
  * 
  * @return Array Array of all events with names from db
  */
-function getAllEvents() {
+function getAllEvents()
+{
     $conn = connectDB();
     $arr = array();
-    
+
     //Creating a table
     $query = "SELECT * FROM `event`";
 
@@ -856,10 +902,10 @@ function getAllEvents() {
     }
 
     //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type);
+    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type, $active);
 
     while (mysqli_stmt_fetch($stmt)) {
-        $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type];
+        $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type, 'active' => $active];
     }
 
     return $arr;
@@ -870,20 +916,29 @@ function getAllEvents() {
  * 
  */
 function checkSelectedTeam ($teamID) {
-    global $error;
+    $error = array();
 
-    if (!$teamID && empty($teamID)) {
-        $error[] = 'Kies een robot';
+    if (!$teamID && empty($teamID) || $teamID == 0) {
+        $error[] = 'Kies een team!';
     }
 
-    //Check if ID is indeed in database
-    //Must come here...
-    //.....
+    //Check if ID is in database
+    $sql = "SELECT id, botId, name FROM team WHERE id = ?";
+
+    //Get results from the database
+    $results = stmtExec($sql, 0, $teamID);
+
+    //Check if no result has been found
+    if (is_array($results) && count($results) > 0) {
+        //Do nothing
+    } else {
+        $error[] = 'Dit team bestaat niet!';
+    }
 
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -891,21 +946,31 @@ function checkSelectedTeam ($teamID) {
 /**
  * Function to check selected event ID
  */
-function checkSelectedEvent ($eventID) {
-    global $error;
+function checkSelectedEvent($eventID)
+{
+    $error = array();
 
-    if (!$eventID && empty($eventID)) {
-        $error[] = 'Kies een robot';
+    if (!$eventID && empty($eventID) || $eventID == 0) {
+        $error[] = 'Kies een event!';
     }
 
-    //Check if ID is indeed in database
-    //Must come here...
-    //.....
+    //Check if ID is in database
+    $sql = "SELECT id, name, date, description, type FROM event WHERE id = ?";
+
+    //Get results from the database
+    $results = stmtExec($sql, 0, $eventID);
+
+    //Check if no result has been found
+    if (is_array($results) && count($results) > 0 && empty($error)) {
+        //Do nothing
+    } else {
+        $error[] = 'Dit event bestaat niet!';
+    }
 
     if (empty($error)) {
         return false;
     } else {
-        return $error;
+        return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 
@@ -1006,11 +1071,9 @@ function deleteFile(string $directory)
 
 function uploadFile($file, string $query, int $id, string $directory)
 {
-    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory,$id)) {
+    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory.$file["name"], $id)) {
         return true;
     } else {
         return false;
     }
-
 }
-

@@ -11,7 +11,7 @@ $events = getAllEvents();
             ?>
                 <div>
                     <span>Selecteer een team</span>
-                    <select onchange="this.form.submit()" class="form-select" aria-label="Default select example" name="selectedTeam">
+                    <select onchange="this.form.submit()" class="form-select" name="selectedTeam">
                         <option value="" disabled selected>Kies een team</option>
                         <?php
                         foreach ($teams as $team) {
@@ -31,7 +31,7 @@ $events = getAllEvents();
             ?>
                 <div>
                     <span>Selecteer een event</span>
-                    <select onchange="this.form.submit()" class="form-select" aria-label="Default select example" name="selectedEvent">
+                    <select onchange="this.form.submit()" class="form-select" name="selectedEvent">
                         <option value="" disabled selected>Kies een event</option>
                         <?php
                         foreach ($events as $event) {
@@ -41,7 +41,7 @@ $events = getAllEvents();
                     </select>
                 </div>
                 <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
-                <!-- <input class="btn btn-danger mt-3" type="submit" name="robotToEvent" value="Robot aan event toevoegen"> -->
+                <input class="btn btn-danger mt-3" type="submit" name="robotEventAnnuleren" value="Annuleren">
             <?php
             }
             ?>

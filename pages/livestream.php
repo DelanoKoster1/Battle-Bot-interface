@@ -20,6 +20,13 @@
         <?php includeHeader('page'); ?>
     </section>
 
+    <?php 
+        if (isset($_POST['submitAnswer'])) {
+            pollQuestionAnswer($_POST['questionAnswer']);
+            pollAddUser($_SESSION['username'],$_POST['questionAnswer']); 
+        }
+    ?>
+
     <div class="container-fluid my-5">
         <div class="row">
             <div id="livestream" class="col-xl-9 col-lg-8 col-12">
@@ -89,7 +96,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true">X</span></button>
+                    <button type="button" class="close close btn btn-success" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true">X</span></button>
                     <h4 class="modal-title custom_align" id="Heading">Stem voor een robot</h4>
                 </div>
                 <div class="modal-body">
