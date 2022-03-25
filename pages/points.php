@@ -1,16 +1,9 @@
 <?php 
     include_once('../functions/function.php');
-
+    $results = getActiveEvent();
     $pointsPerTeam = array();
     $progress = array();
     $maxPoints = 75;
-
-    $sql = "SELECT teamId, points, team.`name` 
-    FROM `team-event` 
-    JOIN team ON team.id = `team-event`.teamId
-    JOIN `event` ON `team-event`.eventId = `event`.id
-    WHERE `event`.active = 1";
-    $results = stmtExec($sql);
     
     if(is_array($results)) {
         $teamIds = $results["teamId"]; 
@@ -25,11 +18,6 @@
     } else {
         $_SESSION['ERROR_MESSAGE'] = "Geen event gaande";   
     }
-    
-
-    
-    
-
 ?>
 
 

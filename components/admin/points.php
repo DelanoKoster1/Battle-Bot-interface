@@ -1,5 +1,6 @@
 <?php 
     include_once('../functions/function.php');
+    $results = getActiveEvent();
 ?>
 
 <div class="row">
@@ -12,9 +13,10 @@
 
 <?php 
 if(isset($_GET['eventId'])) { 
+    if(is_array($results) && $results['eventId'][0] == $_GET['eventId']) {
 ?>
 
-<div class="row" id="eventPoints">
+<div class="row">
     <div class="col-4">  
         <form action="" method="post" id="points-form">
         <?php foreach($teams as $teamId => $team) { ?>
@@ -58,12 +60,18 @@ if(isset($_GET['eventId'])) {
         </div>
     </div>
 </div>
+<?php
+    } else {
+        echo "<h4> Start event om punten toe te kunnen voegen </h3>";
+    }
+?>
+
 <div class="row mt-3">
     <div class="col-12">
         <a href="admin.php?points" class="btn btn-secondary btn-sm" role="button"> Ga terug</a>
     </div>
 </div>
 
-<?php    
-}
+<?php 
+} 
 ?>

@@ -134,7 +134,7 @@ if (isset($_POST['event'])) {
         //SQL Query for inserting into user table
         $sql = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
 
-        if (!stmtExec($query, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
+        if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
             $_SESSION['error'] = "Cannot add event";
             header("location: ../components/error.php");
         }
