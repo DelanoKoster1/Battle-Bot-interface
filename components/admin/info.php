@@ -21,7 +21,7 @@
                     mysqli_stmt_execute($stmt) or die ("<br>unable");
 
                     echo ("Informatie gewijzigd");
-
+                    
                     mysqli_stmt_close($stmt);
                     
                     } else {
@@ -44,7 +44,7 @@
                 mysqli_stmt_bind_param($stmt, "si", $name, $id);
 
                 mysqli_stmt_execute($stmt) or die("<br>unable");
-
+                
                 echo ("Informatie gewijzigd");
 
                 mysqli_stmt_close($stmt);
@@ -150,7 +150,7 @@
             while (mysqli_stmt_fetch($stmt)) {
                 echo "<tr>";
                 echo "<td>" . $name . "</td>";
-                echo "<td><a href=admin.php?info?id" . $id . ">Edit</a></td>";
+                echo "<td><a href=admin.php?info&id=" . $id . ">Edit</a></td>";
                 echo "</tr>";
             }
             echo "</table>";
