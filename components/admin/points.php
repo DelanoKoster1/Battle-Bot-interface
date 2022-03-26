@@ -25,26 +25,26 @@ if(isset($_GET['eventId'])) {
                     <span><?= $team ?></span>
                 </div>
                 <div class="col-8 d-flex justify-content-around">
-                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team?>" value="25" autocomplete="off">
+                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team?>" value="25" <?=(($teamPoints[$teamId] + 25) > 75) ? "disabled" : "";?>>
                     <label class="btn btn-secondary" for="<?=$team?>">25</label>
 
-                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '1'?>" value="18" autocomplete="off">
+                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '1'?>" value="18" <?=(($teamPoints[$teamId] + 18) > 75) ? "disabled" : "";?>>
                     <label class="btn btn-secondary" for="<?=$team . '1'?>">18</label>
 
-                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '2'?>" value="15" autocomplete="off">
+                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '2'?>" value="15" <?=(($teamPoints[$teamId] + 15) > 75) ? "disabled" : "";?>>
                     <label class="btn btn-secondary" for="<?=$team . '2'?>">15</label>
 
-                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '3'?>" value="12" autocomplete="off">
+                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '3'?>" value="12" <?=(($teamPoints[$teamId] + 12) > 75) ? "disabled" : "";?>>
                     <label class="btn btn-secondary" for="<?=$team . '3'?>">12</label>
 
-                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '4'?>" value="10" autocomplete="off">
+                    <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team . '4'?>" value="10" <?=(($teamPoints[$teamId] + 10) > 75) ? "disabled" : "";?>>
                     <label class="btn btn-secondary" for="<?=$team . '4'?>">10</label>     
                 </div>
             </div>
         <?php } ?>
         </form>
     </div>
-    <div class="col-8 <?php if(count($teamPoints) > 1) { echo 'd-flex';}?>">
+    <div class="col-8 <?=(count($teamPoints) > 1) ? "d-flex" : "";?>">
         <div class="row mt-2 d-flex align-content-around">
             <?php foreach($teamPoints as $teamId => $points) { ?>
                 <div class="col-6 d-block d-flex text-left align-items-center">
