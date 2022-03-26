@@ -2,11 +2,11 @@
 $conn = connectDB();
 
 if (isset($_POST['change'])) {
-    if (!empty($_POST['name'])) {
+    if (!empty($_POST['botName'])) {
         if (!empty($_POST['description'])) {
             
             $id = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
-            $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+            $name = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
             $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
             
 
@@ -32,9 +32,9 @@ if (isset($_POST['change'])) {
     }
 }
 if (isset($_POST['change2'])) {
-    if (!empty($_POST['name'])) {
+    if (!empty($_POST['teamName'])) {
         $id = filter_input(INPUT_GET, 'teamId', FILTER_SANITIZE_NUMBER_INT);
-        $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
+        $name = filter_input(INPUT_POST, 'teamName', FILTER_SANITIZE_SPECIAL_CHARS);
 
         $stmt = mysqli_prepare($conn, "UPDATE team SET name=? WHERE id=?") or die (mysqli_error($conn));
 
@@ -49,7 +49,7 @@ if (isset($_POST['change2'])) {
     } else {
         echo "<a href='admin.php?info'><h6>Return</h6></a>";
         die("<h4>Name not empty</h4>"); 
-    }
+    }f
 }
 
 ?>
@@ -163,10 +163,10 @@ if (isset($_POST['change2'])) {
     <form method="POST" action="">
         <p><input type="hidden" class="form-control mt-3" value="<?php echo $id; ?>" name="botId" id="id"></p>
         <h6>Bot name</h6>
-        <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="name"></p>
+        <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="botName"></p>
         <h6>Bot description</h6>
         <p><input type="text" class="form-control mt-3" value="<?php echo $description; ?>" name="description"></p>
-        <input type="submit" name="change" value="wijzig">
+        <input type="submit" name="change" class="btn btn-primary mt-3" value="Wijzig">
     </form>
     </div>
 
@@ -177,8 +177,8 @@ if (isset($_POST['change2'])) {
     <form method="POST" action="">
         <input type="hidden" class="form-control mt-3" value="<?php echo $id; ?>" name="teamId" id="id">
         <h6>Team name</h6>
-        <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="name"></p>
-        <input type="submit" name="change2" value="wijzig">
+        <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="teamName"></p>
+        <input type="submit" name="change2" class="btn btn-primary mt-3" value="Wijzig">
     </form>
     </div>
 </div>
