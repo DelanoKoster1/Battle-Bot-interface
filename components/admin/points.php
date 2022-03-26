@@ -17,14 +17,14 @@ if(isset($_GET['eventId'])) {
 ?>
 
 <div class="row">
-    <div class="col-4">  
+    <div class="col-lg-4">  
         <form action="" method="post" id="points-form">
         <?php foreach($teams as $teamId => $team) { ?>
             <div class="form-group row mt-2">
-                <div class="col-4 d-flex align-items-center">
+                <div class="col-lg-4 d-flex align-items-center">
                     <span><?= $team ?></span>
                 </div>
-                <div class="col-8 d-flex justify-content-around">
+                <div class="col-lg-8 d-flex justify-content-around">
                     <input type="radio" class="btn-check" onclick="this.form.submit()" name="<?= $teamId ?>" id="<?=$team?>" value="25" <?=(($teamPoints[$teamId] + 25) > 75) ? "disabled" : "";?>>
                     <label class="btn btn-secondary" for="<?=$team?>">25</label>
 
@@ -44,13 +44,13 @@ if(isset($_GET['eventId'])) {
         <?php } ?>
         </form>
     </div>
-    <div class="col-8 <?=(count($teamPoints) > 1) ? "d-flex" : "";?>">
+    <div class="col-lg-8 <?=(count($teamPoints) > 1) ? "d-flex" : "";?>">
         <div class="row mt-2 d-flex align-content-around">
             <?php foreach($teamPoints as $teamId => $points) { ?>
-                <div class="col-6 d-block d-flex text-left align-items-center">
+                <div class="col-lg-6 d-block d-flex text-left align-items-center">
                     <span>Points: <?= $points ?></span>
                 </div>
-                <div class="col-6 align-items-center">
+                <div class="col-lg-6 align-items-center">
                     <form action="" method="post" class="h-100">
                         <input type="text" class="h-100" name="<?= $teamId ?>" id="<?= $teamId . '5'?>">
                         <input type="submit" class="btn btn-secondary h-100" name="<?= $teamId . 'submit'?>" id="<?= $teamId . '5'?>" value="Set">
