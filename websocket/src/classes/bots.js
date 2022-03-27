@@ -7,8 +7,7 @@ class Bots {
         if(this.getBotByWsKey(wsKey) == null){
             this.BotList[wsKey] = {
                 "id": id, 
-                "action": "",
-                "status": "", 
+                "game": "", 
                 "client": client, 
                 "connAttempt": 0};
             return true;   
@@ -47,12 +46,12 @@ class Bots {
         this.BotList[wsKey].connAttempt = attempts;
     }
 
-    setAction(wsKey, action){
-        this.BotList[wsKey].status = action;
+    setGame(wsKey, game){
+        this.BotList[wsKey].game = game;
     }
 
-    setStatus(wsKey, status){
-        this.BotList[wsKey].status = status;
+    getGame(wsKey){
+        return this.BotList[wsKey].game
     }
 
     removeBot(wsKey){

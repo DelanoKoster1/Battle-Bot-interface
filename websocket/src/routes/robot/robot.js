@@ -8,9 +8,13 @@ const wss = new WebSocket.Server({
 
 const bots = new Bots();
 let admins = {};
-let games = {};
+let games = [];
 
-
+// {
+//     "game": "maze", 
+//     "bots": [{"id": "edsdfsf", "status": "true"}, {"id": "edsdfsf", "status": "true"}],
+//     "action": "prepare"
+// }
 wss.on('connection', (client, req) => {
     console.info("Total connected clients:", wss.clients.size);
 
@@ -20,45 +24,72 @@ wss.on('connection', (client, req) => {
             let body = JSON.parse(clientReq);
             if (clientIsBot(wsKey) || clientIsAdmin(wsKey)) {
                 if (body.action && clientIsAdmin(wsKey)) {
-                    // 1.) check of game bestaat
-                    // 2.) check of game nog niet word gespeeld door geselecteerde bots of 
-                    // dat de robot nog niet in een andere game zit
-                    // 3.) send prepare naar geselecteerde bots
-                    // 4.) update status van bots die true terug sturen
-                    // 5.) wanneer alle bots ready zijn msg naar admins om het spel te starten
-                    // 6.) update status van de geselecteerde bots
-                    // 7.) send start naar geselecteerde bots
-                    // 8.) update status van bots die true terug sturen
-                    // 9.) wanneer alle bots ready zijn msg naar admins om het spel te kunnen stoppen
-                    // 10.) update status van geselecteerde bots die gefinished zijn
-                    // 11.) wanneer alle bots klaar zijn msg naar admins om het spel opnieuw te starten
+                    let selectedGame = body.game;
+                    let action = body.action;
+                    let target = body.for;
+                    // let for = body.for;
+                   
 
+                    if(selectedGame == "maze" || selectedGame == "race" || selectedGame == "butler"){
+                        let game = {
+                            "game": selectedGame,
+                            "action": action,
+                            "bots": []
+                        }
 
+                        if(target == "all"){
+                            let botsList = bots.getAllBots();
+                            Object.keys(botsList).forEach(wsKey => {
+                                game.bots.push({ "wsKey": wsKey, "status": false})
+                                bots.setGame(wsKey, game);
+                                sendActionToBot(wsKey, {
+                                    "status": action,
+                                    "game": selectedGame
+                                })
+                            });
 
-                    switch (body.for) {
-                        case "all":
-                            sendActionToAllBots(body);
-                            break;
-                        case "single":
-                            // sendActionToBot(body);
-                            break;
-                        default:
-                            sendMsgToClient(client, {
-                                "error": "INVALID_COMMAND"
-                            })
+                        }
+
+                        games.push(game);
+
+                    }else{
+                        sendMsgToAdmin(wsKey, { "error": "UNVALID_GAME"})
                     }
+
+
+                    // switch (body.for) {
+                    //     case "all":
+                    //         sendActionToAllBots(body);
+                    //         break;
+                    //     case "single":
+                    //         // sendActionToBot(body);
+                    //         break;
+                    //     default:
+                    //         sendMsgToClient(client, {
+                    //             "error": "INVALID_COMMAND"
+                    //         })
+                    // }
 
                 }
 
                 if (body.status) {
-                    console.log(body);
 
-                    bots.setStatus(wsKey, body.status);
-                    if (bots.botsReady()) {
-                        sendMsgToAllAdmins({
-                            "status": true
-                        })
-                    }
+                    let botGame = bots.getGame(wsKey);
+                    games.forEach((game) => {
+                        if(game == botGame){
+                            game.bots.forEach((bot) => {
+                                if(bot.wsKey == wsKey){
+                                    bot.status = true;
+                                }
+                            })
+                        }
+                    })
+
+                    // if (bots.botsReady()) {
+                        // sendMsgToAllAdmins({
+                            // "status": true
+                        // })
+                    // }
                 }
 
             } else {
@@ -121,6 +152,15 @@ function login(req, wsKey, client) {
     }
 }
 
+function sendActionToBots(bots, body){
+    bots.forEach((i) => {
+        console.log(bots[i]);
+    //     sendMsgToClient(bots[i].wsKey, {
+    //         "status": body.action,
+    //         "game": body.game})
+    })
+}
+
 
 function sendActionToAllBots(body) {
     let botsList = bots.getAllBots();
@@ -144,14 +184,9 @@ function sendMsgToAllAdmins(body) {
     })
 }
 
-function sendActionToBot(body) {
-    let bot = bots.getBotById(body.id);
-
-    bots.setAction(bot.wsKey, body.action);
-    sendMsgToClient({
-        "status": body.action,
-        "game": body.game
-    });
+function sendActionToBot(wsKey, body) {
+    let bot = bots.getBotByWsKey(wsKey);
+    sendMsgToClient(bot.client, body);
 
 }
 

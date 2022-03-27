@@ -34,7 +34,7 @@ ws.addEventListener("open", () => {
 
             ws.addEventListener("message", res => {
                 let response = JSON.parse(res.data);
-
+                console.log(response);
                 if (response.status) {
                     setButton(item);
                 }
