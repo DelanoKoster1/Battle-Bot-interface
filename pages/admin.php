@@ -29,7 +29,7 @@ switch (true) {
         break;
 
     case isset($_GET['director']);
-        $headerTitle = 'Ressigeur pagina';
+        $headerTitle = 'Regisseur pagina';
         $content = "../components/admin/director.php";
         break;
     case isset($_GET['bot']);
@@ -37,24 +37,29 @@ switch (true) {
         $content = "../components/admin/bot.php";
         break;
     case isset($_GET['addRobotToEvent']);
-        $headerTitle = 'Robot aan event toevoegen';
+        $headerTitle = 'Robot aan evenement toevoegen';
         $content = "../components/admin/addRobotToEvent.php";
 
     case isset($_GET['addTeamToEvent']);
-        $headerTitle = 'Team aan event toevoegen';
+        $headerTitle = 'Team aan evenement toevoegen';
         $content = "../components/admin/addTeamToEvent.php";
         break;
     case isset($_GET['startEvent']);
         $headerTitle = 'Evenement starten';
         $content = "../components/admin/startEvent.php";
         break;
-    case isset($_GET['edit']);
-        $headerTitle = 'Informatie wijzigen';
-        $content = "../components/admin/edit.php";
+    case isset($_GET['info']);
+        $headerTitle = 'Informatie bot en team';
+        $content = "../components/admin/info.php";
+        break;
+
+    case isset($_GET['createTeam']);
+        $headerTitle = 'Team aanmaken';
+        $content = "../components/admin/createTeam.php";
         break;
 
     default:
-        $headerTitle = 'Event toevoegen';
+        $headerTitle = 'Evenement toevoegen';
         $content = "../components/admin/event.php";
         break;
 }
@@ -67,25 +72,25 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
     $error = array();
 
     if (!$eventDate && empty($eventDate)) {
-        $error[] = 'Event datum mag niet leeg zijn!';
+        $error[] = 'De evenement datum mag niet leeg zijn!';
     } else {
         if (!checkValidDate($eventDate)) {
-            $error[] = 'Event datum is ongeldig!';
+            $error[] = 'De evenement datum is ongeldig!';
         }
     }
     if (!$eventDescription && empty($eventDescription)) {
-        $error[] = 'Event omschrijving mag niet leeg zijn!';
+        $error[] = 'De evenement omschrijving mag niet leeg zijn!';
     }
     if (!$eventName && empty($eventName)) {
-        $error[] = 'Event naam mag niet leeg zijn!';
+        $error[] = 'De evenement naam mag niet leeg zijn!';
     }
     if (!$eventType && empty($eventType)) {
-        $error[] = 'Event type mag niet leeg zijn!';
+        $error[] = 'Het evenement type mag niet leeg zijn!';
     } else {
         if ($eventType == 'public' || $eventType == 'private') {
             //Do nothing
         } else {
-            $error[] = 'Event type klopt niet';
+            $error[] = 'Het evenement type klopt niet';
         }
     }
 
@@ -95,7 +100,6 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
         return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
-
 function checkRobotFields($botName, $botDiscription, $macAdress, $botBoard, $botInterface)
 {
     $error = array();
@@ -134,19 +138,21 @@ if (isset($_POST['event'])) {
         //SQL Query for inserting into user table
         $sql = "INSERT INTO event (name, date, description, type) VALUES (?,?,?,?)";
 
-        if (!stmtExec($query, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
+        if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
             $_SESSION['error'] = "Cannot add event";
             header("location: ../components/error.php");
         }
 
         //Set succes message
-        $_SESSION['succes'] = 'Event toegevoegd!';
+        $_SESSION['succes'] = 'Het evenement is succesvol toegevoegd!';
 
         //Send user to index.php
         header('location: admin.php');
         exit();
     }
 }
+
+// Code for add bot page
 
 if (isset($_POST['bot'])) {
     $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -255,7 +261,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
                 $assignedPoints = $_POST[$radioTeamId];
                 $sql = "UPDATE `team-event` SET points = ? WHERE teamId = ?";
             } else {
-                $error[] = "Vul een getal in";
+                $error[] = "Vul een getal in!";
             }
         }
 
@@ -325,7 +331,7 @@ if (isset($_POST['selectedEvent'])) {
 
         //Check if no result has been found
         if (is_array($results) && count($results) > 0) {
-            $error[] = 'Dit team is al toegevoegd aan dit event';
+            $error[] = 'Dit team is al toegevoegd aan dit evenement!';
             $_SESSION['ERROR_MESSAGE'] = $error;
             unset($_SESSION['selectedTeam']);
             header('location: admin.php?addTeamToEvent');
@@ -342,7 +348,7 @@ if (isset($_POST['selectedEvent'])) {
             unset($_SESSION['selectedTeam']);
 
             //Set succes message
-            $_SESSION['succes'] = 'Team aan event toegevoegd!';
+            $_SESSION['succes'] = 'Het team is succesvol aan het evenement toegevoegd!';
 
             //Send user to admin.php?addTeamToEvent
             header('location: admin.php?addTeamToEvent');
@@ -350,6 +356,24 @@ if (isset($_POST['selectedEvent'])) {
         }
     }
 }
+
+//code for create team page
+
+if (isset($_POST['submitTeam'])) {
+    if (isset($_POST['teamName']) && $teamName = filter_input(INPUT_POST, 'teamName', FILTER_SANITIZE_SPECIAL_CHARS)) {
+        if (isset($_POST['bots']) && $botId = filter_input(INPUT_POST, 'bots', FILTER_SANITIZE_NUMBER_INT)) {
+            $sql = "INSERT INTO team (name, botId) VALUES (?,?)";
+
+            if (!stmtExec($sql, 0, $teamName, $botId)) {
+                $_SESSION['error'] = "Voer alle velden in";
+                header("location: ../components/error.php");
+            } else {
+                $_SESSION['succes'] = "Team aangemaakt!";
+            }
+        }
+    }
+}
+
 
 if (isset($_POST['robotEventAnnuleren'])) {
     unset($_SESSION['selectedTeam']);
@@ -379,7 +403,8 @@ if (isset($_POST['stopEvent'])) {
 
 <head>
     <?php
-    include_once('../components/head.html');
+    include_once('../functions/function.php');
+    includeHead('page'); 
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -400,7 +425,7 @@ if (isset($_POST['stopEvent'])) {
                 <nav class="navbar">
                     <ul class="nav w-100 nav-fill pt-2">
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php">Event toevoegen</a>
+                            <a class="nav-link text-white" href="admin.php">Evenement toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?poll">Poll toevoegen</a>
@@ -418,13 +443,16 @@ if (isset($_POST['stopEvent'])) {
                             <a class="nav-link text-white" href="admin.php?bot">Bot toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?addTeamToEvent">Team toevoegen aan event</a>
+                            <a class="nav-link text-white" href="admin.php?addTeamToEvent">Team toevoegen aan evenement</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?startEvent">Event activeren</a>
+                            <a class="nav-link text-white" href="admin.php?startEvent">Evenement starten</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?edit">Informatie wijzigen</a>
+                            <a class="nav-link text-white" href="admin.php?info">Informatie bot en team</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?createTeam">Team aanmaken</a>
                         </li>
                     </ul>
                 </nav>

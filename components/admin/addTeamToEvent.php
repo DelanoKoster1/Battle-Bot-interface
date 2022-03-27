@@ -20,7 +20,7 @@ $events = getAllEvents();
                         ?>
                     </select>
                 </div>
-                <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
+                <i>Bij het selecteren van een keuze wordt een nieuw menu getoond</i>
                 <!-- <input class="btn btn-danger mt-3" type="submit" name="selectRobot" value="Selecteer robot"> -->
             <?php
             }

@@ -1,28 +1,23 @@
 <?php 
     include_once('../functions/function.php');
-
+    $results = getActiveEvent();
     $pointsPerTeam = array();
     $progress = array();
     $maxPoints = 75;
-
-    $sql = "SELECT teamId, points, name FROM `team-event` JOIN team ON team.id = `team-event`.teamId";
-    $results = stmtExec($sql);
-
-    if(empty($results)) {
-        header("location: ../components/error.php");
-    }
-
-    $teamIds = $results["teamId"]; 
-    $points = $results["points"];  
-    $teamNames = $results["name"]; 
-
-    for($i = 0; $i < count($teamIds); $i++) {
-        $pointsPerTeam += [$teamNames[$i] => $points[$i]];
-        $progressPerTeam = ($pointsPerTeam[$teamNames[$i]] / $maxPoints) * 100 . "%";
-        $progress += [$teamNames[$i] => $progressPerTeam];
-    }
     
-
+    if(is_array($results)) {
+        $teamIds = $results["teamId"]; 
+        $points = $results["points"];  
+        $teamNames = $results["team.`name`"]; 
+    
+        for($i = 0; $i < count($teamIds); $i++) {
+            $pointsPerTeam += [$teamNames[$i] => $points[$i]];
+            $progressPerTeam = ($pointsPerTeam[$teamNames[$i]] / $maxPoints) * 100 . "%";
+            $progress += [$teamNames[$i] => $progressPerTeam];
+        }
+    } else {
+        $_SESSION['ERROR_MESSAGE'] = "Geen event gaande";   
+    }
 ?>
 
 
@@ -31,7 +26,7 @@
 
 <head>
     <?php
-    include_once('../components/head.html');
+    includeHead('page'); 
     include_once('../functions/function.php');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
@@ -54,6 +49,12 @@
         </div>
     </div>
     <div class="row pt-3">
+        <?php 
+        if(!empty($_SESSION['ERROR_MESSAGE'])) {
+            echo "<h3 class='text-center'>" . $_SESSION['ERROR_MESSAGE'] . "</h3>";
+            unset($_SESSION['ERROR_MESSAGE']);
+        }
+        ?>
         <div class="col-2"></div>
         <div class="col-8">
             <?php foreach ($pointsPerTeam as $team => $point) { ?>
@@ -67,7 +68,7 @@
                         <p class="mb-2 ps-2"><?= $team ?></p>
                     </div>
                     <div class="col-12 progress h-50 mb-5">
-                        <div class="progress-bar" style="width: <?=$progress[$team]?>" role="progressbar" data-bs-toggle="tooltip" title="<?= $pointsPerTeam[$team]?>"></div>
+                        <div class="progress-bar bg-danger" style="width: <?=$progress[$team]?>" role="progressbar" data-bs-toggle="tooltip" title="<?= $pointsPerTeam[$team] . ' / ' . $maxPoints?>"></div>
                     </div>
                 </div>
                 <div class="col-2"></div>
