@@ -852,10 +852,10 @@ function getAllRobots()
     }
 
     //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $id, $statsId, $specsId, $name, $description, $imagePath);
+    mysqli_stmt_bind_result($stmt, $id, $statsId, $specsId, $name, $description, $imagePath, $macAddress);
 
     while (mysqli_stmt_fetch($stmt)) {
-        $arr[] = ['id' => $id, 'statsId' => $statsId, 'specsId' => $specsId, 'name' => $name, 'description' => $description, 'imagePath' => $imagePath];
+        $arr[] = ['id' => $id, 'statsId' => $statsId, 'specsId' => $specsId, 'name' => $name, 'description' => $description, 'imagePath' => $imagePath, 'macAddress' => $macAddress];
     }
 
     return $arr;

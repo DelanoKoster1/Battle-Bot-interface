@@ -357,6 +357,7 @@ if (isset($_POST['selectedEvent'])) {
     }
 }
 
+
 //code for create team page
 
 if (isset($_POST['submitTeam'])) {

@@ -6,94 +6,85 @@ const wss = new WebSocket.Server({
     port: 3003
 });
 
-const bots = new Bots();
-let admins = {};
 let games = [];
 
-// {
-//     "game": "maze", 
-//     "bots": [{"id": "edsdfsf", "status": "true"}, {"id": "edsdfsf", "status": "true"}],
-//     "action": "prepare"
-// }
 wss.on('connection', (client, req) => {
     console.info("Total connected clients:", wss.clients.size);
 
-    client.on('message', clientReq => {
-        if (isValidJSONString(clientReq)) {
-            let wsKey = req.headers['sec-websocket-key'];
-            let body = JSON.parse(clientReq);
-            if (clientIsBot(wsKey) || clientIsAdmin(wsKey)) {
-                if (body.action && clientIsAdmin(wsKey)) {
-                    let selectedGame = body.game;
-                    let action = body.action;
-                    let target = body.for;
-                    // let for = body.for;
-                   
+    setAttributeToClient("isAlive", true, client);
 
-                    if(selectedGame == "maze" || selectedGame == "race" || selectedGame == "butler"){
-                        let game = {
-                            "game": selectedGame,
-                            "action": action,
-                            "bots": []
-                        }
+    client.on('message', message => {
+        if (isValidJSONString(message)) {
+            let body = JSON.parse(message);
+            console.log(body);
 
-                        if(target == "all"){
-                            let botsList = bots.getAllBots();
-                            Object.keys(botsList).forEach(wsKey => {
-                                game.bots.push({ "wsKey": wsKey, "status": false})
-                                bots.setGame(wsKey, game);
-                                sendActionToBot(wsKey, {
-                                    "status": action,
-                                    "game": selectedGame
-                                })
-                            });
-
-                        }
-
-                        games.push(game);
-
-                    }else{
-                        sendMsgToAdmin(wsKey, { "error": "UNVALID_GAME"})
+            switch (body.action) {
+                case "login":
+                    if (body.key == "111") {
+                        setAttributeToClient("role", "admin", client);
+                    } else {
+                        setAttributeToClient("role", "bot", client);
                     }
+                    setAttributeToClient("id", body.id, client);
+                    break;
+                case "prepare":
+                case "start":
+                case "ended":
+                    if (client.role == "admin") {
+                        if (body.for == "all" && ready()) {
+                            sendActionToAllBots(body.game, body.action);
+                        } else {
+                            sendMessageToInterface({
+                                "status": false,
+                                "msg": "NOT_READY"
+                            }, client)
+                        }
+                    } else {
+                        client.send(JSON.stringify({
+                            "error": "UNAUTHORIZED"
+                        }))
+                    }
+                    break;
+            }
 
+            if (body.status && client.role == "bot") {
 
-                    // switch (body.for) {
-                    //     case "all":
-                    //         sendActionToAllBots(body);
-                    //         break;
-                    //     case "single":
-                    //         // sendActionToBot(body);
-                    //         break;
-                    //     default:
-                    //         sendMsgToClient(client, {
-                    //             "error": "INVALID_COMMAND"
-                    //         })
-                    // }
-
-                }
-
-                if (body.status) {
-
-                    let botGame = bots.getGame(wsKey);
-                    games.forEach((game) => {
-                        if(game == botGame){
-                            game.bots.forEach((bot) => {
-                                if(bot.wsKey == wsKey){
-                                    bot.status = true;
+                switch (body.status) {
+                    case "preparing":
+                        setAttributeToClient("status", body.status, client)
+                        break;
+                    case "preparing_game":
+                    case "ready":
+                    case "in_game":
+                    case "finished":
+                        // update client status in game
+                        if (games["all"]) {
+                            games["all"].bots.forEach((bot) => {
+                                if (bot.id == client.id && bot.status != body.status) {
+                                        bot.status = body.status
+                                        // send games to admins
+                                        sendMessageToInterface({
+                                            "games": games
+                                        })
                                 }
+
                             })
                         }
-                    })
-
-                    // if (bots.botsReady()) {
-                        // sendMsgToAllAdmins({
-                            // "status": true
-                        // })
-                    // }
+                        // update client status
+                        setAttributeToClient("status", body.status, client)
+                        break;
                 }
 
-            } else {
-                login(body, wsKey, client);
+                // wss.clients.forEach(function each(client) {
+                //     if (client.role == "bot") {}
+                // });
+            }
+
+            if (body.error) {
+                sendMessageToInterface({
+                    "status": true,
+                    "game": games
+                })
             }
 
         } else {
@@ -101,100 +92,140 @@ wss.on('connection', (client, req) => {
                 "error": "INVALID_JSON"
             }))
         }
-    })
 
-    client.on('pong', () => {
-        bots.setConnAttempt(req.headers['sec-websocket-key'], 0);
     });
 
-    setInterval(() => {
-        let botsList = bots.getAllBots();
-        Object.keys(botsList).forEach(wsKey => {
-            if (botsList[wsKey].connAttempt < 1) {
-                botsList[wsKey].client.ping();
-                bots.setConnAttempt(wsKey, botsList[wsKey].connAttempt + 1);
-            } else {
-                botsList[wsKey].client.terminate();
-                bots.removeBot(wsKey);
-            }
-        })
-    }, 1000 * 5)
+    client.on('pong', () => {
+        heartbeat(client)
+    })
 
+    client.on('close', () => {
+        console.info("Total connected clients:", wss.clients.size);
+    })
 
 
 })
 
-
-function clientIsAdmin(wsKey) {
-    return admins.hasOwnProperty(wsKey)
+const heartbeat = (client) => {
+    client.isAlive = true;
 }
 
-function clientIsBot(wsKey) {
-    return bots.getAllBots().hasOwnProperty(wsKey)
-}
+const setAttributeToClient = (name, value, target = "all") => {
 
-
-function login(req, wsKey, client) {
-    if (req.key == "111") {
-        admins[wsKey] = client;
-        // console.log(bots.getAllBots());
+    if (target == "all") {
+        wss.clients.forEach((client) => {
+            if (client.role == "bot") {
+                client[name] = value;
+            }
+        })
     } else {
-        if (bots.saveBot(req.id, wsKey, client)) {
-            // console.log(bots.getAllBots());
-            sendMsgToClient(client, {
-                "loggedin": true
-            })
-        } else {
-            sendMsgToClient(client, {
-                "loggedin": false
-            })
+        target[name] = value;
+    }
+}
+
+const interval = setInterval(() => {
+    wss.clients.forEach((client) => {
+        if (client.isAlive === false) {
+            return client.terminate()
         }
-    }
-}
 
-function sendActionToBots(bots, body){
-    bots.forEach((i) => {
-        console.log(bots[i]);
-    //     sendMsgToClient(bots[i].wsKey, {
-    //         "status": body.action,
-    //         "game": body.game})
+        client.isAlive = false
+        client.ping()
+    })
+}, 5000)
+
+
+function sendMessageToAllBots(message) {
+    wss.clients.forEach((client) => {
+        if (client.role == "bot") {
+            client.send(JSON.stringify(message));
+        }
     })
 }
 
+function addBotToGame(status, target = "all") {
+    if (target == "all") {
+        wss.clients.forEach((client) => {
+            if (client.role == "bot") {
+                games["all"].bots.push({
+                    "botId": client.id,
+                    "status": status
+                });
+            }
+        })
+    }
+}
 
-function sendActionToAllBots(body) {
-    let botsList = bots.getAllBots();
-    if (Object.keys(botsList).length != 0) {
-        Object.keys(botsList).forEach(wsKey => {
-            bots.setAction(wsKey, body.action)
-            botsList[wsKey].client.send(JSON.stringify({
-                "status": body.action,
-                "game": body.game
-            }))
-        });
+function sendMessageToInterface(message, target = "all") {
+    if (target == "all") {
+        wss.clients.forEach((client) => {
+            if (client.role == "admin") {
+                client.send(JSON.stringify(message));
+            }
+        })
     } else {
-        //geen bots conn
+        target.send(JSON.stringify(message));
     }
 }
 
+/**
+ * Check if bot/bots are ready for next command
+ * @RETURN true OR false 
+ **/
+function ready(target = "all") {
+    let ready = false
+    if (target == "all") {
 
-function sendMsgToAllAdmins(body) {
-    Object.keys(admins).forEach(wsKey => {
-        admins[wsKey].send(JSON.stringify(body));
+        wss.clients.forEach((client) => {
+            if (client.role == "bot") {
+                if (client.status == "ready") {
+                    ready = true
+                } else {
+                    ready = false;
+                }
+            }
+        });
+    }
+
+    return ready;
+}
+
+/**
+ * Start game for all bots
+ * @param {Sring} game name of the game
+ * @param {String} action action: prepare. start OR ended
+ */
+function sendActionToAllBots(game, action) {
+    if (action == "prepare") {
+        games["all"] = {
+            "game": game,
+            "action": "preparing_game",
+            "bots": []
+        };
+
+        addBotToGame("preparing_game");
+
+        setAttributeToClient("game", game);
+
+    }
+
+    sendMessageToAllBots({
+        "game": game,
+        "action": action
+    })  
+    sendMessageToInterface({
+        "status": true,
+        "action": action,
+        "games": games,
+        "for": "all"
     })
 }
 
-function sendActionToBot(wsKey, body) {
-    let bot = bots.getBotByWsKey(wsKey);
-    sendMsgToClient(bot.client, body);
-
-}
-
-
-function sendMsgToClient(client, msg) {
-    client.send(JSON.stringify(msg));
-}
-
+/**
+ * Check is string is a valid json string
+ * @param {String} str 
+ * @returns true OR false
+ */
 function isValidJSONString(str) {
     try {
         JSON.parse(str);
@@ -203,6 +234,5 @@ function isValidJSONString(str) {
     }
     return true;
 }
-
 
 module.exports = router;
