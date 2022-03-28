@@ -10,7 +10,7 @@ var games = [];
 
 wss.on('connection', (client, req) => {
     console.info("Total connected clients:", wss.clients.size);
-
+    sendMessageToInterface({"total_connected": wss.clients.size});
     setAttributeToClient("isAlive", true, client);
 
     client.on('message', message => {
@@ -54,8 +54,9 @@ wss.on('connection', (client, req) => {
                     break;
             }
 
+            sendMessageToInterface({"message": body, "botId": client.id});
+
             if (body.status && client.role == "bot") {
-                sendMessageToInterface({"req": body, "botId": client.id},);
                 switch (body.status) {
                     case "preparing":
                         setAttributeToClient("status", body.status, client)
