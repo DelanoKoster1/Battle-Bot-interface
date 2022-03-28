@@ -3,7 +3,7 @@ const Bots = require('../../classes/bots.js')
 const WebSocket = require("ws");
 
 const wss = new WebSocket.Server({
-    port: 3003
+    port: 33003
 });
 
 let games = [];
