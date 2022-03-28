@@ -194,8 +194,8 @@ if (isset($_POST['bot'])) {
                     if (makeFolder($botId, "../assets/img/bots/")) {
                         if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botPic']['name'])) {
                             $query = "UPDATE `bot`
-                                                    SET imagePath = ?
-                                                    WHERE id = ?
+                                            SET imagePath = ?
+                                            WHERE id = ?
                                             ";
 
                             if (uploadFile($_FILES['botPic'], $query, $botId, "/assets/img/bots/{$botId}/")) {

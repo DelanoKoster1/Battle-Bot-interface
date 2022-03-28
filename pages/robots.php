@@ -27,14 +27,14 @@
             foreach ($ids as $botId) {
                 $id = $botId;
                 $imgPath = $dbResults["imagePath"][$botId - 1];
-                if ($imgPath === "image.png") $imgPath = "../assets/img/bot.svg";
+                if ($imgPath === null) $imgPath = "/assets/img/bot.svg";
                 $name = $dbResults["name"][$botId - 1];
                 echo ' 
                     <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $name . '" type="button" role="tab" aria-controls="' . $name . '" aria-selected="false">
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
                                 <div class="col-12 pt-1">
-                                    <img class="img-fluid" src="' . $imgPath . '" alt="' . $name . '">
+                                    <img class="img-fluid" src="..' . $imgPath . '" alt="' . $name . '">
                                 </div>
                                 <div class="col-12 position-relative">
                                     <div class="botName position-absolute w-100 bottom-0">
