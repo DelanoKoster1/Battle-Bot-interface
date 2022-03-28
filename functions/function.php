@@ -91,22 +91,24 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
     //Require env.php
     require_once('env.php');
 
+    // Create connection
     if ($conn = connectDB()) {
-        // $query = "SHOW DATABASES LIKE '".DATABASE."'";
-        // $result = mysqli_query($conn, $query);
-        // $row = mysqli_fetch_row($result);
 
         // Check if the statement can be prepared
         if ($stmt = mysqli_prepare($conn, $sql)) {
 
-            // If true
             // Check if the statement needs to bind
             if (substr_count($sql, "?")) {
 
                 // Check if the given params for binding in the query is the same as
                 // The total binding places
                 if (count($bindParamVars) == substr_count($sql, "?")) {
+
+                    // Initialize $paramChars, for the binding params
                     $paramChars = "";
+
+                    // Check each variables their data types for the
+                    // Right char
                     foreach ($bindParamVars as $var) {
                         if (is_int($var)) {
                             $paramChars .= "i";
@@ -119,20 +121,33 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
                         }
                     }
 
+                    // Check if it's NOT possible to bind
                     if (!mysqli_stmt_bind_param($stmt, $paramChars, ...$bindParamVars)) {
                         fail("DB" . $failCode . "4", mysqli_error($conn));
                         return false;
                     }
                 } else {
+                    // If not enough binding variables
+                    fail("DB11", substr_count($sql, "?"));
                     return false;
                 }
             }
 
+            // Check if it can be executed
             if (mysqli_stmt_execute($stmt)) {
-                $_SESSION['lastInsertedId'] = mysqli_insert_id($conn); // sets lastinserted id back into the session
+
+                // sets lastinserted id back into the session
+                $_SESSION['lastInsertedId'] = mysqli_insert_id($conn);
+
+                // Store results
                 mysqli_stmt_store_result($stmt);
+
+                // Check if there are any results
                 if (mysqli_stmt_num_rows($stmt) > 0) {
 
+                    // This piece of code just gets the names of the SELECT statement
+                    // So there are logic variables to bind to the results
+                    
                     $sql = str_replace("DISTINCT ", "", $sql);
                     $totalFromKey = substr_count($sql, "FROM");
                     $totalEndKey = substr_count($sql, ")");
@@ -217,6 +232,7 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
                         $bindResults[] = $selectResults[$i];
                     }
 
+                    // Bind results to the variables
                     if (mysqli_stmt_bind_result($stmt, ...$bindResults)) {
                         $i = 0;
                         while (mysqli_stmt_fetch($stmt)) {
@@ -237,16 +253,20 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
                     return true;
                 }
             } else {
+                // Execution error
                 fail("DB" . $failCode . "1", mysqli_error($conn));
                 return false;
             }
         } else {
+            // Preperation error
             fail("DB00", mysqli_error($conn));
-            echo $sql;
             return false;
         }
+
+        // Close connection
         mysqli_close($conn);
     } else {
+        // Fail connection
         fail("DB04", mysqli_error($conn));
         return false;
     }
