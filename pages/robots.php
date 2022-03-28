@@ -21,24 +21,37 @@
     <div class="container-fluid">
         <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
-            $sql = "SELECT id, name, imagePath FROM bot";
-            $dbResults = stmtExec($sql);
-            $ids = $dbResults["id"];
-            foreach ($ids as $botId) {
-                $id = $botId;
-                $imgPath = $dbResults["imagePath"][$botId - 1];
-                if ($imgPath === null) $imgPath = "/assets/img/bot.svg";
-                $name = $dbResults["name"][$botId - 1];
+            $conn = connectDB();
+
+            $query = "SELECT bot.id, bot.name, bot.specsId, bot.imagePath FROM bot INNER JOIN team ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId";
+
+            $stmt = mysqli_prepare($conn, $query);
+
+            if (!$stmt) {
+                header('location ../components/error.php');
+            }
+
+            if (!mysqli_stmt_execute($stmt)) {
+                header('location ../components/error.php');
+            }
+
+            mysqli_stmt_bind_result($stmt, $botId, $botName, $botSpecId, $botimagePath);
+
+            mysqli_stmt_store_result($stmt);
+
+            while (mysqli_stmt_fetch($stmt)) {
+                if ($botimagePath === "image.png") $botimagePath = "../assets/img/bot.svg";
+
                 echo ' 
-                    <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $name . '" type="button" role="tab" aria-controls="' . $name . '" aria-selected="false">
+                    <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $botName . '" type="button" role="tab" aria-controls="' . $botName . '" aria-selected="false">
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
                                 <div class="col-12 pt-1">
-                                    <img class="img-fluid" src="..' . $imgPath . '" alt="' . $name . '">
+                                    <img class="img-fluid" src="' . $botimagePath . '" alt="' . $botName . '">
                                 </div>
                                 <div class="col-12 position-relative">
                                     <div class="botName position-absolute w-100 bottom-0">
-                                        <span>' . $name . '</span>
+                                        <span>' . $botName . '</span>
                                     </div>
                                 </div>
                             </div>
@@ -46,6 +59,9 @@
                     </div>
                 ';
             }
+
+            mysqli_stmt_close($stmt);
+            mysqli_close($conn);
             ?>
         </div>
 
