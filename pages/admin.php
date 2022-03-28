@@ -436,6 +436,8 @@ if (isset($_POST['submitTeam'])) {
                 header("location: ../components/error.php");
             } else {
                 $_SESSION['succes'] = "Team aangemaakt!";
+                header("location: admin.php?createTeam");
+                exit();
             }
         }
     }

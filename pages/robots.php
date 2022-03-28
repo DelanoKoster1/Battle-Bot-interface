@@ -47,7 +47,7 @@
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
                                 <div class="col-12 pt-1">
-                                    <img class="img-fluid" src="' . $botimagePath . '" alt="' . $botName . '">
+                                    <img class="img-fluid" src="..' . $botimagePath . '" alt="' . $botName . '">
                                 </div>
                                 <div class="col-12 position-relative">
                                     <div class="botName position-absolute w-100 bottom-0">
@@ -88,15 +88,15 @@
                 $dbResults = stmtExec($sql);
                 // debug($dbResults);
                 $ids = $dbResults["team.id"];
-                foreach ($ids as $teamId) {
+                foreach ($ids as $key => $teamId) {
                     $id = $teamId;
-                    $botId = $dbResults["bot.id"][$teamId - 1];
-                    $botName = $dbResults["bot.name"][$teamId - 1];
-                    $teamName = $dbResults["team.name"][$teamId - 1];
-                    $specsBoard = $dbResults["specs.board"][$botId - 1];
-                    $specsInterface = $dbResults["specs.interface"][$botId - 1];;
-                    $gamesWon = $dbResults["stats.wins"][$botId - 1];;
-                    $gamesPlayed = $dbResults["stats.playedMatches"][$botId - 1];;
+                    $botId = $dbResults["bot.id"][$key];
+                    $botName = $dbResults["bot.name"][$key];
+                    $teamName = $dbResults["team.name"][$key];
+                    $specsBoard = $dbResults["specs.board"][$key];
+                    $specsInterface = $dbResults["specs.interface"][$key];
+                    $gamesWon = $dbResults["stats.wins"][$key];
+                    $gamesPlayed = $dbResults["stats.playedMatches"][$key];
                     echo ' 
                         <div class="tab-pane" id="' . $botName . '" role="tabpanel" aria-labelledby="' . $botName . '">
                             <div class="row">

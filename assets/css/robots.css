@@ -1,11 +1,10 @@
 .box {
-    height: 150px;
     border-radius: 18px;
     background-color: gray;
 }
 
 .box img {
-    padding-top: 5px;
+    padding: 16px;
 }
 
 .botName {

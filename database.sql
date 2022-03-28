@@ -105,10 +105,18 @@ INSERT INTO `stats` (id) VALUES (1), (2), (3), (4), (5);
 
 INSERT INTO `specs` (id, board, interface) VALUES (1, "ESP32", "Arduino IDE"), (2, "ESP32", "Arduino IDE"), (3, "ESP32", "Arduino IDE"), (4, "ESP32", "Arduino IDE"), (5, "ESP32", "Arduino IDE");
 
-INSERT INTO `bot` (id, statsId, specsId, name, description, imagePath) VALUES (1, 1, 1, "Bot1", "Description Bot1", NULL), (2, 2, 2, "Bot2", "Description Bot2", NULL), (3, 3, 3, "Bot3", "Description Bot3", NULL), (4, 4, 4, "Bot4", "Description Bot4", NULL), (5, 5, 5, "Bot5", "Description Bot5", NULL);
-
-INSERT INTO `team` (id, botId, name) VALUES (1, 1, "INF1A"), (2, 2, "INF1B"), (3, 3, "INF1C"), (4, 4, "INF1D"), (5, 5, "INF1E");
-
+INSERT INTO `bot` (`id`, `statsId`, `specsId`, `name`, `description`, `imagePath`, `macAddress`) VALUES
+(6, 1, 1, 'INF1A', 'Robot INF1A', '/assets/img/bots/6/Robot_INF1A.png', 'FC:F5:C4:2F:45:5C'),
+(7, 2, 2, 'INF1B', 'Robot INF1B', '/assets/img/bots/7/Robot_INF1B.png', 'F0:08:D1:D1:72:A0'),
+(8, 3, 3, 'INF1C', 'Robot INF1C', '/assets/img/bots/8/Robot_INF1C.png', '84:CC:A8:7A:A2:A8'),
+(9, 4, 4, 'INF1D', 'Robot INF1D', '/assets/img/bots/9/Robot_INF1D.png', '24:0A:C4:61:A6:88'),
+(10, 5, 5, 'INF1E', 'Robot INF1E', '/assets/img/bots/10/Robot_INF1E.png', '84:CC:A8:7A:AF:D8');
+INSERT INTO `team` (`id`, `botId`, `name`) VALUES
+(6, 6, 'INF1A'),
+(7, 7, 'INF1B'),
+(8, 8, 'INF1C'),
+(9, 9, 'INF1D'),
+(10, 10, 'INF1E');
 INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES (1, 0, 1, "User", "$2y$10$aGQ8W0VZuImV2hrYKq3HdO2sGSnDip3X.WekIXwgq0vk1tLlKak.6", "user1@battlebot.nl"), (2, 0, 2, "Admin", "$2y$10$0CG/LGUl/KgxUQFGBzqkUOXHFoNL03jQY9JKbq6KrXGO3R9/vcusC", "admin@battlebot.nl");
 
 INSERT INTO `event` (id, name, date, description, stream) VALUES (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!", "")
