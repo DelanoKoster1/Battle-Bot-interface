@@ -51,6 +51,10 @@ if (isset($_POST['login'])) {
             $error[] = 'Er is geen gebruiker gevonden met deze gebruikersnaam!';
         }
     }
+
+    if(!empty($error)) {
+        $_SESSION['ERROR_MESSAGE'] = $error;
+    }
 }
 
 //Check if submitted
