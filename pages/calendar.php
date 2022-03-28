@@ -22,7 +22,7 @@ include_once('../functions/function.php');
     </section>
 
     <main id='events'>
-        <div class='containter py-4'>
+        <div class='containter py-4 height'>
             <div class="row g-0">
                 <div class="col-md-12 mb-2 text-center">
                     <h3>Evenementen</h3>

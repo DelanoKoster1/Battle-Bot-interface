@@ -49,7 +49,7 @@ if (isset($_POST['change2'])) {
     } else {
         echo "<a href='admin.php?info'><h6>Return</h6></a>";
         die("<h4>Name not empty</h4>"); 
-    }f
+    }
 }
 
 ?>

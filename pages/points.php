@@ -42,7 +42,7 @@
         <?php includeHeader('page'); ?>
     </section>
 
-<div class="container">
+<div class="container height">
     <div class="row">
         <div class="col-12 text-center pt-3">
             <h1>Scores</h1>

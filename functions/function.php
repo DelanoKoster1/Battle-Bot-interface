@@ -262,7 +262,8 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
  * @param array $error Array with errors
  * @return String/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password) {
+function checkLoginFields(String $username, String $password)
+{
     //Call global variable(s)
     $error = array();
 
@@ -548,7 +549,8 @@ function formatdate(string $date): string
  * Function to show events as HTML
  * 
  */
-function showEvents(bool $limit = false, bool $admin = false, $start = false) {
+function showEvents(bool $limit = false, bool $admin = false, $start = false)
+{
     $query = "SELECT id, name, date, description
               FROM event 
               WHERE date > NOW()
@@ -574,13 +576,13 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                     <div class="card eventsCard">
                         <div class="card-body">
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                            <span class="calendarTitle d-block text-capitalize"><a href="../pages/admin.php?points&eventId=' . $id .'" class="text-white stretched-link">' . $name . '</a></span>
+                            <span class="calendarTitle d-block text-capitalize"><a href="../pages/admin.php?points&eventId=' . $id . '" class="text-white stretched-link">' . $name . '</a></span>
                             <span class="calendarInfo mt-4 d-block">' . $description . '</span>    
                         </div>
                     </div>
                 </div>
                 ';
-            } else if($start){
+            } else if ($start) {
                 echo '
                 <div class="col-sm-3 mb-4">
                     <div class="card eventsCard">
@@ -588,14 +590,14 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
                             <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
                             <form action="" method="post">
-                                <button class="bg-success border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="startEvent" value="'.$id.'">Start</button>
-                                <button class="bg-danger border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="stopEvent" value="'.$id.'">Stop</button>
+                                <button class="bg-success border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="startEvent" value="' . $id . '">Start</button>
+                                <button class="bg-danger border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="stopEvent" value="' . $id . '">Stop</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 ';
-            }else {
+            } else {
                 echo '
                 <div class="col-sm-3 mb-4">
                 <div class="card eventsCard">
@@ -646,7 +648,8 @@ function getLivestream()
 }
 
 //this function is there to activate another function if conditions are met
-function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) { 
+function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
+{
 
     if (!empty($question)) {
         if ($questionType == "multiChoice") {
@@ -664,7 +667,8 @@ function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answ
 }
 
 //this function INSERTS a question into the database if certain conditions are met
-function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4) {
+function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4)
+{
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -689,8 +693,9 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
 }
 
 //this function INSERTS a question into the database if certain conditions are met
-function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
-    
+function yesOrNoPoll($question, $questionType, $answer1, $answer2)
+{
+
     if (!empty($answer1)) {
         if (!empty($answer2)) {
             $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
@@ -706,7 +711,8 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
 }
 
 //this function INSERTS a question into the database if certain conditions are met
-function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
+function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
+{
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -736,7 +742,8 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
 
 //this function retrieves the question and answers from the database if the conditions are met
 //it shows all possible answers depending on which question is retrieved
-function retrieveQuestionInfo() {
+function retrieveQuestionInfo()
+{
 
     $query = "SELECT    question, answer1, answer2, answer3, answer4, answer5, active 
               FROM      poll
@@ -750,26 +757,25 @@ function retrieveQuestionInfo() {
     if (!empty($results['active'][0])) {
         if ($results['active'][0] != NULL) {
 
-            $questionnaire .= '<h4>De vraag luid: '. $results['question'][0] .'</h4>';
-            $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer1'][0] .'">';
-            $questionnaire .= '<label class="custom-control-label" for="question1">'. $results['answer1'][0] .'</label> <br>';
-            $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer2'][0] .'">';
-            $questionnaire .= '<label class="custom-control-label" for="question2">'. $results['answer2'][0] .'</label> <br>';
+            $questionnaire .= '<h4>De vraag luid: ' . $results['question'][0] . '</h4>';
+            $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer1'][0] . '">';
+            $questionnaire .= '<label class="custom-control-label" for="question1">' . $results['answer1'][0] . '</label> <br>';
+            $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer2'][0] . '">';
+            $questionnaire .= '<label class="custom-control-label" for="question2">' . $results['answer2'][0] . '</label> <br>';
             if ($results['answer3'][0] != NULL) {
-                $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer3'][0] .'">';
-                $questionnaire .= '<label class="custom-control-label" for="question3">'. $results['answer3'][0] .'</label> <br>';
+                $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer3'][0] . '">';
+                $questionnaire .= '<label class="custom-control-label" for="question3">' . $results['answer3'][0] . '</label> <br>';
             }
             if ($results['answer4'][0] != NULL) {
-                $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer4'][0] .'">';
-                $questionnaire .= '<label class="custom-control-label" for="question4">'. $results['answer4'][0] .'</label> <br>';
+                $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer4'][0] . '">';
+                $questionnaire .= '<label class="custom-control-label" for="question4">' . $results['answer4'][0] . '</label> <br>';
             }
             if ($results['answer5'][0] != NULL) {
-                $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer5'][0] .'">';
-                $questionnaire .= '<label class="custom-control-label" for="question5">'. $results['answer5'][0] .'</label> <br>';
+                $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer5'][0] . '">';
+                $questionnaire .= '<label class="custom-control-label" for="question5">' . $results['answer5'][0] . '</label> <br>';
             }
-    
+
             return $questionnaire;
-    
         } else {
             return "<h4>Er is momenteel geen poll gaande.</h4>";
         }
@@ -778,7 +784,8 @@ function retrieveQuestionInfo() {
     }
 }
 
-function pollUserCheck($username, $givenAnswer) {
+function pollUserCheck($username, $givenAnswer)
+{
 
     $checkUserPoll = "SELECT    userName
                       FROM      `poll-outcome` 
@@ -791,7 +798,7 @@ function pollUserCheck($username, $givenAnswer) {
                          WHERE     username = ?  
                         ";
 
-    $usersOffAccount = stmtExec($checkUserAccount,0, $username);
+    $usersOffAccount = stmtExec($checkUserAccount, 0, $username);
 
     if (empty($usersOffPoll['userName'])) {
         return "test2";
@@ -826,11 +833,11 @@ function pollUserCheck($username, $givenAnswer) {
             }
         }
     }
-
-} 
+}
 
 //this function adds a user which has answered a question of the poll within that moment
-function pollAddUser($username, $givenAnswer) {
+function pollAddUser($username, $givenAnswer)
+{
 
     //return debug(pollUserCheck($username, $givenAnswer));
 
@@ -839,14 +846,14 @@ function pollAddUser($username, $givenAnswer) {
         $query = "INSERT INTO `poll-outcome` (userName,`givenAnswer`)
                   VALUES (?,?)
                 ";
-        
+
         if (!empty($username) && !empty($givenAnswer)) {
             stmtExec($query, 0, $username, $givenAnswer);
 
             $getInsertedUser = "SELECT  userName
                                 FROM    `poll-outcome`   
                             ";
-            
+
             $users = stmtExec($getInsertedUser);
 
             $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
@@ -859,19 +866,21 @@ function pollAddUser($username, $givenAnswer) {
 }
 
 //this function ends the poll which has been activated
-function endPoll() {
+function endPoll()
+{
 
     $changeActive = "UPDATE `poll` SET active = NULL WHERE active = 1";
 
-    stmtExec($changeActive,0);
+    stmtExec($changeActive, 0);
 
     $deletePollOutcome = "TRUNCATE TABLE `poll-outcome`";
 
-    stmtExec($deletePollOutcome,0);
+    stmtExec($deletePollOutcome, 0);
 }
 
 //this function checks if there is a poll and shows an input if the conditions have been met
-function checkIfPoll() {
+function checkIfPoll()
+{
     $checkIfPoll = "SELECT  active
                     FROM    poll    
                    ";
@@ -890,7 +899,8 @@ function checkIfPoll() {
 }
 
 //this function shows the answers of the user who have participated in the poll in percentage
-function pollQuestionAnswer() {
+function pollQuestionAnswer()
+{
 
     $voteArray = [];
 
@@ -1026,7 +1036,7 @@ function getAllEvents()
     }
 
     //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type, $active);
+    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type, $active, $stream);
 
     while (mysqli_stmt_fetch($stmt)) {
         $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type, 'active' => $active];
@@ -1039,7 +1049,8 @@ function getAllEvents()
  * Function to check selected team ID
  * 
  */
-function checkSelectedTeam ($teamID) {
+function checkSelectedTeam($teamID)
+{
     $error = array();
 
     if (!$teamID && empty($teamID) || $teamID == 0) {
@@ -1195,7 +1206,7 @@ function deleteFile(string $directory)
 
 function uploadFile($file, string $query, int $id, string $directory)
 {
-    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory.$file["name"], $id)) {
+    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory . $file["name"], $id)) {
         return true;
     } else {
         return false;
@@ -1209,6 +1220,6 @@ function getActiveEvent()
     JOIN team ON team.id = `team-event`.teamId
     JOIN `event` ON `team-event`.eventId = `event`.id
     WHERE `event`.active = 1";
-    
+
     return stmtExec($sql);
 }

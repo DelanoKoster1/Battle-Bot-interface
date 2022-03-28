@@ -65,9 +65,30 @@ CREATE TABLE IF NOT EXISTS `event` (
     description VARCHAR(999) NOT NULL,
     type enum('public','private') NOT NULL,
     active boolean not NULL,
-    stream VARCHAR(50),
+    stream VARCHAR(255),
 
     CONSTRAINT pk_event PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS `poll` (
+    id INT NOT NULL AUTO_INCREMENT,
+    questionType VARCHAR(50) NOT NULL,
+    question VARCHAR(50) NOT NULL,
+    answer1 VARCHAR(50) NULL,
+    answer2 VARCHAR(50) NULL,
+    answer3 VARCHAR(50) NULL,
+    answer4 VARCHAR(50) NULL,
+    answer5 VARCHAR(50) NULL,
+    pollOutcome VARCHAR(50) NULL,
+    active boolean,
+    CONSTRAINT pk_poll PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS `poll-outcome` (
+    id INT NOT NULL AUTO_INCREMENT,
+    userName VARCHAR(255) NULL,
+    givenAnswer VARCHAR(255),
+    CONSTRAINT pk_pollA PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS `team-event` (
@@ -84,7 +105,7 @@ INSERT INTO `stats` (id) VALUES (1), (2), (3), (4), (5);
 
 INSERT INTO `specs` (id, board, interface) VALUES (1, "ESP32", "Arduino IDE"), (2, "ESP32", "Arduino IDE"), (3, "ESP32", "Arduino IDE"), (4, "ESP32", "Arduino IDE"), (5, "ESP32", "Arduino IDE");
 
-INSERT INTO `bot` (id, statsId, specsId, name, description, imagePath) VALUES (1, 1, 1, "Bot1", "Description Bot1", "image.png"), (2, 2, 2, "Bot2", "Description Bot2", "image.png"), (3, 3, 3, "Bot3", "Description Bot3", "image.png"), (4, 4, 4, "Bot4", "Description Bot4", "image.png"), (5, 5, 5, "Bot5", "Description Bot5", "image.png");
+INSERT INTO `bot` (id, statsId, specsId, name, description, imagePath) VALUES (1, 1, 1, "Bot1", "Description Bot1", NULL), (2, 2, 2, "Bot2", "Description Bot2", NULL), (3, 3, 3, "Bot3", "Description Bot3", NULL), (4, 4, 4, "Bot4", "Description Bot4", NULL), (5, 5, 5, "Bot5", "Description Bot5", NULL);
 
 INSERT INTO `team` (id, botId, name) VALUES (1, 1, "INF1A"), (2, 2, "INF1B"), (3, 3, "INF1C"), (4, 4, "INF1D"), (5, 5, "INF1E");
 
