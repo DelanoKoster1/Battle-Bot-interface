@@ -26,6 +26,9 @@ wss.on('connection', (client, req) => {
                         // client.send(JSON.stringify(games))
                     } else {
                         setAttributeToClient("role", "bot", client);
+                        client.send(JSON.stringify({
+                            "loggedin": true
+                        }));
                     }
                     setAttributeToClient("id", body.id, client);
                     break;
