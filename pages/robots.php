@@ -21,24 +21,37 @@
     <div class="container-fluid">
         <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
-            $sql = "SELECT id, name, imagePath FROM bot";
-            $dbResults = stmtExec($sql);
-            $ids = $dbResults["id"];
-            foreach ($ids as $botId) {
-                $id = $botId;
-                $imgPath = $dbResults["imagePath"][$botId - 1];
-                if ($imgPath === "image.png") $imgPath = "../assets/img/bot.svg";
-                $name = $dbResults["name"][$botId - 1];
+            $query = "SELECT bot.id, 
+                                bot.name, 
+                                bot.imagePath 
+                    FROM bot 
+                    INNER JOIN team ON team.botId = bot.id 
+                    INNER JOIN specs ON specs.id = bot.specsId 
+                    INNER JOIN stats ON stats.id = bot.statsId";
+
+            $results = stmtExec($query);
+
+            if (empty($results)) {
+                header('location ../components/error.php');
+            }
+
+            for($i = 0; $i < count($results["bot.id"]); $i++) {
+
+                $botName = $results["bot.name"][$i];
+                $botimagePath = $results["bot.imagePath"][$i];
+
+                if ($botimagePath === "image.png") $botimagePath = "../assets/img/bot.svg";
+
                 echo ' 
-                    <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $name . '" type="button" role="tab" aria-controls="' . $name . '" aria-selected="false">
+                    <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $botName . '" type="button" role="tab" aria-controls="' . $botName . '" aria-selected="false">
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
                                 <div class="col-12 pt-1">
-                                    <img class="img-fluid" src="' . $imgPath . '" alt="' . $name . '">
+                                    <img class="img-fluid" src="..' . $botimagePath . '" alt="' . $botName . '">
                                 </div>
                                 <div class="col-12 position-relative">
                                     <div class="botName position-absolute w-100 bottom-0">
-                                        <span>' . $name . '</span>
+                                        <span>' . $botName . '</span>
                                     </div>
                                 </div>
                             </div>
@@ -75,15 +88,15 @@
                 $dbResults = stmtExec($sql);
                 // debug($dbResults);
                 $ids = $dbResults["team.id"];
-                foreach ($ids as $teamId) {
+                foreach ($ids as $key => $teamId) {
                     $id = $teamId;
-                    $botId = $dbResults["bot.id"][$teamId - 1];
-                    $botName = $dbResults["bot.name"][$teamId - 1];
-                    $teamName = $dbResults["team.name"][$teamId - 1];
-                    $specsBoard = $dbResults["specs.board"][$botId - 1];
-                    $specsInterface = $dbResults["specs.interface"][$botId - 1];;
-                    $gamesWon = $dbResults["stats.wins"][$botId - 1];;
-                    $gamesPlayed = $dbResults["stats.playedMatches"][$botId - 1];;
+                    $botId = $dbResults["bot.id"][$key];
+                    $botName = $dbResults["bot.name"][$key];
+                    $teamName = $dbResults["team.name"][$key];
+                    $specsBoard = $dbResults["specs.board"][$key];
+                    $specsInterface = $dbResults["specs.interface"][$key];
+                    $gamesWon = $dbResults["stats.wins"][$key];
+                    $gamesPlayed = $dbResults["stats.playedMatches"][$key];
                     echo ' 
                         <div class="tab-pane" id="' . $botName . '" role="tabpanel" aria-labelledby="' . $botName . '">
                             <div class="row">

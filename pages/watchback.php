@@ -12,6 +12,7 @@ include_once('../functions/function.php');
 
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
+    <link rel="stylesheet" href="../assets/css/watchback.css">
 
     <title>Terugkijken</title>
 </head>
@@ -28,16 +29,17 @@ include_once('../functions/function.php');
      * 
      */
 
-    $query = "SELECT id, name
-              FROM streamhistory 
-              where id = 1
-              ";
+    $query = "SELECT    stream
+                        FROM event 
+              WHERE     date < now()
+                        AND id = ?
+    ";
 
-    $historyResults = stmtExec($query);
+    $historyResults = stmtExec($query,0, $_GET['id']);
     ?>
 
-    <video width="840" height="600" autoplay muted controls>
-        <source src="/Project Battle Bot/Battle-Bot-interface/assets/video/Purple_Disco_Machine,_Sophie_and_the_Giants_-_In_The_Dark.mp4" type="video/mp4">
+    <video width="250"  autoplay muted controls id="VideoPlayback">
+        <source src="..<?=$historyResults['stream'][0]?>" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 

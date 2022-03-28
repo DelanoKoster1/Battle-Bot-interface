@@ -67,7 +67,7 @@
                                                 </div>
                                                 <div class="col-12 d-flex justify-content-between mb-3 buttons-group">
                                                     <div class="btn w-33 btn-success">1000</div>
-                                                    <button class="btn text-right btn-success">Scorebord</button>
+                                                    <a href="./points.php" class="btn text-right btn-success">Scorebord</a>
                                                     <button class="btn text-right btn-success vote-button">Stemmen</button>
                                                 </div>
                                             <?php } else {

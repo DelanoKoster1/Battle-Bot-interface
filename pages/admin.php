@@ -1,7 +1,6 @@
 <?php
 //Includes
 include_once('../functions/function.php');
-
 // Check if admin is logged in
 if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
     header('location: ../components/error.php');
@@ -56,6 +55,10 @@ switch (true) {
     case isset($_GET['createTeam']);
         $headerTitle = 'Team aanmaken';
         $content = "../components/admin/createTeam.php";
+        break;
+    case isset($_GET['addStream']);
+        $headerTitle = 'Stream toevoegen';
+        $content = "../components/admin/addStreamToEvent.php";
         break;
 
     default:
@@ -194,8 +197,8 @@ if (isset($_POST['bot'])) {
                     if (makeFolder($botId, "../assets/img/bots/")) {
                         if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botPic']['name'])) {
                             $query = "UPDATE `bot`
-                                                    SET imagePath = ?
-                                                    WHERE id = ?
+                                            SET imagePath = ?
+                                            WHERE id = ?
                                             ";
 
                             if (uploadFile($_FILES['botPic'], $query, $botId, "/assets/img/bots/{$botId}/")) {
@@ -250,10 +253,10 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
     $eventIds = array();
     $teamPoints = array();
     $eventId = $_GET['eventId'];
-    
+
     foreach ($_POST as $radioTeamId => $assignedPoints) {
         if (isset($_POST[$radioTeamId])) {
-            switch($_POST[$radioTeamId]) {
+            switch ($_POST[$radioTeamId]) {
                 case 25:
                     $sql = "UPDATE `team-event` 
                             JOIN stats ON `team-event`.teamId = stats.id 
@@ -272,7 +275,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
         if (isset($_POST[$radioTeamId . 'submit'])) {
             if (is_numeric($_POST[$radioTeamId])) {
                 $assignedPoints = $_POST[$radioTeamId];
-                switch($assignedPoints) {
+                switch ($assignedPoints) {
                     case 0:
                         $sql = "UPDATE `team-event` 
                                 JOIN stats ON `team-event`.teamId = stats.id
@@ -380,6 +383,46 @@ if (isset($_POST['selectedEvent'])) {
         }
     }
 }
+//add stream
+if (isset($_POST['streamAnnuleren'])) {
+    unset($_SESSION['selectedEvent']);
+    header('location: admin.php?addStream');
+}
+
+if (isset($_POST['selectedEventForStream'])) {
+    $selectedEvent = filter_input(INPUT_POST, 'selectedEventForStream', FILTER_SANITIZE_SPECIAL_CHARS);
+
+    if (!checkSelectedEvent($selectedEvent)) {
+        $_SESSION['selectedEvent'] = $selectedEvent;
+        header('location: admin.php?addStream');
+    }
+    header('location: admin.php?addStream');
+    exit();
+}
+
+
+if (isset($_POST['uploadStream'])) {
+    //check if event & team id are already in database
+
+    if (checkIfFile($_FILES['file'])) {
+            if (checkFileType($_FILES['file'])) {
+                if (!checkFileExist("../assets/video/", $_FILES['file']['name'])) {
+                    $query = "Update    event
+                              SET       stream = ?
+                              WHERE     id = ?
+                            ";
+
+                    if (uploadFile($_FILES['file'], $query, $_SESSION['selectedEvent'], "/assets/video/")) {
+                        $_SESSION['succes'] = 'Stream toegevoegd';
+                        unset($_SESSION['selectedEvent']);
+
+                        header('location: admin.php?addStream');
+                        exit();
+                    }
+                }
+            }
+    }
+}
 
 //code for create team page
 
@@ -393,6 +436,8 @@ if (isset($_POST['submitTeam'])) {
                 header("location: ../components/error.php");
             } else {
                 $_SESSION['succes'] = "Team aangemaakt!";
+                header("location: admin.php?createTeam");
+                exit();
             }
         }
     }
@@ -428,7 +473,7 @@ if (isset($_POST['stopEvent'])) {
 <head>
     <?php
     include_once('../functions/function.php');
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -477,6 +522,9 @@ if (isset($_POST['stopEvent'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?createTeam">Team aanmaken</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?addStream">Stream toevoegen</a>
                         </li>
                     </ul>
                 </nav>
