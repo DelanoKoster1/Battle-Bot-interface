@@ -32,9 +32,9 @@ $events = getAllEvents();
                     <span>Selecteer een event</span>
                     <input type="file" name="file">
                     <input class="btn btn-success mt-3" type="submit" name="uploadStream" value="Uploaden">
+                    <input class="btn btn-danger mt-3" type="submit" name="streamAnnuleren" value="Annuleren">
                 </div>
-                <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
-                <input class="btn btn-danger mt-3" type="submit" name="streamAnnuleren" value="Annuleren">
+                
             <?php
             }
             ?>
