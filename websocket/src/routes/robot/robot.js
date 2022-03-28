@@ -31,11 +31,8 @@ wss.on('connection', (client, req) => {
                     break;
                 case "prepare":
                 case "start":
-                case "ended":
                     if (client.role == "admin") {
                         if (body.for == "all" && ready() && body.action != "ended") {
-                            sendActionToAllBots(body.game, body.action);
-                        } else if(body.action == "ended") {
                             sendActionToAllBots(body.game, body.action);
                         }else {
                             sendMessageToInterface({
@@ -48,6 +45,9 @@ wss.on('connection', (client, req) => {
                             "error": "UNAUTHORIZED"
                         }))
                     }
+                    break;
+                case "ended":
+                    sendActionToAllBots(body.game, body.action);
                     break;
             }
 
