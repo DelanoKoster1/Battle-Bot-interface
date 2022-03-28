@@ -50,7 +50,7 @@ wss.on('connection', (client, req) => {
             }
 
             if (body.status && client.role == "bot") {
-
+                sendMessageToInterface({"req": body, "botId": client.id},);
                 switch (body.status) {
                     case "preparing":
                         setAttributeToClient("status", body.status, client)

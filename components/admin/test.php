@@ -25,7 +25,7 @@ let prepareButler = document.querySelector('.prepare-butler');
 let startButler = document.querySelector('.start-butler');
 let stopButler = document.querySelector('.stop-butler');
 
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 ws.addEventListener("open", () => {
     ws.send(JSON.stringify({
