@@ -33,9 +33,11 @@ wss.on('connection', (client, req) => {
                 case "start":
                 case "ended":
                     if (client.role == "admin") {
-                        if (body.for == "all" && ready()) {
+                        if (body.for == "all" && ready() && body.action != "ended") {
                             sendActionToAllBots(body.game, body.action);
-                        } else {
+                        } else if(body.action == "ended") {
+                            sendActionToAllBots(body.game, body.action);
+                        }else {
                             sendMessageToInterface({
                                 "status": false,
                                 "msg": "NOT_READY"
