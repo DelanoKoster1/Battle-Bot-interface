@@ -255,14 +255,15 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
     $eventId = $_GET['eventId'];
 
     foreach ($_POST as $radioTeamId => $assignedPoints) {
-        if (isset($_POST[$radioTeamId])) {
-            switch ($_POST[$radioTeamId]) {
+        if (isset($_POST[$radioTeamId]) && !isset($_POST[$radioTeamId . 'submit'])) {
+            switch($_POST[$radioTeamId]) {
                 case 25:
                     $sql = "UPDATE `team-event` 
                             JOIN stats ON `team-event`.teamId = stats.id 
                             SET points = points + ?, wins = wins + 1, playedMatches = playedMatches + 1 
                             WHERE `team-event`.teamId = ?";
                     break;
+                    
                 default:
                     $sql = "UPDATE `team-event` 
                             JOIN stats ON `team-event`.teamId = stats.id 
@@ -273,40 +274,47 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
         }
 
         if (isset($_POST[$radioTeamId . 'submit'])) {
-            if (is_numeric($_POST[$radioTeamId])) {
+            if (is_numeric($_POST[$radioTeamId]) && $_POST[$radioTeamId] <= 75 && $_POST[$radioTeamId] >= 0) {
                 $assignedPoints = $_POST[$radioTeamId];
                 switch ($assignedPoints) {
                     case 0:
                         $sql = "UPDATE `team-event` 
                                 JOIN stats ON `team-event`.teamId = stats.id
-                                SET points = ?, wins = 0, playedMatches = 0
+                                SET points = ?, 
+                                wins = (CASE WHEN (wins > 0) THEN wins - 1 ELSE (wins)END), 
+                                playedMatches = (CASE WHEN (playedMatches > 0) THEN playedMatches - 1 ELSE (playedMatches)END)
                                 WHERE `team-event`.teamId = ?";
                         break;
+
                     default:
                         $sql = "UPDATE `team-event` 
                                 SET points = ? 
                                 WHERE teamId = ?";
+                        break;
                 }
             } else {
-                $_SESSION['ERROR_MESSAGE'] = "Vul een getal in die kleiner of gelijk is aan 75";
+                $_SESSION['ERROR_MESSAGE'] = "Punten aantal kan niet groter zijn dan 75 en niet kleiner dan 0";
             }
         }
 
-        $stmt = mysqli_prepare($conn, $sql);
+        if(isset($sql)) {
+            $stmt = mysqli_prepare($conn, $sql);
 
-        if (!$stmt) {
-            header("location: ../components/error.php");
+            if (!$stmt) {
+                header("location: ../components/error.php");
+            }
+
+            if (!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)) {
+                header('location: ../components/error.php');
+            }
+
+            if (!mysqli_stmt_execute($stmt)) {
+                header('location ../components/error.php');
+            }
+
+            mysqli_stmt_close($stmt);
         }
-
-        if (!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)) {
-            header('location: ../components/error.php');
-        }
-
-        if (!mysqli_stmt_execute($stmt)) {
-            header('location ../components/error.php');
-        }
-
-        mysqli_stmt_close($stmt);
+        break;
     }
 
     $sql = "SELECT teamId, `name`, eventId, points FROM `team-event` JOIN team ON team.id = `team-event`.teamId WHERE eventId = ?";
@@ -559,9 +567,10 @@ if (isset($_POST['stopEvent'])) {
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">
                                     <?php
-                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
+                                    // foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
+                                    //     echo '<li>' . $errorMsg . '</li>';
+                                    // }
+                                    echo $_SESSION['ERROR_MESSAGE'];
 
                                     unset($_SESSION['ERROR_MESSAGE']);
                                     ?>
