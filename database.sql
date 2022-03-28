@@ -90,7 +90,7 @@ INSERT INTO `stats` (id) VALUES (1), (2), (3), (4), (5);
 
 INSERT INTO `specs` (id, board, interface) VALUES (1, "ESP32", "Arduino IDE"), (2, "ESP32", "Arduino IDE"), (3, "ESP32", "Arduino IDE"), (4, "ESP32", "Arduino IDE"), (5, "ESP32", "Arduino IDE");
 
-INSERT INTO `bot` (id, statsId, specsId, name, description, imagePath) VALUES (1, 1, 1, "Bot1", "Description Bot1", "image.png"), (2, 2, 2, "Bot2", "Description Bot2", "image.png"), (3, 3, 3, "Bot3", "Description Bot3", "image.png"), (4, 4, 4, "Bot4", "Description Bot4", "image.png"), (5, 5, 5, "Bot5", "Description Bot5", "image.png");
+INSERT INTO `bot` (id, statsId, specsId, name, description, imagePath, macAddress) VALUES (1, 1, 1, "Bot A", "Description Bot A", "image.png", "FC:F5:C4:2F:45:5C"), (2, 2, 2, "Bot B", "Description Bot B", "image.png", "F0:08:D1:D1:72:A0"), (3, 3, 3, "Bot C", "Description Bot C", "image.png", "84:CC:A8:7A:A2:A8"), (4, 4, 4, "Bot D", "Description Bot D", "image.png", " 24:0A:C4:61:A6:88"), (5, 5, 5, "Bot E", "Description Bot E", "image.png", "84:CC:A8:7A:AF:D8");
 
 INSERT INTO `team` (id, botId, name) VALUES (1, 1, "INF1A"), (2, 2, "INF1B"), (3, 3, "INF1C"), (4, 4, "INF1D"), (5, 5, "INF1E");
 

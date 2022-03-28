@@ -24,9 +24,7 @@ ws.addEventListener("open", () => {
 
         if (res.msg) {
             showMessage(res);
-        } else if (res.amountOfWatchers) {
-            showAmoutnOfWatchers(res.amountOfWatchers);
-        }
+        } 
     })
 
 })
