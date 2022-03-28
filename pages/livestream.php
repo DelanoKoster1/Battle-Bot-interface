@@ -22,8 +22,10 @@
 
     <?php 
         if (isset($_POST['submitAnswer'])) {
-            pollQuestionAnswer($_POST['questionAnswer']);
-            pollAddUser($_SESSION['username'],$_POST['questionAnswer']); 
+            if (!empty($_POST['questionAnswer'])) {
+                pollQuestionAnswer();
+                pollAddUser($_SESSION['username'],$_POST['questionAnswer']); 
+            }
         }
     ?>
 

@@ -7,7 +7,7 @@ include_once('../functions/function.php');
 
 <head>
     <?php
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -22,36 +22,35 @@ include_once('../functions/function.php');
         <?php includeHeader('page'); ?>
     </section>
 
-    <main id='events'>
-        <div class='containter height py-4'>
-            <div class="row">
-                <div class="col-12 mb-2 text-center">
-                    <h3>Geschiedenis</h3>
-                </div>
+    <div class='container height py-4'>
+        <div class="row">
+            <div class="col-12 mb-2 text-center">
+                <h3>Geschiedenis</h3>
             </div>
+        </div>
 
-            <div class="row m-auto eventShowBox">
-                <?php 
-                    $query = "SELECT id, name, description, date, stream
+        <div class="row m-auto eventShowBox">
+            <?php
+            $query = "SELECT id, name, description, date, stream
                             FROM event 
                             where date < now()
                             ";
-            
-                    $historyResults = stmtExec($query);
-            
-            
-            
-                    if (!empty($historyResults["id"])) {
-                        $ids = $historyResults["id"];
-            
-                        for ($i = 0; $i < count($ids); $i++) {
-                            $name = $historyResults["name"][$i];
-                            $id = $historyResults["id"][$i];
-                            $description = $historyResults["description"][$i];
-                            $date = $historyResults["date"][$i];
-                            $date = $historyResults["date"][$i];
-            
-                            echo '
+
+            $historyResults = stmtExec($query);
+
+
+
+            if (!empty($historyResults["id"])) {
+                $ids = $historyResults["id"];
+
+                for ($i = 0; $i < count($ids); $i++) {
+                    $name = $historyResults["name"][$i];
+                    $id = $historyResults["id"][$i];
+                    $description = $historyResults["description"][$i];
+                    $date = $historyResults["date"][$i];
+                    $date = $historyResults["date"][$i];
+
+                    echo '
                             <div class="col-sm-3 mb-4">
                                 <div class="card eventsCard">
                                     <div class="card-body">
@@ -63,11 +62,12 @@ include_once('../functions/function.php');
                                     </div>
                                 </div>
                             </div>';
-                        }
-                    }
-                ?>
-            </div>
-    </main>
+                }
+            }
+            ?>
+        </div>
+    </div>
+
     <footer class="navbar">
         <?php include_once('../components/footer.php') ?>
     </footer>

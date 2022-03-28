@@ -821,7 +821,7 @@ function pollUserCheck($username, $givenAnswer)
     $usersOffAccount = stmtExec($checkUserAccount, 0, $username);
 
     if (empty($usersOffPoll['userName'])) {
-        return "test2";
+
         $query =  "INSERT INTO `poll-outcome` (userName,`givenAnswer`)
                    VALUES (?,?)
                   ";
@@ -843,7 +843,6 @@ function pollUserCheck($username, $givenAnswer)
         }
     } else {
         foreach ($usersOffPoll['userName'] as $userResponse) {
-            //return debug($userResponse);
             foreach ($usersOffAccount['username'] as $userAccount) {
                 if (ucfirst(strtolower($userResponse)) != ucfirst(strtolower($userAccount))) {
                     return true;
