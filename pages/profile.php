@@ -85,6 +85,19 @@ $results = getProfileInfo();
                     <div class="col-12">
                         <h1 class="text-center bg-white w-100 pt-5 mb-3">Welkom, <?= $results['username'][0] ?></h1>
                     </div>
+                    <?php
+                    if($_SESSION['role'] == 2){
+                    ?>
+                    <div class="col-12 text-center mb-3">
+                        <span>
+                        <a class="text-body" href="./addAdmin.php">
+                            <span class="material-icons align-middle">add</span>
+                            admin Toevoegen</a></span>
+                    </div>
+                    <?php
+                    }
+                    ?>
+
                     <div class="col-12">
                         <?php
                         if (isset($_POST['save']) && !empty($error)) {
