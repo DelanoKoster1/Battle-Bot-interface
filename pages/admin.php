@@ -57,7 +57,10 @@ switch (true) {
         $headerTitle = 'Team aanmaken';
         $content = "../components/admin/createTeam.php";
         break;
-
+    case isset($_GET['test']):
+        $headerTitle = 'Test';
+        $content = "../components/admin/test.php";
+        break;
     default:
         $headerTitle = 'Evenement toevoegen';
         $content = "../components/admin/event.php";
@@ -454,6 +457,9 @@ if (isset($_POST['stopEvent'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?createTeam">Team aanmaken</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?test">Test</a>
                         </li>
                     </ul>
                 </nav>

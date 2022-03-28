@@ -40,7 +40,6 @@
     <h4 style="text-align: center; margin: 10px; padding: 10px;">Huidige games</h4>
 
     <div class="games">
-        
     </div>
     
 </div>

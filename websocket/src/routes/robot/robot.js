@@ -6,7 +6,7 @@ const wss = new WebSocket.Server({
     port: 3003
 });
 
-let games = [];
+var games = [];
 
 wss.on('connection', (client, req) => {
     console.info("Total connected clients:", wss.clients.size);
@@ -22,6 +22,8 @@ wss.on('connection', (client, req) => {
                 case "login":
                     if (body.key == "111") {
                         setAttributeToClient("role", "admin", client);
+                        let body = {"games": []}
+                        // client.send(JSON.stringify(games))
                     } else {
                         setAttributeToClient("role", "bot", client);
                     }
@@ -64,7 +66,7 @@ wss.on('connection', (client, req) => {
                                         bot.status = body.status
                                         // send games to admins
                                         sendMessageToInterface({
-                                            "games": games
+                                            "games": games["all"]
                                         })
                                 }
 
@@ -216,7 +218,7 @@ function sendActionToAllBots(game, action) {
     sendMessageToInterface({
         "status": true,
         "action": action,
-        "games": games,
+        "games": games["all"],
         "for": "all"
     })
 }

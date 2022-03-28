@@ -1,4 +1,4 @@
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 let selectBot = document.querySelector('#selectBot');
 let selectGame = document.querySelector('#selectGame');
@@ -43,7 +43,7 @@ ws.addEventListener("open", () => {
         console.log(data);
         
         if(data.games){
-            createGameCard(game)
+            createGameCard(data.games)
         }
     })
 
@@ -51,7 +51,27 @@ ws.addEventListener("open", () => {
 
 
 function createGameCard(game){
+    var gameDiv;
+    if(!document.getElementById(`${game.game}`)){
+        gameDiv = document.createElement('div');
+    }else { 
+        gameDiv = document.getElementById(`${game.game}`)
+    }
 
+    let h4 = document.createElement('h4');
+    h4.innerHTML = game.game;
+
+    let p = document.createElement('p');
+    p.innerHTML = game.action;
+
+    let button = document.createElement('button');
+    button.setAttribute('class', 'btn btn-primary');
+    button.innerHTML = game.action;
+
+    gameDiv.appendChild(h4);
+    gameDiv.appendChild(p);
+    gameDiv.appendChild(button);
+    gamesDiv.appendChild(gameDiv);
 }
 
 function sendAction(message){
