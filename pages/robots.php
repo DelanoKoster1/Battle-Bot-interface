@@ -21,25 +21,25 @@
     <div class="container-fluid">
         <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
-            $conn = connectDB();
+            $query = "SELECT bot.id, 
+                                bot.name, 
+                                bot.imagePath 
+                    FROM bot 
+                    INNER JOIN team ON team.botId = bot.id 
+                    INNER JOIN specs ON specs.id = bot.specsId 
+                    INNER JOIN stats ON stats.id = bot.statsId";
 
-            $query = "SELECT bot.id, bot.name, bot.specsId, bot.imagePath FROM bot INNER JOIN team ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId";
+            $results = stmtExec($query);
 
-            $stmt = mysqli_prepare($conn, $query);
-
-            if (!$stmt) {
+            if (empty($results)) {
                 header('location ../components/error.php');
             }
 
-            if (!mysqli_stmt_execute($stmt)) {
-                header('location ../components/error.php');
-            }
+            for($i = 0; $i < count($results["bot.id"]); $i++) {
 
-            mysqli_stmt_bind_result($stmt, $botId, $botName, $botSpecId, $botimagePath);
+                $botName = $results["bot.name"][$i];
+                $botimagePath = $results["bot.imagePath"][$i];
 
-            mysqli_stmt_store_result($stmt);
-
-            while (mysqli_stmt_fetch($stmt)) {
                 if ($botimagePath === "image.png") $botimagePath = "../assets/img/bot.svg";
 
                 echo ' 
@@ -59,9 +59,6 @@
                     </div>
                 ';
             }
-
-            mysqli_stmt_close($stmt);
-            mysqli_close($conn);
             ?>
         </div>
 
