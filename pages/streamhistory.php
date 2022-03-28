@@ -57,7 +57,7 @@ include_once('../functions/function.php');
                                     <div class="card-body">
                                         <span class="calendarDate d-block text-lowercase">' . formatdate($date) . '</span>
                                         <span class="calendarTitle d-block text-capitalize">
-                                            <a class="stretched-link" href="watchBack.php?id=' . $id . '">' . $name . '</a>
+                                            <a class="stretched-link" href="watchback.php?id=' . $id . '">' . $name . '</a>
                                         </span>
                                         <span class="calendarInfo mt-4 d-block">' . $description . '</span>
                                     </div>

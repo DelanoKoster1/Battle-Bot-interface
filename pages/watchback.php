@@ -29,18 +29,26 @@ include_once('../functions/function.php');
      * 
      */
 
-    $query = "SELECT id, name
-              FROM streamhistory 
-              where id = 1
+    $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
+
+    $query = "SELECT name, stream, date
+              FROM event 
+              where id = ?
               ";
 
-    $historyResults = stmtExec($query);
-    ?>
+    $historyResults = stmtExec($query, 0, $id);
 
-    <video width="250"  autoplay muted controls id="VideoPlayback">
-        <source src="/Project Battle Bot/Battle-Bot-interface/assets/video/Purple_Disco_Machine,_Sophie_and_the_Giants_-_In_The_Dark.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    $name = $historyResults["name"][0];
+    $date = $historyResults["date"][0];
+    $stream = $historyResults["stream"][0];
+    ?>
+    <div>
+        <h1><?=$name?> - <?=formatdate($date)?></h1>
+        <video width="250"  autoplay muted controls id="VideoPlayback">
+            <source src="../assets/video/<?=$stream?>" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
 
     <footer class="navbar">
         <?php include_once('../components/footer.php') ?>
