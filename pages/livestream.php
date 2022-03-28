@@ -97,7 +97,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close close btn btn-success" data-dismiss="modal" aria-hidden="true"><span class="glyphicon glyphicon-remove" aria-hidden="true">X</span></button>
-                    <h4 class="modal-title custom_align" id="Heading">Stem voor een robot</h4>
+                    <h4 class="modal-title custom_align" id="Heading">Stem Nu!</h4>
                 </div>
                 <div class="modal-body">
                     <form method="post" id="formBot" action="">
@@ -107,7 +107,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" form="formBot" name="submitAnswer" class="btn btn-warning btn-lg" style="width: 100%;">
+                    <input type="submit" form="formBot" name="submitAnswer" class="btn btn-warning btn-lg" value="stem nu!" style="width: 100%;">
                 </div>
             </div>
             <!-- /.modal-content -->

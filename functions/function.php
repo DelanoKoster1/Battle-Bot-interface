@@ -645,8 +645,8 @@ function getLivestream()
         ';
 }
 
-function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
-{
+//this function is there to activate another function if conditions are met
+function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) { 
 
     if (!empty($question)) {
         if ($questionType == "multiChoice") {
@@ -663,8 +663,8 @@ function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answ
     }
 }
 
-function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4)
-{
+//this function INSERTS a question into the database if certain conditions are met
+function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -688,9 +688,9 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
     }
 }
 
-function yesOrNoPoll($question, $questionType, $answer1, $answer2)
-{
-
+//this function INSERTS a question into the database if certain conditions are met
+function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
+    
     if (!empty($answer1)) {
         if (!empty($answer2)) {
             $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
@@ -705,8 +705,8 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2)
     }
 }
 
-function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
-{
+//this function INSERTS a question into the database if certain conditions are met
+function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -734,8 +734,9 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
     }
 }
 
-function retrieveQuestionInfo()
-{
+//this function retrieves the question and answers from the database if the conditions are met
+//it shows all possible answers depending on which question is retrieved
+function retrieveQuestionInfo() {
 
     $query = "SELECT    question, answer1, answer2, answer3, answer4, answer5, active 
               FROM      poll
@@ -746,45 +747,150 @@ function retrieveQuestionInfo()
 
     $questionnaire = "";
 
-    if ($results['active'][0] != NULL) {
+    if (!empty($results['active'][0])) {
+        if ($results['active'][0] != NULL) {
 
-        $questionnaire .= '<h4>De vraag luid: ' . $results['question'][0] . '</h4>';
-        $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer1'][0] . '">';
-        $questionnaire .= '<label class="custom-control-label" for="question1">' . $results['answer1'][0] . '</label> <br>';
-        $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer2'][0] . '">';
-        $questionnaire .= '<label class="custom-control-label" for="question2">' . $results['answer2'][0] . '</label> <br>';
-        if ($results['answer3'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer3'][0] . '">';
-            $questionnaire .= '<label class="custom-control-label" for="question3">' . $results['answer3'][0] . '</label> <br>';
+            $questionnaire .= '<h4>De vraag luid: '. $results['question'][0] .'</h4>';
+            $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer1'][0] .'">';
+            $questionnaire .= '<label class="custom-control-label" for="question1">'. $results['answer1'][0] .'</label> <br>';
+            $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer2'][0] .'">';
+            $questionnaire .= '<label class="custom-control-label" for="question2">'. $results['answer2'][0] .'</label> <br>';
+            if ($results['answer3'][0] != NULL) {
+                $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer3'][0] .'">';
+                $questionnaire .= '<label class="custom-control-label" for="question3">'. $results['answer3'][0] .'</label> <br>';
+            }
+            if ($results['answer4'][0] != NULL) {
+                $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer4'][0] .'">';
+                $questionnaire .= '<label class="custom-control-label" for="question4">'. $results['answer4'][0] .'</label> <br>';
+            }
+            if ($results['answer5'][0] != NULL) {
+                $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="'. $results['answer5'][0] .'">';
+                $questionnaire .= '<label class="custom-control-label" for="question5">'. $results['answer5'][0] .'</label> <br>';
+            }
+    
+            return $questionnaire;
+    
+        } else {
+            return "<h4>Er is momenteel geen poll gaande.</h4>";
         }
-        if ($results['answer4'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer4'][0] . '">';
-            $questionnaire .= '<label class="custom-control-label" for="question4">' . $results['answer4'][0] . '</label> <br>';
-        }
-        if ($results['answer4'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer5'][0] . '">';
-            $questionnaire .= '<label class="custom-control-label" for="question5">' . $results['answer5'][0] . '</label> <br>';
-        }
-
-        return $questionnaire;
     } else {
         return "<h4>Er is momenteel geen poll gaande.</h4>";
     }
 }
 
+function pollUserCheck($username, $givenAnswer) {
 
-function pollAddUser($username, $givenAnswer)
-{
+    $checkUserPoll = "SELECT    userName
+                      FROM      `poll-outcome` 
+                     ";
 
-    $query = "INSERT INTO `poll-outcome` (`userName`,`givenAnswer`)
-              VALUES (?,?)
-             ";
+    $usersOffPoll = stmtExec($checkUserPoll);
 
-    stmtExec($query, 0, $username, $givenAnswer);
+    $checkUserAccount = "SELECT    username
+                         FROM      `account`
+                         WHERE     username = ?  
+                        ";
+
+    $usersOffAccount = stmtExec($checkUserAccount,0, $username);
+
+    if (empty($usersOffPoll['userName'])) {
+        return "test2";
+        $query =  "INSERT INTO `poll-outcome` (userName,`givenAnswer`)
+                   VALUES (?,?)
+                  ";
+
+        if (!empty($username) && !empty($givenAnswer)) {
+            stmtExec($query, 0, $username, $givenAnswer);
+
+            $getInsertedUser = "SELECT  userName
+                                FROM    `poll-outcome`   
+                               ";
+
+            $users = stmtExec($getInsertedUser);
+
+            $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
+
+            foreach ($users['userName'] as $user) {
+                stmtExec($insertPoints, 0, $user);
+            }
+        }
+    } else {
+        foreach ($usersOffPoll['userName'] as $userResponse) {
+            //return debug($userResponse);
+            foreach ($usersOffAccount['username'] as $userAccount) {
+                if (ucfirst(strtolower($userResponse)) != ucfirst(strtolower($userAccount))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
+
+} 
+
+//this function adds a user which has answered a question of the poll within that moment
+function pollAddUser($username, $givenAnswer) {
+
+    //return debug(pollUserCheck($username, $givenAnswer));
+
+    if (pollUserCheck($username, $givenAnswer) == true) {
+
+        $query = "INSERT INTO `poll-outcome` (userName,`givenAnswer`)
+                  VALUES (?,?)
+                ";
+        
+        if (!empty($username) && !empty($givenAnswer)) {
+            stmtExec($query, 0, $username, $givenAnswer);
+
+            $getInsertedUser = "SELECT  userName
+                                FROM    `poll-outcome`   
+                            ";
+            
+            $users = stmtExec($getInsertedUser);
+
+            $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
+
+            foreach ($users['userName'] as $user) {
+                stmtExec($insertPoints, 0, $user);
+            }
+        }
+    }
 }
 
-function pollQuestionAnswer()
-{
+//this function ends the poll which has been activated
+function endPoll() {
+
+    $changeActive = "UPDATE `poll` SET active = NULL WHERE active = 1";
+
+    stmtExec($changeActive,0);
+
+    $deletePollOutcome = "TRUNCATE TABLE `poll-outcome`";
+
+    stmtExec($deletePollOutcome,0);
+}
+
+//this function checks if there is a poll and shows an input if the conditions have been met
+function checkIfPoll() {
+    $checkIfPoll = "SELECT  active
+                    FROM    poll    
+                   ";
+
+    $getActive = stmtExec($checkIfPoll);
+
+    if (!empty($getActive['active'])) {
+        foreach ($getActive['active'] as $active) {
+            if ($active == 1) {
+                return '<input type="submit" name="endPoll" class="btn btn-danger mt-3" value="eindig poll" />';
+            } else {
+                return "geen poll aanwezig";
+            }
+        }
+    }
+}
+
+//this function shows the answers of the user who have participated in the poll in percentage
+function pollQuestionAnswer() {
 
     $voteArray = [];
 
@@ -794,8 +900,11 @@ function pollQuestionAnswer()
 
     $results = stmtExec($query);
 
-    foreach ($results['givenAnswer'] as $postQuestion) {
-        array_push($voteArray, $postQuestion);
+    if (!empty($results['givenAnswer'])) {
+
+        foreach ($results['givenAnswer'] as $postQuestion) {
+            array_push($voteArray, $postQuestion);
+        }
     }
 
     $values = array_count_values($voteArray);
