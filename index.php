@@ -3,9 +3,8 @@
 
 <head>
     <?php
-    include_once('components/head.html');
     include_once('functions/function.php');
-    ?>
+    includeHead('index'); ?>
     <link href="assets/img/logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/footer.css">
@@ -53,11 +52,11 @@
                                 $id = $ids[$i];
                                 $imgPath = $dbResults["imagePath"][$i];
 
-                                if ($imgPath === "image.png") $imgPath = "assets\img\bot.svg";
+                                if ($imgPath === null) $imgPath = "assets\img\bot.svg";
                                 $name = $dbResults["name"][$i];
                                 echo "
                                 <div class='card'>
-                                    <img src='$imgPath' class='img-fluid card-img-top' alt='$name'>
+                                    <img src='./$imgPath' class='img-fluid card-img-top' alt='$name'>
                                     <div class='card-body'>
                                         <h5 class='card-title text-center'><a href='pages/robots.php?botName=$name' class='stretched-link'>$name</a></h5>
                                     </div>

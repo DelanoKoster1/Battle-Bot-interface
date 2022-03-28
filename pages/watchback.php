@@ -7,7 +7,7 @@ include_once('../functions/function.php');
 
 <head>
     <?php
-    include_once('../components/head.html');
+    includeHead('page'); 
     ?>
 
     <link rel="stylesheet" href="../assets/css/style.css">

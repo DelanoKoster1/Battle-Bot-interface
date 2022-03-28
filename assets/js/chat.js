@@ -1,8 +1,7 @@
-const ws = new WebSocket(`ws://${getDomainName()}:3002/websocket/src/websocket/chat`);
+const ws = new WebSocket(`ws://${getDomainName()}:3002/websocket/client/chat`);
 let chatInput = document.getElementById('chatMessage');
 let chatButton = document.getElementById('button-addon2');
 let username = document.getElementById('username').value;
-
 ws.addEventListener("open", () => {
 
     chatInput.addEventListener("keyup", (e) => {
@@ -32,7 +31,6 @@ ws.addEventListener("open", () => {
 
 })
 
-
 function sendMsgToWS() {
     if (chatInput.value.trim() != "") {
         let body = {
@@ -42,14 +40,10 @@ function sendMsgToWS() {
 
         body.msg = chatInput.value;
         chatInput.value = "";
+        
         showMessage(body);
         ws.send(JSON.stringify(body));
     }
-}
-
-
-function showAmoutnOfWatchers(watchers) {
-
 }
 
 function showMessage(data) {
@@ -64,9 +58,18 @@ function showMessage(data) {
     spanMessage.setAttribute('class', 'message');
 
     spanUsername.innerHTML = data.username + ": ";
-    spanMessage.innerHTML = data.msg;
+    spanMessage.innerHTML = escapeHtml(data.msg);
 
     chatLine.appendChild(div);
     div.appendChild(spanUsername);
     div.appendChild(spanMessage);
 }
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+  }

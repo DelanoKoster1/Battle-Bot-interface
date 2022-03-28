@@ -51,6 +51,10 @@ if (isset($_POST['login'])) {
             $error[] = 'Er is geen gebruiker gevonden met deze gebruikersnaam!';
         }
     }
+
+    if(!empty($error)) {
+        $_SESSION['ERROR_MESSAGE'] = $error;
+    }
 }
 
 //Check if submitted
@@ -102,7 +106,7 @@ if (isset($_POST['register'])) {
 
 <head>
     <?php
-    include_once('../components/head.html');
+    includeHead('page'); 
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">

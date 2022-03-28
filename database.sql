@@ -65,15 +65,9 @@ CREATE TABLE IF NOT EXISTS `event` (
     description VARCHAR(999) NOT NULL,
     type enum('public','private') NOT NULL,
     active boolean not NULL,
+    stream VARCHAR(50),
 
     CONSTRAINT pk_event PRIMARY KEY (id)
-);
-
-CREATE TABLE IF NOT EXISTS `streamhistory` (
-    id INT NOT NULL AUTO_INCREMENT,
-    name VARCHAR(255) NOT NULL,
-    weburl VARCHAR(255) NOT NULL,
-    CONSTRAINT pk_history PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS `team-event` (
@@ -96,8 +90,7 @@ INSERT INTO `team` (id, botId, name) VALUES (1, 1, "INF1A"), (2, 2, "INF1B"), (3
 
 INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES (1, 0, 1, "User", "$2y$10$aGQ8W0VZuImV2hrYKq3HdO2sGSnDip3X.WekIXwgq0vk1tLlKak.6", "user1@battlebot.nl"), (2, 0, 2, "Admin", "$2y$10$0CG/LGUl/KgxUQFGBzqkUOXHFoNL03jQY9JKbq6KrXGO3R9/vcusC", "admin@battlebot.nl");
 
-INSERT INTO `event` (id, name, date, description) VALUES (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!");
+INSERT INTO `event` (id, name, date, description, stream) VALUES (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!", "")
+                                                        ,(2, "Past Event", "2022-01-01 08:30:00", "The Past BattleBot Event!", "Purple_Disco_Machine,_Sophie_and_the_Giants_-_In_The_Dark.mp4");
 
 INSERT INTO `team-event` (eventId, teamId) VALUES (1, 1);
-
-INSERT INTO `streamhistory` (`id`, `name`, `weburl`) VALUES (NULL, 'Stream van maandag 11 januari', 'Project Battle Bot/Battle-Bot-interface/assets/video/Purple_Disco_Machine,_Sophie_and_the_Giants_-_In_The_Dark.mp4');
