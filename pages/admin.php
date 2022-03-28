@@ -253,15 +253,39 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
     
     foreach ($_POST as $radioTeamId => $assignedPoints) {
         if (isset($_POST[$radioTeamId])) {
-            $sql = "UPDATE `team-event` SET points = points + ? WHERE teamId = ?";
+            switch($_POST[$radioTeamId]) {
+                case 25:
+                    $sql = "UPDATE `team-event` 
+                            JOIN stats ON `team-event`.teamId = stats.id 
+                            SET points = points + ?, wins = wins + 1, playedMatches = playedMatches + 1 
+                            WHERE `team-event`.teamId = ?";
+                    break;
+                default:
+                    $sql = "UPDATE `team-event` 
+                            JOIN stats ON `team-event`.teamId = stats.id 
+                            SET points = points + ?, playedMatches = playedMatches + 1
+                            WHERE `team-event`.teamId = ?";
+                    break;
+            }
         }
 
         if (isset($_POST[$radioTeamId . 'submit'])) {
             if (is_numeric($_POST[$radioTeamId])) {
                 $assignedPoints = $_POST[$radioTeamId];
-                $sql = "UPDATE `team-event` SET points = ? WHERE teamId = ?";
+                switch($assignedPoints) {
+                    case 0:
+                        $sql = "UPDATE `team-event` 
+                                JOIN stats ON `team-event`.teamId = stats.id
+                                SET points = ?, wins = 0, playedMatches = 0
+                                WHERE `team-event`.teamId = ?";
+                        break;
+                    default:
+                        $sql = "UPDATE `team-event` 
+                                SET points = ? 
+                                WHERE teamId = ?";
+                }
             } else {
-                $error[] = "Vul een getal in!";
+                $_SESSION['ERROR_MESSAGE'] = "Vul een getal in die kleiner of gelijk is aan 75";
             }
         }
 
