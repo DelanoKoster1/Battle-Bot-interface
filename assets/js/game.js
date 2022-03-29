@@ -23,14 +23,24 @@ selectBotBtn.addEventListener('click', (ev) => {
 selectGame.addEventListener('change', (ev) => {
     selectedGame = selectGame.value;
     selectGameDiv.setAttribute('class', 'd-none');
-    selectGame.value = "";
     selectBotDiv.setAttribute('class', '');
-    sendAction({
-        "action": "prepare",
-        "game": selectedGame,
-        "for": getSelectValues(selectBot)
-    })
+    result = getSelectValues(selectBot);
+
+    result.forEach(botAdres => {
+        sendAction({
+            "action": "prepare",
+            "game": selectedGame,
+            "for": botAdres
+        })
+    });
 })
+
+document.addEventListener('click',function(e){
+    if(e.target && e.target.id == 'preparing_game'){
+        let btn = document.getElementById('preparing_game');
+        btn.setAttribute("disabled", true)
+     }
+ });
 
 ws.addEventListener("open", () => {
 
@@ -45,7 +55,9 @@ ws.addEventListener("open", () => {
         console.log(data);
         
         if(data.games){
-            createGameCard(data.games)
+            console.log(data.games);
+            clearGameCard();
+            createGameCard(data.games, false);
         }
     })
 
@@ -56,24 +68,50 @@ function createGameCard(game){
     var gameDiv;
     if(!document.getElementById(`${game.game}`)){
         gameDiv = document.createElement('div');
+        gameDiv.setAttribute('class','card mb-3');
     }else { 
         gameDiv = document.getElementById(`${game.game}`)
     }
+    
+    let gameBody = document.createElement('div');
+    gameBody.setAttribute('class','card-body')
 
     let h4 = document.createElement('h4');
     h4.innerHTML = game.game;
 
     let p = document.createElement('p');
-    p.innerHTML = game.action;
+    p.innerHTML = "Status: " + game.action;
 
     let button = document.createElement('button');
-    button.setAttribute('class', 'btn btn-primary');
-    button.innerHTML = game.action;
+    button.setAttribute('class', 'btn btn-primary float-end');
+    
+    if (game.action == "preparing_game") {
+        button.setAttribute('id', 'preparing_game');
+    }else {
+        button.setAttribute('id', 'start');
+    }
 
-    gameDiv.appendChild(h4);
-    gameDiv.appendChild(p);
-    gameDiv.appendChild(button);
+    button.innerHTML = game.action;
+    let p2 = document.createElement('p');
+    p2.innerHTML = "Bots: ";
+
+    gameBody.appendChild(h4);
+    gameBody.appendChild(p);
+    gameBody.appendChild(p2);
+
+    game.bots.forEach(bot => {
+        let p = document.createElement('p');
+        p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
+        gameBody.appendChild(p);
+    });
+
+    gameBody.appendChild(button);
+    gameDiv.appendChild(gameBody);
     gamesDiv.appendChild(gameDiv);
+}
+
+function clearGameCard() {
+ document.getElementById('gameContainer').innerHTML = "";
 }
 
 function sendAction(message){
@@ -93,4 +131,14 @@ function getSelectValues(select) {
       }
     }
     return result;
-  }
+}
+
+function botAdresToName(adres) {
+    let selectBot = document.querySelector('#selectBot');
+
+    for (i = 0; i < selectBot.length; i++) { 
+        if (selectBot.options[i].value == adres) {
+            return selectBot.options[i].text
+        }
+    }
+}
