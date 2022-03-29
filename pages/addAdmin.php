@@ -16,9 +16,9 @@ if (isset($_POST['toAdmin'])) {
     ";
     if(stmtExec($query, 0, $id))
     {
-        $_SESSION['succes'] = "Succesvol de rol aangepast naar Admin";
+        $_SESSION['succes'] = "De rol is succesvol aangepast naar Admin!";
     }else{
-        $_SESSION['ERROR_MESSAGE'] = "De rol is niet aangepast probeer het opniew.";
+        $_SESSION['ERROR_MESSAGE'] = "!De rol kon niet aangepast worden, probeer het opnieuw!";
     }
 }
 
@@ -30,9 +30,9 @@ if (isset($_POST['toUser'])) {
     ";
     if(stmtExec($query, 0, $id))
     {
-        $_SESSION['succes'] = "Succesvol de rol aangepast naar Gebruiker";
+        $_SESSION['succes'] = "De rol is succesvol aangepast naar Gebruiker!";
     }else{
-        $_SESSION['ERROR_MESSAGE'] = "De rol is niet aangepast probeer het opniew.";
+        $_SESSION['ERROR_MESSAGE'] = "De rol kon niet aangepast worden, probeer het opnieuw!";
     }
 }
 ?>
@@ -55,12 +55,12 @@ if (isset($_POST['toUser'])) {
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
-    <div class="container height py-4">
+    <div class="container bg-white w-50 height py-4">
         <div class="row">
             <?php
             if (!empty($_SESSION['succes'])) {
             ?>
-                <div class="col-md-12 p-0">
+                <div class="col-md-12">
                     <div class="alert alert-success text-black fw-bold p-4 rounded-0" role="alert">
                         <ul class="mb-0">
                             <?php
@@ -98,10 +98,10 @@ if (isset($_POST['toUser'])) {
                 <table class="table table-responisve">
                     <thead>
                         <tr>
-                            <td class="align-middle">id</td>
-                            <td class="align-middle">username</td>
+                            <td class="align-middle">ID</td>
+                            <td class="align-middle">Username</td>
                             <td class="align-middle">Huidige rol</td>
-                            <td class="align-middle">admin</td>
+                            <td class="align-middle">Nieuwe rol</td>
                         </tr>
                     </thead>
                     <tbody>

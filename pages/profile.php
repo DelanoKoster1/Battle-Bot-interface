@@ -92,7 +92,7 @@ $results = getProfileInfo();
                         <span>
                         <a class="text-body" href="./addAdmin.php">
                             <span class="material-icons align-middle">add</span>
-                            admin Toevoegen</a></span>
+                            Administrator Toevoegen</a></span>
                     </div>
                     <?php
                     }
