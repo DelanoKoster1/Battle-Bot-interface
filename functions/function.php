@@ -1248,7 +1248,7 @@ function getActiveEvent()
 {
     $sql = "SELECT teamId, points, team.`name`, eventId 
     FROM `team-event` 
-    JOIN team ON team.id = `team-event`.teamId
+    JOIN team ON teamId = `team-event`.teamId
     JOIN `event` ON `team-event`.eventId = `event`.id
     WHERE `event`.active = 1";
 
