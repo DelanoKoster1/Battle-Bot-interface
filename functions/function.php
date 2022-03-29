@@ -809,10 +809,10 @@ function retrieveQuestionInfo()
 
             return $questionnaire;
         } else {
-            return "<h4>Er is op het moment geen poll actief!</h4>";
+            return "<h5 class='alert alert-danger mt-3'>Er is op het moment geen poll actief!</h5>";
         }
     } else {
-        return "<h4>Er is op het moment geen poll actief!</h4>";
+        return "<h5 class='alert alert-danger mt-3'>Er is op het moment geen poll actief!</h5>";
     }
 }
 
@@ -1248,7 +1248,7 @@ function getActiveEvent()
 {
     $sql = "SELECT teamId, points, team.`name`, eventId 
     FROM `team-event` 
-    JOIN team ON teamId = `team-event`.teamId
+    JOIN team ON team.id = `team-event`.teamId
     JOIN `event` ON `team-event`.eventId = `event`.id
     WHERE `event`.active = 1";
 
