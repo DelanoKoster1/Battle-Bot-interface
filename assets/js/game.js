@@ -1,6 +1,7 @@
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 let selectBot = document.querySelector('#selectBot');
+let selectBotBtn = document.querySelector('#selectBotBtn');
 let selectGame = document.querySelector('#selectGame');
 
 let selectBotDiv = document.querySelector('#bot');
@@ -11,12 +12,13 @@ let gamesDiv = document.querySelector('.games');
 let selectedBot;
 let selectedGame;
 
-selectBot.addEventListener('change', (ev) => {
-    selectedBot = selectBot.value;
+selectBotBtn.addEventListener('click', (ev) => {
+    console.log(getSelectValues(selectBot));
     selectBotDiv.setAttribute('class', 'd-none');
-    selectBot.value = "";
     selectGameDiv.setAttribute('class', '');
 })
+
+
 
 selectGame.addEventListener('change', (ev) => {
     selectedGame = selectGame.value;
@@ -26,7 +28,7 @@ selectGame.addEventListener('change', (ev) => {
     sendAction({
         "action": "prepare",
         "game": selectedGame,
-        "for": selectedBot
+        "for": getSelectValues(selectBot)
     })
 })
 
@@ -77,3 +79,18 @@ function createGameCard(game){
 function sendAction(message){
     ws.send(JSON.stringify(message));
 }
+
+function getSelectValues(select) {
+    var result = [];
+    var options = select && select.options;
+    var opt;
+  
+    for (let i=0, iLen=options.length; i<iLen; i++) {
+      opt = options[i];
+  
+      if (opt.selected) {
+        result.push(opt.value);
+      }
+    }
+    return result;
+  }
