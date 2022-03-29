@@ -1,0 +1,158 @@
+<?php
+include_once('../functions/function.php');
+
+global $error;
+
+if (!isset($_SESSION['email'])) {
+    header('location: ../components/error.php');
+}
+
+
+if (isset($_POST['toAdmin'])) {
+    $id = filter_input(INPUT_POST, 'toAdmin', FILTER_SANITIZE_NUMBER_INT);
+    $query = "UPDATE account
+            SET roleId = 2
+            WHERE id = ?
+    ";
+    if(stmtExec($query, 0, $id))
+    {
+        $_SESSION['succes'] = "Succesvol de rol aangepast naar Admin";
+    }else{
+        $_SESSION['ERROR_MESSAGE'] = "De rol is niet aangepast probeer het opniew.";
+    }
+}
+
+if (isset($_POST['toUser'])) {
+    $id = filter_input(INPUT_POST, 'toUser', FILTER_SANITIZE_NUMBER_INT);
+    $query = "UPDATE account
+            SET roleId = 1
+            WHERE id = ? 
+    ";
+    if(stmtExec($query, 0, $id))
+    {
+        $_SESSION['succes'] = "Succesvol de rol aangepast naar Gebruiker";
+    }else{
+        $_SESSION['ERROR_MESSAGE'] = "De rol is niet aangepast probeer het opniew.";
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <?php
+    includeHead('page');
+    ?>
+    <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/footer.css">
+    <link rel="stylesheet" href="../assets/css/profile.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <title>Admin toevoegen - Battlebots</title>
+</head>
+
+<body class="bg-light">
+    <section id="header">
+        <?php includeHeader('page'); ?>
+    </section>
+    <div class="container height py-4">
+        <div class="row">
+            <?php
+            if (!empty($_SESSION['succes'])) {
+            ?>
+                <div class="col-md-12 p-0">
+                    <div class="alert alert-success text-black fw-bold p-4 rounded-0" role="alert">
+                        <ul class="mb-0">
+                            <?php
+                            echo '<li>' . $_SESSION['succes'] . '</li>';
+                            $_SESSION['succes'] = '';
+                            ?>
+                        </ul>
+                    </div>
+                </div>
+            <?php
+            }
+            if (!empty($_SESSION['ERROR_MESSAGE'])) {
+                ?>
+                    <div class="row" id="errorBar">
+                        <div class="col-md-12">
+                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
+                                <ul class="mb-0">
+                                    <?php
+                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
+                                        echo '<li>' . $errorMsg . '</li>';
+                                    }
+
+                                    unset($_SESSION['ERROR_MESSAGE']);
+                                    ?>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <?php
+                }
+                ?>
+            <div class="col-md-2"></div>
+            <form class="col-md-8 col-12 bg-white" method="post">
+                <h1 class="text-center">Rol aanpassen</h1>
+                <table class="table table-responisve">
+                    <thead>
+                        <tr>
+                            <td class="align-middle">id</td>
+                            <td class="align-middle">username</td>
+                            <td class="align-middle">Huidige rol</td>
+                            <td class="align-middle">admin</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $query = " SELECT   id,
+                                            username,
+                                            roleId
+                                    FROM    account
+                                    ORDER BY   roleId  DESC                       
+                        ";
+                        $results = stmtExec($query);
+
+                        $ids = $results['id'];
+                        foreach ($ids as $key => $id) {
+                        ?>
+                            <tr>
+                                <td class="align-middle"><?= $id ?></td>
+                                <td class="align-middle"><?= $results['username'][$key] ?></td>
+                                <?php
+                                if ($results['roleId'][$key] == 1) {
+                                ?>
+                                    <td class="align-middle">Gebruiker</td>
+                                <?php
+                                } else {
+                                ?>
+                                    <td class="align-middle">Admin</td>
+                                <?php
+                                }
+                                if ($results['roleId'][$key] == 1) {
+                                ?>
+                                    <td class="align-middle"><button class="btn btn-primary" type="submit" name="toAdmin" value="<?= $id ?>">Admin</button></td>
+                                <?php
+                                } else {
+                                ?>
+                                    <td class="align-middle"><button class="btn btn-success" type="submit" name="toUser" value="<?= $id ?>">Gebruiker</button></td>
+                                <?php
+                                }
+                                ?>
+
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="">
+        <?php include_once("../components/footer.php"); ?>
+    </div>
+</body>
+
+</html>
