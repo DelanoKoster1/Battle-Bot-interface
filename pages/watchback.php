@@ -1,6 +1,5 @@
 <?php
 include_once('../functions/function.php');
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -9,12 +8,11 @@ include_once('../functions/function.php');
     <?php
     includeHead('page'); 
     ?>
-
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/watchback.css">
 
-    <title>Terugkijken</title>
+    <title>Terugkijken - Battlebots</title>
 </head>
 
 <body>
@@ -29,10 +27,10 @@ include_once('../functions/function.php');
      * 
      */
 
-    $query = "SELECT    stream
-                        FROM event 
-              WHERE     date < now()
-                        AND id = ?
+    $query = "SELECT stream
+              FROM event 
+              WHERE date < now()
+              AND id = ?
     ";
 
     $historyResults = stmtExec($query,0, $_GET['id']);

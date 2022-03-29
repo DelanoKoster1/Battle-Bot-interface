@@ -10,24 +10,24 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/robots.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
-    <title>Bot Page</title>
+    <title>Robot pagina - Battlebots</title>
 </head>
 
 <body>
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
-
+    <h1 class="text-center py-4">Robots</h1>
     <div class="container-fluid">
         <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
             $query = "SELECT bot.id, 
-                                bot.name, 
-                                bot.imagePath 
-                    FROM bot 
-                    INNER JOIN team ON team.botId = bot.id 
-                    INNER JOIN specs ON specs.id = bot.specsId 
-                    INNER JOIN stats ON stats.id = bot.statsId";
+                             bot.name, 
+                             bot.imagePath 
+                      FROM bot 
+                      INNER JOIN team ON team.botId = bot.id 
+                      INNER JOIN specs ON specs.id = bot.specsId 
+                      INNER JOIN stats ON stats.id = bot.statsId";
 
             $results = stmtExec($query);
 

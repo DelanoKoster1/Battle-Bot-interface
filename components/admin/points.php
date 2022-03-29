@@ -48,7 +48,7 @@ if(isset($_GET['eventId'])) {
         <div class="row mt-2 d-flex align-content-around">
             <?php foreach($teamPoints as $teamId => $points) { ?>
                 <div class="col-lg-6 d-block d-flex text-left align-items-center">
-                    <span>Points: <?= $points ?></span>
+                    <span>Punten: <?= $points ?></span>
                 </div>
                 <div class="col-lg-6 align-items-center">
                     <form action="" method="post" class="h-100">
@@ -62,16 +62,25 @@ if(isset($_GET['eventId'])) {
 </div>
 <?php
     } else {
-        echo "<h4> Start event om punten toe te kunnen voegen </h3>";
+        $error[] = "Start eerst een evenement om punten toe te kunnen voegen!";
     }
 ?>
 
 <div class="row mt-3">
     <div class="col-12">
-        <a href="admin.php?points" class="btn btn-secondary btn-sm" role="button"> Ga terug</a>
+        <a href="admin.php?points" class="btn btn-secondary btn-sm" role="button">Ga terug</a>
     </div>
 </div>
 
 <?php 
 } 
+if (!empty($error)){
+    foreach ($error as $errorMsg) { ?>
+        <div class="col-md-12 p-0">
+            <div class="alert alert-danger text-center text-black fw-bold p-4 mt-3 mb-3 rounded" role="alert">
+                <?php echo $errorMsg ?>
+            </div>
+        </div><?php
+    }
+}
 ?>

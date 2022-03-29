@@ -269,3 +269,9 @@ header .menu,
     font-size: 11px;
   }
 }
+
+.infotable {
+  text-align: left; 
+  border: 1px solid black; 
+  padding: 5px;
+}

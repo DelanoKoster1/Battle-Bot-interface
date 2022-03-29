@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-12 mb-3">
-                <h6>Battlebot</h6>
+                <h6>Battlebots</h6>
                 <ul class="list-unstyled mt-4">
                     <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? '../index.php' : 'index.php'?>">Voorpagina</a></li>
                     <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'robots.php' : 'pages/robots.php'?>">Robots</a></li>
@@ -22,7 +22,7 @@
                     <?php if(isset($_SESSION['username'])) { ?>
                         <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'profile.php' : 'pages/profile.php'?>">Profiel</a></li>
                     <?php } else { ?>
-                        <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'login.php' : 'pages/login.php'?>">Login/Registeren</a></li>
+                        <li><a class="text-decoration-none nav-link" href="<?= ($_SESSION['sort'] == 'page') ? 'login.php' : 'pages/login.php'?>">Inloggen / Registeren</a></li>
                     <?php } ?>
                 </ul>
             </div>

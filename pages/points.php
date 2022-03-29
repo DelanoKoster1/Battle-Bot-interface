@@ -16,7 +16,7 @@
             $progress += [$teamNames[$i] => $progressPerTeam];
         }
     } else {
-        $_SESSION['ERROR_MESSAGE'] = "Geen event gaande";   
+        $_SESSION['ERROR_MESSAGE'] = "<h5 class='text-center fs-6'>Er is op het moment geen evenement actief!<h5>";   
     }
 ?>
 
@@ -33,18 +33,17 @@
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
 
-    <title>Punten Pagina</title>
+    <title>Scores - Battlebots</title>
 </head>
-
 
 <body>
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
 
-<div class="container height">
+<div class="container py-4 height">
     <div class="row">
-        <div class="col-12 text-center pt-3">
+        <div class="col-12 text-center">
             <h1>Scores</h1>
         </div>
     </div>

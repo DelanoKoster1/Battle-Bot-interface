@@ -7,16 +7,16 @@
             <div class="form-check mt-3">
                 <input class="form-check-input" type="radio" value="private" name="eventType" id="eventType1">
                 <label class="form-check-label" for="eventType1">
-                    Privé event
+                    Privé evenement
                 </label>
                 </div>
                 <div class="form-check">
                 <input class="form-check-input" type="radio" value="public" name="eventType" id="eventType2" checked>
                 <label class="form-check-label" for="eventType2">
-                    Openbaar event
+                    Openbaar evenement
                 </label>
             </div>
-            <input class="btn btn-danger mt-3" type="submit" name="event" value="Event toevoegen">
+            <input class="btn btn-danger mt-3" type="submit" name="event" value="Evenement toevoegen">
         </div>
     </form>
 </div>

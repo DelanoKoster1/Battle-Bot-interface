@@ -19,7 +19,9 @@ if (isset($_POST['login'])) {
     //Check form data fields
     if (!checkLoginFields($username, $password)) {
         //SQL query to select all from user where the username is ...
-        $sql = "SELECT id, roleId, username, password, email FROM account WHERE username = ?";
+        $sql = "SELECT id, roleId, username, password, email 
+                FROM account 
+                WHERE username = ?";
 
         //Get results from the database
         $results = stmtExec($sql, 0, $username);
@@ -76,14 +78,18 @@ if (isset($_POST['register'])) {
             $teamid = 0;
 
             //SQL Query for inserting into user table
-            $sql = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
+            $sql = "INSERT 
+                    INTO account (teamId, roleId, username, password, email) 
+                    VALUES (?,?,?,?,?)";
 
             if (!stmtExec($sql, 0, $teamid, $role, $username, $password, $email)) {
                 $_SESSION['error'] = "Er is iets misgegaan bij het aanmaken van het account, probeer het opnieuw!";
                 header("location: ../components/error.php");
             }
 
-            $sql = "SELECT id FROM account WHERE username = ?";
+            $sql = "SELECT id 
+                    FROM account 
+                    WHERE username = ?";
             $result = stmtExec($sql, 0, $username);
             $lastInsertedID = $result["id"][0];
 
@@ -112,8 +118,7 @@ if (isset($_POST['register'])) {
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/loginregister.css">
-
-    <title>Inlogscherm - Battlebots</title>
+    <title>Inloggen - Battlebots</title>
 </head>
 
 <body>
@@ -125,7 +130,7 @@ if (isset($_POST['register'])) {
         <div class="height">
             <div class="row">
                 <div class="col-md-12 text-center mt-2">
-                    <h1>Login/Register</h1>
+                    <h1>Inloggen / Registreren</h1>
                 </div>
             </div>
 
@@ -193,7 +198,7 @@ if (isset($_POST['register'])) {
 
             <div class="box row rounded">
                 <div class="col-md-12">
-                    <h2 class="form-heading mt-3">Registeren</h2>
+                    <h2 class="form-heading mt-3">Registreren</h2>
                     <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
                         <div class="form-group">
                             <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {

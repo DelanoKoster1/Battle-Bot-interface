@@ -29,9 +29,9 @@ $events = getAllEvents();
             if (isset($_SESSION['selectedTeam'])) {
             ?>
                 <div>
-                    <span>Selecteer een event</span>
+                    <span>Selecteer een evenement</span>
                     <select onchange="this.form.submit()" class="form-select" name="selectedEvent">
-                        <option value="" disabled selected>Kies een event</option>
+                        <option value="" disabled selected>Kies een evenement</option>
                         <?php
                         foreach ($events as $event) {
                             echo '<option value="'. $event['id'] .'">' . $event['name'] . '</option>';
