@@ -18,7 +18,7 @@ if (isset($_POST['toAdmin'])) {
     {
         $_SESSION['succes'] = "De rol is succesvol aangepast naar Admin!";
     }else{
-        $_SESSION['ERROR_MESSAGE'] = "!De rol kon niet aangepast worden, probeer het opnieuw!";
+        $_SESSION['ERROR_MESSAGE'] = "De rol kon niet aangepast worden, probeer het opnieuw!";
     }
 }
 
@@ -48,7 +48,7 @@ if (isset($_POST['toUser'])) {
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/profile.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <title>Admin toevoegen - Battlebots</title>
+    <title>Administrator toevoegen - Battlebots</title>
 </head>
 
 <body class="bg-light">

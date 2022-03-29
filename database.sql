@@ -99,11 +99,19 @@ CREATE TABLE IF NOT EXISTS `team-event` (
     CONSTRAINT pk_team_event PRIMARY KEY (eventId, teamId)
 );
 
-INSERT INTO `role` (id, name) VALUES (1, "Default"), (2, "Admin");
+INSERT INTO `role` (id, name) VALUES 
+(1, "Default"), 
+(2, "Admin"), 
+(3, "Team");
 
 INSERT INTO `stats` (id) VALUES (1), (2), (3), (4), (5);
 
-INSERT INTO `specs` (id, board, interface) VALUES (1, "ESP32", "Arduino IDE"), (2, "ESP32", "Arduino IDE"), (3, "ESP32", "Arduino IDE"), (4, "ESP32", "Arduino IDE"), (5, "ESP32", "Arduino IDE");
+INSERT INTO `specs` (id, board, interface) VALUES 
+(1, "ESP32", "Arduino IDE"), 
+(2, "ESP32", "Arduino IDE"), 
+(3, "ESP32", "Arduino IDE"), 
+(4, "ESP32", "Arduino IDE"), 
+(5, "ESP32", "Arduino IDE");
 
 INSERT INTO `bot` (`id`, `statsId`, `specsId`, `name`, `description`, `imagePath`, `macAddress`) VALUES
 (6, 1, 1, 'INF1A', 'Robot INF1A', '/assets/img/bots/6/Robot_INF1A.png', 'FC:F5:C4:2F:45:5C'),
@@ -111,15 +119,21 @@ INSERT INTO `bot` (`id`, `statsId`, `specsId`, `name`, `description`, `imagePath
 (8, 3, 3, 'INF1C', 'Robot INF1C', '/assets/img/bots/8/Robot_INF1C.png', '84:CC:A8:7A:A2:A8'),
 (9, 4, 4, 'INF1D', 'Robot INF1D', '/assets/img/bots/9/Robot_INF1D.png', '24:0A:C4:61:A6:88'),
 (10, 5, 5, 'INF1E', 'Robot INF1E', '/assets/img/bots/10/Robot_INF1E.png', '84:CC:A8:7A:AF:D8');
+
 INSERT INTO `team` (`id`, `botId`, `name`) VALUES
 (6, 6, 'INF1A'),
 (7, 7, 'INF1B'),
 (8, 8, 'INF1C'),
 (9, 9, 'INF1D'),
 (10, 10, 'INF1E');
-INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES (1, 0, 1, "User", "$2y$10$aGQ8W0VZuImV2hrYKq3HdO2sGSnDip3X.WekIXwgq0vk1tLlKak.6", "user1@battlebot.nl"), (2, 0, 2, "Admin", "$2y$10$0CG/LGUl/KgxUQFGBzqkUOXHFoNL03jQY9JKbq6KrXGO3R9/vcusC", "admin@battlebot.nl");
 
-INSERT INTO `event` (id, name, date, description, stream) VALUES (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!", "")
-                                                        ,(2, "Past Event", "2022-01-01 08:30:00", "The Past BattleBot Event!", "2022-01-01-08-03-00.mp4");
+INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES 
+(1, 0, 1, "User", "$2y$10$aGQ8W0VZuImV2hrYKq3HdO2sGSnDip3X.WekIXwgq0vk1tLlKak.6", "user1@battlebot.nl"), 
+(2, 0, 2, "Admin", "$2y$10$0CG/LGUl/KgxUQFGBzqkUOXHFoNL03jQY9JKbq6KrXGO3R9/vcusC", "admin@battlebot.nl"),
+(3, 6, 3, "TeamA", "$2y$10$FkF27OUFEM6jLXTM7DKNXOnASu0JhoC8ZPGYcSd6HNrL61o2WzObG", "TeamA@battlebot.nl");
+
+INSERT INTO `event` (id, name, date, description, stream) VALUES 
+(1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!", ""),
+(2, "Past Event", "2022-01-01 08:30:00", "The Past BattleBot Event!", "2022-01-01-08-03-00.mp4");
 
 INSERT INTO `team-event` (eventId, teamId) VALUES (1, 1);
