@@ -341,14 +341,14 @@ function checkRegisterFields(string $username, string $email, string $password, 
     if ($password != $password2) {
         $error[] = 'Wachtwoorden komen niet overeen!';
     }
+    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,49}$/', $username) ) {
+        $error[] = 'Gebruikersnaam voldoet niet aan de standaarden!';
+    }
+    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,254}$/', $password) ) {
+        $error[] = 'Wachtwoord voldoet niet aan de standaarden!';
+    }
     if (strlen($email) > 200) {
         $error[] = 'E-mail is te lang!';
-    }
-    if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
-    }
-    if (strlen($password) > 255) {
-        $error[] = 'Wachtwoord is te lang!';
     }
 
     if (empty($error)) {
