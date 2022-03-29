@@ -21,14 +21,13 @@
     </section>
 
     <?php 
-        if (isset($_POST['submitAnswer'])) {
-            if (!empty($_POST['questionAnswer'])) {
-                pollQuestionAnswer();
-                pollAddUser($_SESSION['username'],$_POST['questionAnswer']); 
-            }
+    if (isset($_POST['submitAnswer'])) {
+        if (!empty($_POST['questionAnswer'])) {
+            pollQuestionAnswer();
+            pollAddUser($_SESSION['username'],$_POST['questionAnswer']); 
         }
+    }
     ?>
-
     <div class="container-fluid my-5">
         <div class="row">
             <div id="livestream" class="col-xl-9 col-lg-8 col-12">

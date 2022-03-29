@@ -661,10 +661,22 @@ function eventTimeDescent()
 
 function getLivestream()
 {
-    return '
-        <img
-        src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
-        ';
+    $query = "SELECT name
+              FROM `event`
+              WHERE active = 1";
+    $results = stmtExec($query, 0);
+    if ($results == 1) {
+        echo '<div class="col-md-12 p-0">
+                  <div class="alert alert-danger text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                      Er is op het moment geen livestream actief!
+                  </div>
+              </div>';
+    } else {
+        return '
+            <img
+            src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
+            ';
+    }
 }
 
 //this function is there to activate another function if conditions are met
@@ -682,7 +694,7 @@ function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answ
             return "Deze optie bestaat niet";
         }
     } else {
-        return "de vraag kan niet leeg zijn";
+        return "De vraag kan niet leeg zijn";
     }
 }
 
@@ -699,16 +711,16 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
 
                     stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4);
                 } else {
-                    return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                    return "Het antwoord mag niet leeg zijn voor dit vraag type!";
                 }
             } else {
-                return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                return "Het antwoord mag niet leeg zijn voor dit vraag type!";
             }
         } else {
-            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            return "Het antwoord mag niet leeg zijn voor dit vraag type!";
         }
     } else {
-        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
     }
 }
 
@@ -723,10 +735,10 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2)
 
             stmtExec($query, 0, $questionType, $question, $answer1, $answer2);
         } else {
-            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            return "Het antwoord mag niet leeg zijn voor dit vraag type!";
         }
     } else {
-        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
     }
 }
 
@@ -744,19 +756,19 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
 
                         stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4, $answer5);
                     } else {
-                        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
                     }
                 } else {
-                    return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                    return "Het antwoord mag niet leeg zijn voor dit vraag type!";
                 }
             } else {
-                return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                return "Het antwoord mag niet leeg zijn voor dit vraag type!";
             }
         } else {
-            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            return "Het antwoord mag niet leeg zijn voor dit vraag type!";
         }
     } else {
-        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
     }
 }
 
@@ -797,10 +809,10 @@ function retrieveQuestionInfo()
 
             return $questionnaire;
         } else {
-            return "<h4>Er is momenteel geen poll gaande.</h4>";
+            return "<h4>Er is op het moment geen poll actief!</h4>";
         }
     } else {
-        return "<h4>Er is momenteel geen poll gaande.</h4>";
+        return "<h4>Er is op het moment geen poll actief!</h4>";
     }
 }
 
@@ -911,13 +923,13 @@ function checkIfPoll()
             if ($active == 1) {
                 return '<input type="submit" name="endPoll" class="btn btn-danger mt-3" value="eindig poll" />';
             } else {
-                return "geen poll aanwezig";
+                return "Er is op het moment geen poll actief!";
             }
         }
     }
 }
 
-//this function shows the answers of the user who have participated in the poll in percentage
+//This function shows the answers of the user who have participated in the poll in percentage
 function pollQuestionAnswer()
 {
 
@@ -1105,7 +1117,7 @@ function checkSelectedEvent($eventID)
     $error = array();
 
     if (!$eventID && empty($eventID) || $eventID == 0) {
-        $error[] = 'Kies een event!';
+        $error[] = 'Kies een evenement!';
     }
 
     //Check if ID is in database
@@ -1118,7 +1130,7 @@ function checkSelectedEvent($eventID)
     if (is_array($results) && count($results) > 0 && empty($error)) {
         //Do nothing
     } else {
-        $error[] = 'Dit event bestaat niet!';
+        $error[] = 'Dit evenement bestaat niet!';
     }
 
     if (empty($error)) {
