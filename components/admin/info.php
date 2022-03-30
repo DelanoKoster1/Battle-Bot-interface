@@ -1,23 +1,63 @@
 <?php
-$conn = connectDB();
 if (isset($_POST['change'])) {
     if (!empty($_POST['botName'])) {
         if (!empty($_POST['description'])) {
-            if (!empty($_POST['imagePath'])) {
+            if (isset($_FILES['imagePath'])) {
             
 
                 $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
                 $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
                 $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
-                $imagePath = filter_input(INPUT_POST, 'imagePath', FILTER_SANITIZE_SPECIAL_CHARS);
 
-                $sql = "UPDATE bot SET name = ?, description = ?, imagePath = ? WHERE id = ?";
+                if (checkIfFile($_FILES['imagePath'])) {
+                    if (checkFileSize($_FILES['imagePath'])) {
+                        if (checkFileType($_FILES['imagePath'])) {
+                            if (makeFolder($botId, "../assets/img/bots/")) {
+                                if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['imagePath']['name'])) {
+                                    $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
+                                    
+                                    deleteFile("../assets/img/bots/{$botId}/");
+        
+                                    if (!uploadFile($_FILES['imagePath'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                                        $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                        $_SESSION['ERROR_MESSAGE'] = $error;
+                                        header('location: admin.php?info');
+                                        exit();
+                                    } 
+                                } else {
+                                    $error[] = "Het geüploade bestand bestaat al!";
+                                    $_SESSION['ERROR_MESSAGE'] = $error;
+                                    header('location: admin.php?info');
+                                    exit();
+                                }
+                            } else {
+                                $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                $_SESSION['ERROR_MESSAGE'] = $error;
+                                header('location: admin.php?info');
+                                exit();
+                            }
+                        } else {
+                            $error[] = "Dit bestandstype wordt niet geaccepteerd!";
+                            $_SESSION['ERROR_MESSAGE'] = $error;
+                            header('location: admin.php?info');
+                            exit();
+                        }
+                    } else {
+                        $error[] = "Het geüploade bestand is te groot!";
+                        $_SESSION['ERROR_MESSAGE'] = $error;
+                        header('location: admin.php?info');
+                        exit();
+                    }
+                }
+
+                $sql = "UPDATE bot SET name = ?, description = ? WHERE id = ?";
                 
-                if (!stmtExec($sql, 0, $botName, $description, $imagePath, $botId)) {
+                if (!stmtExec($sql, 0, $botName, $description, $botId)) {
                     $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
                     header("location: ../components/error.php");
                     exit();
                 }
+
                 ?>
 
                 <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
@@ -27,7 +67,7 @@ if (isset($_POST['change'])) {
             <?php
             } else {
                 echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
-                $error[] = "De robot omschrijving mag niet leeg zijn!";
+                $error[] = "De robot afbeelding mag niet leeg zijn!";
             }
         } else {
             echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
@@ -102,7 +142,7 @@ if (!empty($error)) {
                 echo "<tr class='infotable'>";
                 echo "<th class='infotable'>" . $botName . "</th>";
                 echo "<th class='infotable'>" . $description . "</th>";
-                echo "<th class='infotable'>" . $imagePath . "</th>";
+                echo "<th class='infotable'><img src='.." . $imagePath . "'></th>";
                 echo "<th class='infotable'><a href=admin.php?info&botId=" . $botId . ">Edit</a></th>";
                 echo "</tr>";
             }
@@ -179,14 +219,14 @@ if (!empty($error)) {
 <div class="row">
     <div class="col-md-6">
         <h3>Robot informatie</h3>
-        <form method="POST" action="">
+        <form method="POST" action="" enctype="multipart/form-data">
             <p><input type="hidden" class="form-control mt-3" value="<?php echo $botId; ?>" name="botId" id="id"></p>
             <h6>Robot naam</h6>
             <p><input type="text" class="form-control mt-3" value="<?php echo $botName; ?>" name="botName"></p>
             <h6>Robot beschrijving</h6>
             <p><input type="text" class="form-control mt-3" value="<?php echo $description; ?>" name="description"></p>
             <h6>Robot fotopagina</h6>
-            <p><input type="text" class="form-control mt-3" value="<?php echo $imagePath; ?>" name="imagePath"></p>
+            <p><input type="file" class="form-control mt-3" name="imagePath"></p>
             <input type="submit" name="change" class="btn btn-primary mt-3" value="Wijzigen">
         </form>
     </div>
