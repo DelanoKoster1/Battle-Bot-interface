@@ -37,7 +37,7 @@ ws.addEventListener("open", () => {
     // Maze
     prepareMaze.addEventListener('click', () =>{
         ws.send(JSON.stringify({
-            "for": ["FC:F5:C4:2F:45:5C"],
+            "for": "all",
             "action": "prepare",
             "game": "maze"
         }))
