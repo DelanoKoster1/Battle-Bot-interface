@@ -95,7 +95,7 @@ function fail(?string $code = NULL, ?string $info = NULL) {
  * @param   string           $sql: Give the sql query to execute                                                                                    
  * @param   int              $failCode: Use a code for fail messages, You can easily create 1 above                           
  * @param   ...              $BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables    
- * @return  boolean/object   $results 
+ * @return  boolean/Array   $results 
  */
 function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
     //Require env.php
@@ -981,14 +981,16 @@ function checkIfPoll() {
     }
 }
 
-//This function shows the answers of the user who have participated in the poll in percentage
+/**
+ * Function pollQuestionAnswer
+ * This function shows the answers of the user who have participated in the poll in percentage
+ * @return HTML $progressBar
+ */
 function pollQuestionAnswer() {
 
     $voteArray = [];
 
-    $query = "SELECT    userName, givenAnswer
-              FROM      `poll-outcome`
-             ";
+    $query = "SELECT userName, givenAnswer FROM `poll-outcome`";
 
     $results = stmtExec($query);
 
@@ -1017,18 +1019,19 @@ function pollQuestionAnswer() {
     return $progressBar;
 }
 
+
+/**
+ * Function getProfileInfo
+ * @return Array
+ */
 function getProfileInfo() {
-    $query = "SELECT    username,
-                        email,
-                        password
-                FROM    `account`
-                WHERE   id = ?
-            ";
+    $query = "SELECT username, email, password FROM `account` WHERE   id = ?";
     return stmtExec($query, 0, $_SESSION['id']);
 }
+
 /**
  * Function to get all robots
- * 
+ * Function getAllRobots
  * @return Array Array of all robots with names from db
  */
 function getAllRobots() {
@@ -1060,6 +1063,11 @@ function getAllRobots() {
     return $arr;
 }
 
+/**
+ * Function getAllTeams
+ * Function to get all the teams
+ * @return Array
+ */
 function getAllTeams() {
     $conn = connectDB();
     $arr = array();
@@ -1090,8 +1098,8 @@ function getAllTeams() {
 }
 
 /**
+ * Function getAllEvents
  * Function to get all avaiable events based on robot id
- * 
  * @return Array Array of all events with names from db
  */
 function getAllEvents() {
@@ -1124,8 +1132,10 @@ function getAllEvents() {
 }
 
 /**
+ * Function checkSelectedTeam
  * Function to check selected team ID
- * 
+ * @param String $teamId
+ * @return Array/boolean 
  */
 function checkSelectedTeam($teamID) {
     $error = array();
@@ -1154,9 +1164,11 @@ function checkSelectedTeam($teamID) {
     }
 }
 
-
 /**
+ * Function checkSelectedEvent
  * Function to check selected event ID
+ * @param String $eventID
+ * @return Array/boolean 
  */
 function checkSelectedEvent($eventID) {
     $error = array();
@@ -1186,16 +1198,18 @@ function checkSelectedEvent($eventID) {
 }
 
 /**
- * @param: $file: returns file object with properties
- * @return: true or false
+ * Function checkIfFile
+ * @param Object $file: returns file object with properties
+ * @return File
  */
 function checkIfFile($file) {
     return is_uploaded_file($file["tmp_name"]);
 }
 
 /**
- * @param: $file: returns file object with properties
- * @return: true or false
+ * Function checkFileSize
+ * @param File $file: returns file object with properties
+ * @return boolean
  */
 function checkFileSize($file) {
     if ($file["size"] <= 5000000) {
@@ -1206,8 +1220,9 @@ function checkFileSize($file) {
 }
 
 /**
- * @param: $file: returns file object with properties
- * @return: true or false
+ * Function checkFileSize
+ * @param File $file: returns file object with properties
+ * @return boolean
  */
 function checkFileType($file) {
     $mimeArray = ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf", "video/mp4"];
@@ -1224,9 +1239,10 @@ function checkFileType($file) {
 }
 
 /**
- * @param: $id: returns id
- * @param: $path: returns file path
- * @return: true or false
+ * Function checkFileSize
+ * @param int $id: returns id
+ * @param String $path: returns file path
+ * @return boolean
  */
 function makeFolder(int $id, string $path) {
     $directory = $path . $id;
@@ -1238,17 +1254,19 @@ function makeFolder(int $id, string $path) {
 }
 
 /**
- * @param: $directory: returns directory to file
- * @param: $fileName: returns file name
- * @return: true or false
+ * Function checkFileExist
+ * @param String $directory: returns directory to file
+ * @param String $fileName: returns file name
+ * @return boolean
  */
 function checkFileExist(string $directory, string $fileName) {
     return file_exists($directory . $fileName);
 }
 
 /**
- * @param: $directory: returns directory to file
- * @return: true
+ * Function deleteFile
+ * @param String $directory: returns directory to file
+ * @return boolean
  */
 function deleteFile(string $directory) {
     $files = glob($directory . '*'); // get all file names
@@ -1262,10 +1280,11 @@ function deleteFile(string $directory) {
 }
 
 /**
- * @param: $file: returns file object with properties
- * @param: $Id int: relation ID
- * @param: $directory: returns directory
- * @return: true or false
+ * Function uploadFile
+ * @param String $file: returns file object with properties
+ * @param Int $Id int: relation ID
+ * @param String $directory: returns directory
+ * @return boolean
  */
 function uploadFile($file, string $query, int $id, string $directory) {
     if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory . $file["name"], $id)) {
@@ -1275,6 +1294,10 @@ function uploadFile($file, string $query, int $id, string $directory) {
     }
 }
 
+/**
+ * Function getActiveEvent
+ * @return Array
+ */
 function getActiveEvent() {
     $sql = "SELECT teamId, points, team.`name`, eventId 
     FROM `team-event` 
@@ -1285,8 +1308,11 @@ function getActiveEvent() {
     return stmtExec($sql);
 }
 
-function changeTeamInfo() 
-{
+/**
+ * Function changeTeamInfo
+ * @return HTML $returnForm
+ */
+function changeTeamInfo() {
     $sql = "SELECT  bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
             FROM    `bot`
             JOIN    `specs`     ON specs.id = bot.specsId
