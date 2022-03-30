@@ -533,9 +533,7 @@ if (isset($_POST['stopEvent'])) {
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">
                                     <?php
-                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
+                                    echo '<li>' . $_SESSION['ERROR_MESSAGE'] . '</li>';
                                     
                                     unset($_SESSION['ERROR_MESSAGE']);
                                     ?>
