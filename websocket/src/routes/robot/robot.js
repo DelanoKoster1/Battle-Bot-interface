@@ -1,5 +1,7 @@
 const router = require("express").Router();
-const { v4: uuidv4 } = require('uuid');
+const {
+    v4: uuidv4
+} = require('uuid');
 const Bots = require('../../classes/bots.js')
 const WebSocket = require("ws");
 
@@ -11,7 +13,9 @@ var games = [];
 
 wss.on('connection', (client, req) => {
     console.info("Total connected clients:", wss.clients.size);
-    sendMessageToInterface({"total_connected": wss.clients.size});
+    sendMessageToInterface({
+        "total_connected": wss.clients.size
+    });
     setAttributeToClient("isAlive", true, client);
 
     client.on('message', message => {
@@ -24,24 +28,30 @@ wss.on('connection', (client, req) => {
                     login(client, req);
                     break;
                 case "prepare":
-                    if (ready(req.for)) {
-                        createGame(req);
-                        sendActionToBot(req);
-                        setAttributeToClient("preparing", false, client);
-                        sendMessageToInterface({
-                            "games": games
-                        })
-                    } else {
+                    if (checkIfBotsExist(req.for)) {
+                        if (ready(req.for)) {
+                            createGame(req);
+                            sendActionToBot(req);
+                            setAttributeToClient("preparing", false, client);
+                            sendMessageToInterface({
+                                "games": games
+                            })
+                        } else {
+                            sendMessageToClient(client, {
+                                "error": "NOT_READY"
+                            })
+                        }
+                    }else{
                         sendMessageToClient(client, {
-                            "error": "NOT_READY"
+                            "error": "BOT_DOES_NOT_EXIST"
                         })
                     }
                     break;
                 case "start":
-                    if(preparingDone()){
+                    if (preparingDone()) {
                         sendActionToBot(req);
                         updateGameStatus(req);
-                    }else{
+                    } else {
                         sendMessageToClient(client, {
                             "error": "NOT_READY"
                         })
@@ -117,15 +127,15 @@ const setAttributeToClient = (name, value, targets = "all") => {
                 client[name] = value;
             }
         })
-    } else if(Array.isArray(targets)) {
+    } else if (Array.isArray(targets)) {
         targets.forEach((target) => {
             wss.clients.forEach((client) => {
-                if(client.id == target){
+                if (client.id == target) {
                     client[name] = value;
                 }
             })
         })
-    }else{
+    } else {
         targets[name] = value;
     }
 }
@@ -141,7 +151,7 @@ const interval = setInterval(() => {
     })
 }, 5000)
 
-function updateGameStatus(body){
+function updateGameStatus(body) {
 
 }
 
@@ -162,7 +172,7 @@ function updateBotStatusInGame(client, status) {
 
 }
 
-function preparingDone(targets = "all"){
+function preparingDone(targets = "all") {
     let ready = false
     if (targets == "all") {
         wss.clients.forEach((client) => {
@@ -280,11 +290,13 @@ function ready(target, action = "") {
     } else {
         for (let i of target) {
             wss.clients.forEach((client) => {
-                if (client.id == i) {
-                    if (client.status == "ready") {
-                        ready = true;
-                    } else {
-                        ready = false;
+                if (client.role == "bot") {
+                    if (client.id == i) {
+                        if (client.status == "ready") {
+                            ready = true;
+                        } else {
+                            ready = false;
+                        }
                     }
                 }
             })
@@ -294,6 +306,30 @@ function ready(target, action = "") {
     return ready;
 }
 
+function checkIfBotsExist(bots) {
+    if (bots != "all") {
+        let clients = [];
+        wss.clients.forEach((client) => {
+            if (client.role == "bot") {
+                clients.push(client.id);
+            }
+        })
+
+        let exist = false;
+
+        bots.forEach((bot) => {
+            if (clients.includes(bot)) {
+                exist = true;
+            } else {
+                exist = false
+            }
+        })
+
+        return exist;
+    } else {
+        return true;
+    }
+}
 
 /**
  * Start game for all bots
@@ -338,15 +374,21 @@ function createGame(req) {
         "bots": []
     }
     let bots = [];
- 
+
 
     wss.clients.forEach((client) => {
-        if(client.role == "bot"){
-            if(req.for == "all"){
-                bots.push({"botId": client.id, "status": client.status}) 
-            }else{
-                if(req.for.includes(client.id)){
-                    bots.push({"botId": client.id, "status": client.status})
+        if (client.role == "bot") {
+            if (req.for == "all") {
+                bots.push({
+                    "botId": client.id,
+                    "status": client.status
+                })
+            } else {
+                if (req.for.includes(client.id)) {
+                    bots.push({
+                        "botId": client.id,
+                        "status": client.status
+                    })
                 }
             }
         }
