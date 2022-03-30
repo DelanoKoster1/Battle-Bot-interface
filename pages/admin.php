@@ -172,6 +172,7 @@ if (isset($_POST['bot'])) {
             header("location: ../components/error.php");
             exit();
         }
+        $botId = $_SESSION['lastInsertedId'];
 
         $sql = "INSERT INTO specs (board, interface) VALUES (?,?)";
 
@@ -180,6 +181,7 @@ if (isset($_POST['bot'])) {
             header("location: ../components/error.php");
             exit();
         }
+        $specsId = $_SESSION['lastInsertedId'];
 
         $sql = "INSERT INTO stats (wins, playedMatches) VALUES (?,?)";
 
@@ -188,11 +190,19 @@ if (isset($_POST['bot'])) {
             header("location: ../components/error.php");
             exit();
         }
+        $statsId = $_SESSION['lastInsertedId'];
+
+        $sql = "UPDATE `bot` SET specsId = ?, statsId = ? WHERE id = ?";
+
+        if (!stmtExec($sql, 0, $specsId, $statsId, $botId)) {
+            $_SESSION['ERROR_MESSAGE'] = "Voer alle velden in!";
+            header("location: ../components/error.php");
+            exit();
+        }
 
         if (checkIfFile($_FILES['botPic'])) {
             if (checkFileSize($_FILES['botPic'])) {
                 if (checkFileType($_FILES['botPic'])) {
-                    $botId = $_SESSION['lastInsertedId'];
                     if (makeFolder($botId, "../assets/img/bots/")) {
                         if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botPic']['name'])) {
                             $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
