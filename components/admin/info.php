@@ -3,25 +3,32 @@ $conn = connectDB();
 if (isset($_POST['change'])) {
     if (!empty($_POST['botName'])) {
         if (!empty($_POST['description'])) {
-
-            $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
-            $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
-            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
-
-            $sql = "UPDATE bot SET name = ?, description = ? WHERE id = ?";
+            if (!empty($_POST['imagePath'])) {
             
-            if (!stmtExec($sql, 0, $botName, $description, $botId)) {
-                $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
-                header("location: ../components/error.php");
-                exit();
+
+                $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
+                $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
+                $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+                $imagePath = filter_input(INPUT_POST, 'imagePath', FILTER_SANITIZE_SPECIAL_CHARS);
+
+                $sql = "UPDATE bot SET name = ?, description = ?, imagePath = ? WHERE id = ?";
+                
+                if (!stmtExec($sql, 0, $botName, $description, $imagePath, $botId)) {
+                    $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
+                    header("location: ../components/error.php");
+                    exit();
+                }
+                ?>
+
+                <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                    <?php echo "De informatie is succesvol gewijzigd!" ?>
+                </div>
+
+            <?php
+            } else {
+                echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
+                $error[] = "De robot omschrijving mag niet leeg zijn!";
             }
-            ?>
-
-            <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
-                <?php echo "De informatie is succesvol gewijzigd!" ?>
-            </div>
-
-        <?php
         } else {
             echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
             $error[] = "De robot omschrijving mag niet leeg zijn!";
@@ -72,7 +79,7 @@ if (!empty($error)) {
     <div class="col-md-6">
         <h3>Robot Informatie</h3>
         <?php
-        $sql = "SELECT id, name, description FROM bot";
+        $sql = "SELECT id, name, description, imagePath FROM bot";
         
         $bots = stmtExec($sql);
         
@@ -83,16 +90,19 @@ if (!empty($error)) {
             echo "<table class='border border-dark'>";
             echo "<th class='infotable'>Name</th>
                  <th class='infotable'>Description</th>
+                 <th class='infotable'>Image Path</th>
                  <th class='infotable'>Edit</th>";
 
             for ($i = 0; $i < count($bots["id"]); $i++) {
                 $botId = $bots["id"][$i];
                 $botName = $bots["name"][$i];
                 $description = $bots["description"][$i];
+                $imagePath = $bots['imagePath'][$i]; 
 
                 echo "<tr class='infotable'>";
                 echo "<th class='infotable'>" . $botName . "</th>";
                 echo "<th class='infotable'>" . $description . "</th>";
+                echo "<th class='infotable'>" . $imagePath . "</th>";
                 echo "<th class='infotable'><a href=admin.php?info&botId=" . $botId . ">Edit</a></th>";
                 echo "</tr>";
             }
@@ -105,7 +115,7 @@ if (!empty($error)) {
         if (isset($_GET["botId"])) {
             $id = filter_input(INPUT_GET, "botId", FILTER_VALIDATE_INT);
 
-            $sql = "SELECT id, name, description FROM bot WHERE id = ?";
+            $sql = "SELECT id, name, description, imagePath FROM bot WHERE id = ?";
 
             $bots = stmtExec($sql, 0, $id);
 
@@ -118,6 +128,7 @@ if (!empty($error)) {
             $botId = $bots["id"][0];
             $botName = $bots["name"][0];
             $description = $bots["description"][0];
+            $imagePath = $bots["imagePath"][0];
         }
         ?>
     </div>
@@ -174,6 +185,8 @@ if (!empty($error)) {
             <p><input type="text" class="form-control mt-3" value="<?php echo $botName; ?>" name="botName"></p>
             <h6>Robot beschrijving</h6>
             <p><input type="text" class="form-control mt-3" value="<?php echo $description; ?>" name="description"></p>
+            <h6>Robot fotopagina</h6>
+            <p><input type="text" class="form-control mt-3" value="<?php echo $imagePath; ?>" name="imagePath"></p>
             <input type="submit" name="change" class="btn btn-primary mt-3" value="Wijzigen">
         </form>
     </div>
