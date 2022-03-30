@@ -78,7 +78,12 @@ switch (true) {
 }
 
 /**
- * Add event section
+ * Function checkEventFields
+ * @param String $eventDate
+ * @param String $eventName
+ * @param String $eventDescription
+ * @param String $eventType
+ * @return Array/boolean
  */
 function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
     $error = array();
@@ -113,6 +118,15 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
     }
 }
 
+/**
+ * Function checkRobotFields
+ * @param String $botName
+ * @param String $botDiscription
+ * @param String $macAdress
+ * @param String $botBoard
+ * @param String $botInterface
+ * @return Array/boolean
+ */
 function checkRobotFields($botName, $botDiscription, $macAdress, $botBoard, $botInterface) {
     $error = array();
 
@@ -337,9 +351,6 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
     mysqli_stmt_close($stmt);
 }
 
-/**
- * Add team to robot section
- */
 if (isset($_POST['selectedTeam'])) {
     $selectedTeam = filter_input(INPUT_POST, 'selectedTeam', FILTER_SANITIZE_SPECIAL_CHARS);
 
@@ -384,9 +395,6 @@ if (isset($_POST['selectedEvent'])) {
     }
 }
 
-
-//code for create team page
-//Add stream
 if (isset($_POST['streamAnnuleren'])) {
     unset($_SESSION['selectedEvent']);
     header('location: admin.php?addStream');
@@ -402,7 +410,6 @@ if (isset($_POST['selectedEventForStream'])) {
     header('location: admin.php?addStream');
     exit();
 }
-
 
 if (isset($_POST['uploadStream'])) {
     //check if event & team id are already in database
@@ -423,7 +430,6 @@ if (isset($_POST['uploadStream'])) {
     }
 }
 
-//code for create team page
 if (isset($_POST['submitTeam'])) {
     if (isset($_POST['teamName']) && $teamName = filter_input(INPUT_POST, 'teamName', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (isset($_POST['bots']) && $botId = filter_input(INPUT_POST, 'bots', FILTER_SANITIZE_NUMBER_INT)) {
@@ -440,7 +446,6 @@ if (isset($_POST['submitTeam'])) {
         }
     }
 }
-
 
 if (isset($_POST['robotEventAnnuleren'])) {
     unset($_SESSION['selectedTeam']);
@@ -464,7 +469,6 @@ if (isset($_POST['stopEvent'])) {
     $result = stmtExec($query, 0, $id);
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
