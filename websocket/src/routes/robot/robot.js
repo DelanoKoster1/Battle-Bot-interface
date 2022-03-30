@@ -136,6 +136,9 @@ const interval = setInterval(() => {
     })
 }, 5000)
 
+function updateGameStatus(){
+    
+}
 
 function addBotToGame(status, target = "all") {
     if (target == "all") {
