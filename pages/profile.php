@@ -15,20 +15,20 @@ if (isset($_POST['save'])) {
         if ($username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
             if ($results["username"][0] != $username || $results["email"][0] != $email) {
                 if (!checkUserInDataBase($username, $email, true)) {
-                    $query = "UPDATE    account
-                      SET       username = ?,
-                                email = ?
-                      WHERE     id = ?  
+                    $query = "UPDATE account
+                              SET username = ?,
+                                  email = ?
+                              WHERE id = ?  
                     ";
                     stmtExec($query, 0, $username, $email, $_SESSION['id']);
                     $success = true;
                 }
-            } 
+            }
         } else {
-            $error[] = 'De gebruikersnaam is ongeldig!';
+            $error[] = 'Deze gebruikersnaam is ongeldig!';
         }
     } else {
-        $error[] = 'Het e-mailadres is ongeldig!';
+        $error[] = 'Dit e-mailadres is ongeldig!';
     }
 
     if ($curPassword = filter_input(INPUT_POST, 'curpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
@@ -38,9 +38,9 @@ if (isset($_POST['save'])) {
                     if (checkProfilePassword($newPassword, $repeatPassword)) {
                         if (!password_verify($newPassword, $results['password'][0]) && !password_verify($repeatPassword, $results['password'][0])) {
                             $hashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                            $query = "UPDATE    account
-                                    SET       `password` = ?
-                                    WHERE     id = ?  
+                            $query = "UPDATE account
+                                      SET `password` = ?
+                                      WHERE id = ?  
                                 ";
                             stmtExec($query, 0, $hashPassword, $_SESSION['id']);
                             $success2 = true;
@@ -48,12 +48,12 @@ if (isset($_POST['save'])) {
                             $error[] = 'Het nieuwe en herhaal wachtwoord mogen niet overeen komen met het huidige wachtwoord!';
                         }
                     }
-                } 
-            } 
+                }
+            }
         } else {
             $error[] = 'Het huidige wachtwoord is incorrect!';
         }
-    } 
+    }
 }
 
 $results = getProfileInfo();
@@ -63,7 +63,7 @@ $results = getProfileInfo();
 
 <head>
     <?php
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -85,6 +85,32 @@ $results = getProfileInfo();
                     <div class="col-12">
                         <h1 class="text-center bg-white w-100 pt-5 mb-3">Welkom, <?= $results['username'][0] ?></h1>
                     </div>
+                    <?php
+                    if ($_SESSION['role'] == 2) {
+                    ?>
+                        <div class="col-12 text-center mb-3">
+                            <span>
+                                <a class="text-body" href="./roles.php">
+                                    <span class="material-icons align-middle">add</span>
+                                    Rol Aanpassen
+                                </a>
+                            </span>
+                        </div>
+                    <?php
+                    }
+                    if ($_SESSION['role'] == 3) {
+                    ?>
+                        <div class="col-12 text-center mb-3">
+                            <span>
+                                <a class="text-body" href="./editTeamInfo.php">
+                                    <span class="material-icons align-middle">add</span>
+                                    Team informatie bewerken
+                                </a>
+                            </span>
+                        </div>
+                    <?php
+                    }
+                    ?>
                     <div class="col-12">
                         <?php
                         if (isset($_POST['save']) && !empty($error)) {
@@ -95,28 +121,27 @@ $results = getProfileInfo();
                                     </div>
                                 </div>
                             <?php
-                            }   
+                            }
                         }
                         if (isset($_POST['save'])) {
                             if ($success == true) {
-                                ?>
+                            ?>
                                 <div class="col-md-12 p-0">
                                     <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
                                         <?php echo "De gegevens zijn succesvol geüpdate!" ?>
                                     </div>
                                 </div>
-                                <?php
-                            } 
+                            <?php
+                            }
                             if ($success2 == true) {
-                               ?>
-                               <div class="col-md-12 p-0">
-                                   <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
-                                       <?php echo "Het wachtwoord is succesvol geüpdate!" ?>
-                                   </div>
-                               </div>
-                               <?php
-                           }
-                           
+                            ?>
+                                <div class="col-md-12 p-0">
+                                    <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                                        <?php echo "Het wachtwoord is succesvol geüpdate!" ?>
+                                    </div>
+                                </div>
+                        <?php
+                            }
                         }
                         ?>
                     </div>
@@ -133,7 +158,7 @@ $results = getProfileInfo();
                     <div class="col-12 bg-white">
                         <div class="input-group w-lg-50 mb-3 pb-2">
                             <span class="input-group-text bg-light" id="basic-addon1"><span class="material-icons ml-8 mr-8 verticalmid">email</span></span>
-                            <input name="email" type="email" class="form-control bg-light" placeholder="Email" value="<?= $results['email'][0] ?>">
+                            <input name="email" type="email" class="form-control bg-light" placeholder="E-mailadres" value="<?= $results['email'][0] ?>">
                         </div>
                     </div>
                 </div>
@@ -177,58 +202,7 @@ $results = getProfileInfo();
     <div class="bottom">
         <?php include_once("../components/footer.php"); ?>
     </div>
-    <script>
-        //Change eye icon for the current password field
-        const toggleCurPassword = document.querySelector('#toggleCurPassword');
-        const curpassword = document.querySelector('#curpassword');
-
-        let isVisibleCur = false;
-        toggleCurPassword.addEventListener('click', function(e) {
-            if (isVisibleCur == false) {
-                isVisibleCur = true;
-                document.getElementById("toggleCurPassword").textContent = "visibility";
-            } else {
-                isVisibleCur = false;
-                document.getElementById("toggleCurPassword").textContent = "visibility_off";
-            }
-            const type = curpassword.getAttribute('type') === 'password' ? 'text' : 'password';
-            curpassword.setAttribute('type', type);
-        });
-
-        //Change eye icon for the new password field
-        const toggleNewPassword = document.querySelector('#toggleNewPassword');
-        const newpassword = document.querySelector('#newpassword');
-        
-        let isVisibleNew = false;
-        toggleNewPassword.addEventListener('click', function(e) {
-            if (isVisibleNew == false) {
-                isVisibleNew = true;
-                document.getElementById("toggleNewPassword").textContent = "visibility";
-            } else {
-                isVisibleNew = false;
-                document.getElementById("toggleNewPassword").textContent = "visibility_off";
-            }
-            const type = newpassword.getAttribute('type') === 'password' ? 'text' : 'password';
-            newpassword.setAttribute('type', type);
-        });
-
-        //Change eye icon for the repeat password field
-        const toggleRepeatPassword = document.querySelector('#toggleRepeatPassword');
-        const newpassword2 = document.querySelector('#newpassword2');
-
-        let isVisibleRepeat = false;
-        toggleRepeatPassword.addEventListener('click', function(e) {
-            if (isVisibleRepeat == false) {
-                isVisibleRepeat = true;
-                document.getElementById("toggleRepeatPassword").textContent = "visibility";
-            } else {
-                isVisibleRepeat = false;
-                document.getElementById("toggleRepeatPassword").textContent = "visibility_off";
-            }
-            const type = newpassword2.getAttribute('type') === 'password' ? 'text' : 'password';
-            newpassword2.setAttribute('type', type);
-        });
-    </script>
+    <script src="../assets/js/profile.js"></script>
 </body>
 
 </html>

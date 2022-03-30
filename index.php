@@ -8,7 +8,7 @@
     <link href="assets/img/logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/style.css">
     <link rel="stylesheet" href="assets/css/footer.css">
-    <title>Voorpagina</title>
+    <title>Voorpagina - Battlebots</title>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
         <div class="container">
             <div class="row py-5">
                 <div class="col-lg-6 col-12">
-                    <h1>Welkom bij Battlebots</h1>
+                    <h1>Welkom bij Battlebots!</h1>
                     <p>Battle Bots is een evenement georganiseerd door de eerste jaars studenten ICT van de NHL Stenden Hogeschool te Emmen. Er zullen diverse spellen gespeeld worden en de robot die de meeste spellen wint, wint het evenement.</p>
                     <p>Het evenement zal plaatsvinden op donderdag 14 April 2022.</p>
                 </div>
@@ -40,7 +40,7 @@
             <div class="container">
                 <div class="row my-4">
                     <div class="col-12 text-center mb-4">
-                        <h3 class="text-white">Ontmoet de Bots</h3>
+                        <h3 class="text-white">Ontmoet de robots!</h3>
                     </div>
                     <div class="col-12 d-flex justify-content-between">
                         <?php
@@ -52,11 +52,11 @@
                                 $id = $ids[$i];
                                 $imgPath = $dbResults["imagePath"][$i];
 
-                                if ($imgPath === "image.png") $imgPath = "assets\img\bot.svg";
+                                if ($imgPath === null) $imgPath = "assets\img\bot.svg";
                                 $name = $dbResults["name"][$i];
                                 echo "
                                 <div class='card'>
-                                    <img src='$imgPath' class='img-fluid card-img-top' alt='$name'>
+                                    <img src='./$imgPath' class='img-fluid card-img-top' alt='$name'>
                                     <div class='card-body'>
                                         <h5 class='card-title text-center'><a href='pages/robots.php?botName=$name' class='stretched-link'>$name</a></h5>
                                     </div>
@@ -67,7 +67,7 @@
                                 <div class="col-sm-12 mb-4">
                                     <div class="card no-bots">
                                         <div class="card-body text-center">
-                                            <span class="card-title d-block text-white">Nog geen robots beschikbaar</span>
+                                            <span class="card-title d-block text-white">Er zijn nog geen robots beschikbaar!</span>
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@
             </div>
 
             <div class="row m-auto eventShowBox">
-                <?php showEvents(); 
+                <?php showEvents();
                 ?>
             </div>
         </div>

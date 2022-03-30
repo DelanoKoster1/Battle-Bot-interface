@@ -7,13 +7,12 @@ include_once('../functions/function.php');
 
 <head>
     <?php
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
-
-    <title>Calendar</title>
+    <title>Kalender - Battlebots</title>
 </head>
 
 <body>
@@ -22,16 +21,16 @@ include_once('../functions/function.php');
     </section>
 
     <main id='events'>
-        <div class='containter py-4'>
+        <div class='containter py-4 height'>
             <div class="row g-0">
                 <div class="col-md-12 mb-2 text-center">
-                    <h3>Evenementen</h3>
+                    <h1>Evenementen</h1>
                 </div>
                 <div class="col-md-12 text-center alert alert-dark" id="eventTimeDisplay" role="alert">
                     <span hidden id="dateOfEvent"><?= eventTimeDescent(); ?></span>
                 </div>
             </div>
-            
+
             <div class="row m-auto eventShowBox">
                 <?php showEvents(); ?>
             </div>

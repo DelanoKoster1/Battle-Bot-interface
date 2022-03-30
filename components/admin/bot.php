@@ -2,7 +2,7 @@
     <div class="col-4">
         <input class="form-control mt-3" placeholder="Bot Naam" name="botName" id="botName" type="text">
         <input class="form-control mt-3" placeholder="Omschrijving" name="botDiscription" id="botDiscription" type="text">
-        <input class="form-control mt-3" placeholder="Mac address" name="macAddress" id="macAddress" type="text">
+        <input class="form-control mt-3" placeholder="Mac adres" name="macAddress" id="macAddress" type="text">
         <input class="form-control mt-3" placeholder="Board" name="board" id="board" type="text">
         <input class="form-control mt-3" placeholder="Interface" name="interface" id="interface" type="text">
         <label class="mt-3" for="botPic">Foto Bijvoegen</label>
