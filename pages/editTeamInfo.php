@@ -55,43 +55,11 @@ global $error;
                             </ul>
                         </div>
                     </div>
-                </div>
-            <?php
-            }
-            ?>
-            <form class="col-md-12 col-12 bg-white" method="post">
-                <h1 class="text-center">Team bewerken</h1>
-                <table class="table table-responisve">
-                    <thead>
-                        <tr>
-                            <td class="align-middle">Team Naam</td>
-                            <td class="align-middle">Robot Naam</td>
-                            <td class="align-middle">Robot Beschrijving</td>
-                            <td class="align-middle">Robot Board</td>
-                            <td class="align-middle">Robot Interface</td>
-                            <td class="align-middle">Robot Foto</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $query = "SELECT team.name, bot.name, bot.description, specs.board, specs.interface, bot.imagePath FROM team JOIN bot ON bot.id = team.botId JOIN specs ON bot.specsId = specs.id";
-                        $results = stmtExec($query, 0);
-                        foreach ($results as $key => $id) {
-                        ?>
-                            <tr>
-                                <td class="align-middle"></td>
-                                <td class="align-middle"></td>
-                                <td class="align-middle"></td>
-                                <td class="align-middle"></td>
-                                <td class="align-middle"></td>
-                                <td class="align-middle"></td>
-                            </tr>
-                        <?php
-                        }
-                        ?>
-                    </tbody>
-                </table>
-            </form>
+                <?php
+                }
+                ?>
+            <h3 class="mt-3">verander team informatie</h3>
+            <?php echo changeTeamInfo(); ?>
         </div>
     </div>
     <div>
