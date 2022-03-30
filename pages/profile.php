@@ -96,6 +96,15 @@ $results = getProfileInfo();
                                 </a>
                             </span>
                         </div>
+
+                        <div class="col-12 text-center mb-3">
+                            <span>
+                                <a class="text-body" href="./roles.php">
+                                    <span class="material-icons align-middle">add</span>
+                                    Rol Aanpassen
+                                </a>
+                            </span>
+                        </div>
                     <?php
                     }
                     if ($_SESSION['role'] == 3) {
