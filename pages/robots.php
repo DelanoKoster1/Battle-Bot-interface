@@ -4,7 +4,7 @@
 <head>
     <?php
     include_once('../functions/function.php');
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -21,13 +21,7 @@
     <div class="container-fluid">
         <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
-            $query = "SELECT bot.id, 
-                             bot.name, 
-                             bot.imagePath 
-                      FROM bot 
-                      INNER JOIN team ON team.botId = bot.id 
-                      INNER JOIN specs ON specs.id = bot.specsId 
-                      INNER JOIN stats ON stats.id = bot.statsId";
+            $query = "SELECT bot.id, bot.name, bot.imagePath FROM bot INNER JOIN team ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId";
 
             $results = stmtExec($query);
 
@@ -35,18 +29,18 @@
                 header('location ../components/error.php');
             }
 
-            for($i = 0; $i < count($results["bot.id"]); $i++) {
+            for ($i = 0; $i < count($results["bot.id"]); $i++) {
 
                 $botName = $results["bot.name"][$i];
                 $botimagePath = $results["bot.imagePath"][$i];
 
-                if ($botimagePath === "image.png") $botimagePath = "../assets/img/bot.svg";
+                if ($botimagePath == NULL) $botimagePath = "/assets/img/bot.svg";
 
                 echo ' 
                     <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $botName . '" type="button" role="tab" aria-controls="' . $botName . '" aria-selected="false">
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
-                                <div class="col-12 pt-1">
+                                <div class="col-12 my-auto pt-1">
                                     <img class="img-fluid" src="..' . $botimagePath . '" alt="' . $botName . '">
                                 </div>
                                 <div class="col-12 position-relative">
@@ -68,25 +62,10 @@
             </div>
             <div class="tab-content">
                 <?php
-                $sql = "SELECT  team.id,
-                            team.name,
-                            bot.name,
-                            bot.id,
-                            bot.specsId,
-                            specs.board,
-                            specs.interface,
-                            stats.wins,
-                            stats.playedMatches
-                    FROM    team
-                    INNER JOIN bot 
-                    ON team.botId = bot.id 
-                    INNER JOIN specs 
-                    ON specs.id = bot.specsId  
-                    INNER JOIN stats
-                    ON stats.id = bot.statsId         
-                ";
+                $sql = "SELECT  team.id, team.name, bot.name, bot.id, bot.specsId, specs.board, specs.interface, stats.wins, stats.playedMatches FROM team INNER JOIN bot ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId         ";
+                
                 $dbResults = stmtExec($sql);
-                // debug($dbResults);
+                
                 $ids = $dbResults["team.id"];
                 foreach ($ids as $key => $teamId) {
                     $id = $teamId;
@@ -104,7 +83,7 @@
                                     <div class="box bg-secondary d-flex justify-content-center">
                                         <div class="row g-0 w-100 text-center">
                                             <div class="col-12 my-auto">
-                                                <img class="img-fluid" src="../assets/img/person.svg" alt="' . $teamName . '">
+                                                <img class="img-fluid mb-4" src="../assets/img/person.svg" alt="' . $teamName . '">
                                             </div>
                                             <div class="col-12 position-relative">
                                                 <div class="botName position-absolute w-100 bottom-0">

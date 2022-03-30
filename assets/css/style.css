@@ -5,8 +5,7 @@
 }
 @font-face {
   font-family: "Aviano Future Bold";
-  src: url("../fonts/Aviano-future/bold/Aviano-future-bold.eot")
-      format("embedded-opentype"),
+  src: url("../fonts/Aviano-future/bold/Aviano-future-bold.eot") format("embedded-opentype"),
     url("../fonts/Aviano-future/bold/Aviano-future-bold.woff2") format("woff2"),
     url("../fonts/Aviano-future/bold/Aviano-future-bold.woff") format("woff"),
     url("../fonts/Aviano-future/bold/Aviano-future-bold.ttf") format("truetype");
@@ -197,7 +196,7 @@ header .menu,
   padding: 0;
 }
 .nav-link {
-  padding: 0.2rem .8rem;
+  padding: 0.2rem 0.8rem;
 }
 .navbar-collapse .nav-item span {
   color: white;
@@ -271,7 +270,7 @@ header .menu,
 }
 
 .infotable {
-  text-align: left; 
-  border: 1px solid black; 
+  text-align: left;
+  border: 1px solid black;
   padding: 5px;
 }

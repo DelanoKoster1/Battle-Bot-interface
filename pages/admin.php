@@ -1,6 +1,7 @@
 <?php
 //Includes
 include_once('../functions/function.php');
+
 // Check if admin is logged in
 if (!isset($_SESSION['email']) ||  $_SESSION['role'] != 2) {
     header('location: ../components/error.php');
@@ -31,10 +32,12 @@ switch (true) {
         $headerTitle = 'Regisseur pagina';
         $content = "../components/admin/director.php";
         break;
+
     case isset($_GET['bot']);
         $headerTitle = 'Robot toevoegen';
         $content = "../components/admin/bot.php";
         break;
+
     case isset($_GET['addRobotToEvent']);
         $headerTitle = 'Robot aan evenement toevoegen';
         $content = "../components/admin/addRobotToEvent.php";
@@ -43,10 +46,12 @@ switch (true) {
         $headerTitle = 'Team aan evenement toevoegen';
         $content = "../components/admin/addTeamToEvent.php";
         break;
+
     case isset($_GET['startEvent']);
         $headerTitle = 'Evenement starten';
         $content = "../components/admin/startEvent.php";
         break;
+
     case isset($_GET['info']);
         $headerTitle = 'Informatie robot en team';
         $content = "../components/admin/info.php";
@@ -56,6 +61,7 @@ switch (true) {
         $headerTitle = 'Team aanmaken';
         $content = "../components/admin/createTeam.php";
         break;
+
     case isset($_GET['addStream']);
         $headerTitle = 'Stream toevoegen';
         $content = "../components/admin/addStreamToEvent.php";
@@ -70,8 +76,7 @@ switch (true) {
 /**
  * Add event section
  */
-function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
-{
+function checkEventFields($eventDate, $eventName, $eventDescription, $eventType) {
     $error = array();
 
     if (!$eventDate && empty($eventDate)) {
@@ -103,8 +108,8 @@ function checkEventFields($eventDate, $eventName, $eventDescription, $eventType)
         return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
-function checkRobotFields($botName, $botDiscription, $macAdress, $botBoard, $botInterface)
-{
+
+function checkRobotFields($botName, $botDiscription, $macAdress, $botBoard, $botInterface) {
     $error = array();
 
     if (!$botName && empty($botName)) {
@@ -138,26 +143,19 @@ if (isset($_POST['event'])) {
     $eventDescription = filter_input(INPUT_POST, 'eventOmschrijving', FILTER_SANITIZE_SPECIAL_CHARS);
 
     if (!checkEventFields($eventDate, $eventName, $eventDescription, $eventType)) {
-        //SQL Query for inserting into user table
-        $sql = "INSERT 
-                INTO `event` (name, date, description, type) 
-                VALUES (?,?,?,?)";
+        $sql = "INSERT INTO `event` (name, date, description, type) VALUES (?,?,?,?)";
 
         if (!stmtExec($sql, 0, $eventName, $eventDate, $eventDescription, $eventType)) {
             $_SESSION['error'] = "Het evenement kon niet toegevoegd worden, probeer het opnieuw!";
             header("location: ../components/error.php");
         }
 
-        //Set succes message
         $_SESSION['succes'] = 'Het evenement is succesvol toegevoegd!';
 
-        //Send user to index.php
         header('location: admin.php');
         exit();
     }
 }
-
-// Code for add bot page
 
 if (isset($_POST['bot'])) {
     $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
@@ -167,9 +165,7 @@ if (isset($_POST['bot'])) {
     $botInterface = filter_input(INPUT_POST, 'interface', FILTER_SANITIZE_SPECIAL_CHARS);
 
     if (!checkRobotFields($botName, $botDiscription, $macAdress, $botBoard, $botInterface)) {
-        $sql = "INSERT 
-                INTO bot (name, description, macAddress) 
-                VALUES (?,?,?)";
+        $sql = "INSERT INTO bot (name, description, macAddress) VALUES (?,?,?)";
 
         if (!stmtExec($sql, 0, $botName, $botDiscription, $macAdress)) {
             $_SESSION['ERROR_MESSAGE'] = "Voer alle velden in!";
@@ -177,9 +173,7 @@ if (isset($_POST['bot'])) {
             exit();
         }
 
-        $sql = "INSERT 
-                INTO specs (board, interface) 
-                VALUES (?,?)";
+        $sql = "INSERT INTO specs (board, interface) VALUES (?,?)";
 
         if (!stmtExec($sql, 0, $botBoard, $botInterface)) {
             $_SESSION['ERROR_MESSAGE'] = "Voer alle velden in!";
@@ -187,9 +181,7 @@ if (isset($_POST['bot'])) {
             exit();
         }
 
-        $sql = "INSERT 
-                INTO stats (wins, playedMatches) 
-                VALUES (?,?)";
+        $sql = "INSERT INTO stats (wins, playedMatches) VALUES (?,?)";
 
         if (!stmtExec($sql, 0, 0, 0)) {
             $_SESSION['ERROR_MESSAGE'] = "Voer alle velden in!";
@@ -197,17 +189,13 @@ if (isset($_POST['bot'])) {
             exit();
         }
 
-
         if (checkIfFile($_FILES['botPic'])) {
             if (checkFileSize($_FILES['botPic'])) {
                 if (checkFileType($_FILES['botPic'])) {
                     $botId = $_SESSION['lastInsertedId'];
                     if (makeFolder($botId, "../assets/img/bots/")) {
                         if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botPic']['name'])) {
-                            $query = "UPDATE `bot`
-                                      SET imagePath = ?
-                                      WHERE id = ?
-                                      ";
+                            $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
 
                             if (uploadFile($_FILES['botPic'], $query, $botId, "/assets/img/bots/{$botId}/")) {
                                 $_SESSION['succes'] = 'De robot is succesvol toegevoegd!';
@@ -264,19 +252,13 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
 
     foreach ($_POST as $radioTeamId => $assignedPoints) {
         if (isset($_POST[$radioTeamId]) && !isset($_POST[$radioTeamId . 'submit'])) {
-            switch($_POST[$radioTeamId]) {
+            switch ($_POST[$radioTeamId]) {
                 case 25:
-                    $sql = "UPDATE `team-event` 
-                            JOIN stats ON `team-event`.teamId = stats.id 
-                            SET points = points + ?, wins = wins + 1, playedMatches = playedMatches + 1 
-                            WHERE `team-event`.teamId = ?";
+                    $sql = "UPDATE `team-event` JOIN stats ON `team-event`.teamId = stats.id SET points = points + ?, wins = wins + 1, playedMatches = playedMatches + 1 WHERE `team-event`.teamId = ?";
                     break;
-                    
+
                 default:
-                    $sql = "UPDATE `team-event` 
-                            JOIN stats ON `team-event`.teamId = stats.id 
-                            SET points = points + ?, playedMatches = playedMatches + 1
-                            WHERE `team-event`.teamId = ?";
+                    $sql = "UPDATE `team-event` JOIN stats ON `team-event`.teamId = stats.id SET points = points + ?, playedMatches = playedMatches + 1 WHERE `team-event`.teamId = ?";
                     break;
             }
         }
@@ -286,18 +268,11 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
                 $assignedPoints = $_POST[$radioTeamId];
                 switch ($assignedPoints) {
                     case 0:
-                        $sql = "UPDATE `team-event` 
-                                JOIN stats ON `team-event`.teamId = stats.id
-                                SET points = ?, 
-                                wins = (CASE WHEN (wins > 0) THEN wins - 1 ELSE (wins)END), 
-                                playedMatches = (CASE WHEN (playedMatches > 0) THEN playedMatches - 1 ELSE (playedMatches)END)
-                                WHERE `team-event`.teamId = ?";
+                        $sql = "UPDATE `team-event` JOIN stats ON `team-event`.teamId = stats.id SET points = ?, wins = (CASE WHEN (wins > 0) THEN wins - 1 ELSE (wins)END), playedMatches = (CASE WHEN (playedMatches > 0) THEN playedMatches - 1 ELSE (playedMatches)END) WHERE `team-event`.teamId = ?";
                         break;
 
                     default:
-                        $sql = "UPDATE `team-event` 
-                                SET points = ? 
-                                WHERE teamId = ?";
+                        $sql = "UPDATE `team-event` SET points = ? WHERE teamId = ?";
                         break;
                 }
             } else {
@@ -305,7 +280,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
             }
         }
 
-        if(isset($sql)) {
+        if (isset($sql)) {
             $stmt = mysqli_prepare($conn, $sql);
 
             if (!$stmt) {
@@ -325,10 +300,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
         break;
     }
 
-    $sql = "SELECT teamId, name, eventId, points 
-            FROM `team-event` 
-            JOIN team ON team.id = `team-event`.teamId 
-            WHERE eventId = ?";
+    $sql = "SELECT teamId, name, eventId, points FROM `team-event` JOIN team ON team.id = `team-event`.teamId WHERE eventId = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     mysqli_stmt_bind_param($stmt, 'i', $eventId);
@@ -369,13 +341,8 @@ if (isset($_POST['selectedEvent'])) {
     $selectedEvent = filter_input(INPUT_POST, 'selectedEvent', FILTER_SANITIZE_SPECIAL_CHARS);
 
     if (!checkSelectedEvent($selectedEvent)) {
-        //check if event & team id are already in database
-        $sql = "SELECT eventId, teamId, points 
-                FROM `team-event` 
-                WHERE eventId = ? 
-                AND teamId = ?";
+        $sql = "SELECT eventId, teamId, points FROM `team-event` WHERE eventId = ? AND teamId = ?";
 
-        //Get results from the database
         $results = stmtExec($sql, 0, $selectedEvent, $_SESSION['selectedTeam']);
 
         //Check if no result has been found
@@ -386,10 +353,7 @@ if (isset($_POST['selectedEvent'])) {
             header('location: admin.php?addTeamToEvent');
             exit();
         } else {
-            //Insert into database
-            $sql = "INSERT 
-                    INTO `team-event` (eventId, teamId) 
-                    VALUES (?,?)";
+            $sql = "INSERT INTO `team-event` (eventId, teamId) VALUES (?,?)";
 
             if (!stmtExec($sql, 0, $selectedEvent, $_SESSION['selectedTeam'])) {
                 $_SESSION['error'] = "database_error";
@@ -398,15 +362,14 @@ if (isset($_POST['selectedEvent'])) {
 
             unset($_SESSION['selectedTeam']);
 
-            //Set success message
             $_SESSION['succes'] = 'Het team is succesvol aan het evenement toegevoegd!';
 
-            //Send user to admin.php?addTeamToEvent
             header('location: admin.php?addTeamToEvent');
             exit();
         }
     }
 }
+
 //Add stream
 if (isset($_POST['streamAnnuleren'])) {
     unset($_SESSION['selectedEvent']);
@@ -427,35 +390,28 @@ if (isset($_POST['selectedEventForStream'])) {
 
 if (isset($_POST['uploadStream'])) {
     //check if event & team id are already in database
-
     if (checkIfFile($_FILES['file'])) {
-            if (checkFileType($_FILES['file'])) {
-                if (!checkFileExist("../assets/video/", $_FILES['file']['name'])) {
-                    $query = "UPDATE `event`
-                              SET stream = ?
-                              WHERE id = ?
-                            ";
+        if (checkFileType($_FILES['file'])) {
+            if (!checkFileExist("../assets/video/", $_FILES['file']['name'])) {
+                $query = "UPDATE `event` SET stream = ? WHERE id = ?";
 
-                    if (uploadFile($_FILES['file'], $query, $_SESSION['selectedEvent'], "/assets/video/")) {
-                        $_SESSION['succes'] = 'De stream is succesvol toegevoegd!';
-                        unset($_SESSION['selectedEvent']);
+                if (uploadFile($_FILES['file'], $query, $_SESSION['selectedEvent'], "/assets/video/")) {
+                    $_SESSION['succes'] = 'De stream is succesvol toegevoegd!';
+                    unset($_SESSION['selectedEvent']);
 
-                        header('location: admin.php?addStream');
-                        exit();
-                    }
+                    header('location: admin.php?addStream');
+                    exit();
                 }
             }
+        }
     }
 }
 
 //code for create team page
-
 if (isset($_POST['submitTeam'])) {
     if (isset($_POST['teamName']) && $teamName = filter_input(INPUT_POST, 'teamName', FILTER_SANITIZE_SPECIAL_CHARS)) {
         if (isset($_POST['bots']) && $botId = filter_input(INPUT_POST, 'bots', FILTER_SANITIZE_NUMBER_INT)) {
-            $sql = "INSERT 
-                    INTO team (name, botId) 
-                    VALUES (?,?)";
+            $sql = "INSERT INTO team (name, botId) VALUES (?,?)";
 
             if (!stmtExec($sql, 0, $teamName, $botId)) {
                 $_SESSION['error'] = "Voer alle velden in!";
@@ -477,22 +433,17 @@ if (isset($_POST['robotEventAnnuleren'])) {
 
 if (isset($_POST['startEvent'])) {
     // sets all events to inactive
-    $query = "UPDATE `event` 
-              SET active = 0";
+    $query = "UPDATE `event` SET active = 0";
     $result = stmtExec($query);
 
     // update event on active
-    $query = "UPDATE `event` 
-              SET active = 1 
-              WHERE id = ?";
+    $query = "UPDATE `event` SET active = 1 WHERE id = ?";
     $id = filter_input(INPUT_POST, "startEvent", FILTER_SANITIZE_NUMBER_INT);
     $result = stmtExec($query, 0, $id);
 }
 
 if (isset($_POST['stopEvent'])) {
-    $query = "UPDATE `event` 
-              SET active = 0 
-              WHERE id = ?";
+    $query = "UPDATE `event` SET active = 0 WHERE id = ?";
     $id = filter_input(INPUT_POST, "stopEvent", FILTER_SANITIZE_NUMBER_INT);
     $result = stmtExec($query, 0, $id);
 }
@@ -503,7 +454,6 @@ if (isset($_POST['stopEvent'])) {
 
 <head>
     <?php
-    include_once('../functions/function.php');
     includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
@@ -589,11 +539,10 @@ if (isset($_POST['stopEvent'])) {
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">
                                     <?php
-                                    // foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
-                                    //     echo '<li>' . $errorMsg . '</li>';
-                                    // }
-                                    echo $_SESSION['ERROR_MESSAGE'];
-
+                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
+                                        echo '<li>' . $errorMsg . '</li>';
+                                    }
+                                    
                                     unset($_SESSION['ERROR_MESSAGE']);
                                     ?>
                                 </ul>

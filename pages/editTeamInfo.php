@@ -40,20 +40,19 @@ global $error;
             <?php
             }
             if (!empty($_SESSION['ERROR_MESSAGE'])) {
-                ?>
-                    <div class="row" id="errorBar">
-                        <div class="col-md-12">
-                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
-                                <ul class="mb-0">
-                                    <?php
-                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
+            ?>
+                <div class="row" id="errorBar">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
+                            <ul class="mb-0">
+                                <?php
+                                foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
+                                    echo '<li>' . $errorMsg . '</li>';
+                                }
 
-                                    unset($_SESSION['ERROR_MESSAGE']);
-                                    ?>
-                                </ul>
-                            </div>
+                                unset($_SESSION['ERROR_MESSAGE']);
+                                ?>
+                            </ul>
                         </div>
                     </div>
                 <?php
@@ -63,7 +62,7 @@ global $error;
             <?php echo changeTeamInfo(); ?>
         </div>
     </div>
-    <div class="">
+    <div>
         <?php include_once("../components/footer.php"); ?>
     </div>
 </body>
