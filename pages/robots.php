@@ -34,13 +34,13 @@
                 $botName = $results["bot.name"][$i];
                 $botimagePath = $results["bot.imagePath"][$i];
 
-                if ($botimagePath === "image.png") $botimagePath = "../assets/img/bot.svg";
+                if ($botimagePath == NULL) $botimagePath = "/assets/img/bot.svg";
 
                 echo ' 
                     <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $botName . '" type="button" role="tab" aria-controls="' . $botName . '" aria-selected="false">
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
-                                <div class="col-12 pt-1">
+                                <div class="col-12 my-auto pt-1">
                                     <img class="img-fluid" src="..' . $botimagePath . '" alt="' . $botName . '">
                                 </div>
                                 <div class="col-12 position-relative">

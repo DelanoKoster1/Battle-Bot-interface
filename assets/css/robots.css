@@ -1,6 +1,7 @@
 .box {
   border-radius: 18px;
   background-color: gray;
+  height: 225px;
 }
 
 .box img {
