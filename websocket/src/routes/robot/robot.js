@@ -27,7 +27,10 @@ wss.on('connection', (client, req) => {
                     if (ready(req.for)) {
                         createGame(req);
                         sendActionToBot(req);
-                        setAttributeToClient("preparing", false, client)
+                        setAttributeToClient("preparing", false, client);
+                        sendMessageToInterface({
+                            "games": games
+                        })
                     } else {
                         sendMessageToClient(client, {
                             "error": "NOT_READY"
@@ -73,7 +76,7 @@ wss.on('connection', (client, req) => {
             if (req.error) {
                 sendMessageToInterface({
                     "status": true,
-                    "game": games
+                    "games": games
                 })
             }
 
@@ -138,7 +141,7 @@ const interval = setInterval(() => {
     })
 }, 5000)
 
-function updateGameStatus(){
+function updateGameStatus(body){
 
 }
 
@@ -300,7 +303,7 @@ function ready(target, action = "") {
 function sendActionToAllBots(game, action) {
     if (action == "prepare") {
         games["all"] = {
-            "game": game,
+            "games": game,
             "action": "preparing_game",
             "bots": []
         };
@@ -328,12 +331,26 @@ function sendActionToAllBots(game, action) {
  * @param {Object} req 
  */
 function createGame(req) {
-    games.push({
+    let game = {
         "id": uuidv4(),
         "game": req.game,
         "status": req.action,
-        "bots": req.for
+        "bots": []
+    }
+    let bots = [];
+ 
+
+    wss.clients.forEach((client) => {
+        if(client.role == "bot"){
+            if(req.for == "all"){
+                bots.push({"botId": client.id, "status": client.status}) 
+            }
+        }
     })
+
+    game.bots = bots
+
+    games.push(game);
 }
 
 /**
