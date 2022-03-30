@@ -2,6 +2,56 @@
 include_once('../functions/function.php');
 
 global $error;
+
+if (isset($_POST['playerInfoChange'])) {
+    if (checkIfFile($_FILES['botTeamImage'])) {
+        if (checkFileSize($_FILES['botTeamImage'])) {
+            if (checkFileType($_FILES['botTeamImage'])) {
+                if (makeFolder($botId, "../assets/img/bots/")) {
+                    if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botTeamImage']['name'])) {
+                        $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
+
+                        if (uploadFile($_FILES['botTeamImage'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                            $_SESSION['succes'] = 'De robot is succesvol toegevoegd!';
+                            header("location:../pages/admin.php?bot");
+                            exit();
+                        } else {
+                            $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                            $_SESSION['ERROR_MESSAGE'] = $error;
+                            header('location: admin.php?bot');
+                            exit();
+                        }
+                    } else {
+                        $error[] = "Het geüploade bestand bestaat al!";
+                        $_SESSION['ERROR_MESSAGE'] = $error;
+                        header('location: admin.php?bot');
+                        exit();
+                    }
+                } else {
+                    $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                    $_SESSION['ERROR_MESSAGE'] = $error;
+                    header('location: admin.php?bot');
+                    exit();
+                }
+            } else {
+                $error[] = "Dit bestandstype wordt niet geaccepteerd!";
+                $_SESSION['ERROR_MESSAGE'] = $error;
+                header('location: admin.php?bot');
+                exit();
+            }
+        } else {
+            $error[] = "Het geüploade bestand is te groot!";
+            $_SESSION['ERROR_MESSAGE'] = $error;
+            header('location: admin.php?bot');
+            exit();
+        }
+    } else {
+        $_SESSION['succes'] = "De robot is succesvol toegevoegd!";
+        $_SESSION['ERROR_MESSAGE'] = $error;
+        header('location: admin.php?bot');
+        exit();
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
