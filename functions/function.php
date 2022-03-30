@@ -1286,3 +1286,40 @@ function getActiveEvent() {
 
     return stmtExec($sql);
 }
+
+function changeTeamInfo() 
+{
+    $sql = "SELECT  bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
+            FROM    `bot`
+            JOIN    `specs`     ON specs.id = bot.specsId
+            JOIN    `team`      ON team.botId = bot.id  
+            JOIN    `account`   ON account.teamId = team.id
+            WHERE   account.username = ?       
+           ";
+
+
+    $botInfo = stmtExec($sql, 0, $_SESSION['username']);
+    
+    $returnForm = '';
+
+    $returnForm .= '<form method="post" action="" enctype="multipart/form-data">';
+        $returnForm .= '<div class="form-group">';
+            $returnForm .= '<label for="teamNaam" class="mt-3">team naam</label>';
+            $returnForm .= '<input type="text" id="teamNaam" class="form-control mt-3" value="'. $botInfo['team.name'][0] .'" placeholder="'. $botInfo['team.name'][0] .'" />';
+            $returnForm .= '<label for="botName" class="mt-3">Bot naam</label>';
+            $returnForm .= '<input type="text" id="botName" class="form-control mt-3" value="'. $botInfo['bot.name'][0] .'" placeholder="'. $botInfo['bot.name'][0] .'" />';
+            $returnForm .= '<label for="botDescription" class="mt-3">bot omschrijving</label>';
+            $returnForm .= '<input type="text" id="botDescription" class="form-control mt-3" value="'. $botInfo['bot.description'][0] .'" placeholder="'. $botInfo['bot.description'][0] .'" />';
+            $returnForm .= '<label for="botImagePath" class="mt-3">bot foto</label>';
+            $returnForm .= '<img src="..'.$botInfo['bot.imagePath'][0].'" height="100" width="100">';
+            $returnForm .= '<input type="file" id="botImagePath" class="form-control mt-3" value="..'.$botInfo['bot.imagePath'][0].'" />';
+            $returnForm .= '<label for="specsBoard" class="mt-3">specificatie board</label>';
+            $returnForm .= '<input type="text" id="specsBoard" class="form-control mt-3" value="'. $botInfo['specs.board'][0] .'" placeholder="'. $botInfo['specs.board'][0] .'" />';
+            $returnForm .= '<label for="specsInterface" class="mt-3">specificatie interface</label>';
+            $returnForm .= '<input type="text" id="specsInterface" class="form-control mt-3" value="'. $botInfo['specs.interface'][0] .'" placeholder="'. $botInfo['specs.interface'][0] .'" />';
+            $returnForm .= '<input type="submit" class="btn btn-primary mt-3" value="verander info" name="playerInfoChange">';
+        $returnForm .= '</div>';
+    $returnForm .= '</form>';
+
+    return $returnForm;
+}
