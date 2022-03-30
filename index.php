@@ -44,10 +44,7 @@
                     </div>
                     <div class="col-12 d-flex justify-content-between">
                         <?php
-                        $sql = "SELECT id, 
-                                       name, 
-                                       imagePath 
-                                FROM bot limit 5";
+                        $sql = "SELECT id, name, imagePath FROM bot limit 5";
                         $dbResults = stmtExec($sql);
                         if (is_array($dbResults)) {
                             $ids = $dbResults["id"];
@@ -92,7 +89,7 @@
             </div>
 
             <div class="row m-auto eventShowBox">
-                <?php showEvents(); 
+                <?php showEvents();
                 ?>
             </div>
         </div>

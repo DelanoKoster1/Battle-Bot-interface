@@ -4,7 +4,7 @@
 <head>
     <?php
     include_once('../functions/function.php');
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/playback.css">
@@ -20,11 +20,11 @@
         <?php includeHeader('page'); ?>
     </section>
 
-    <?php 
+    <?php
     if (isset($_POST['submitAnswer'])) {
         if (!empty($_POST['questionAnswer'])) {
             pollQuestionAnswer();
-            pollAddUser($_SESSION['username'],$_POST['questionAnswer']); 
+            pollAddUser($_SESSION['username'], $_POST['questionAnswer']);
         }
     }
     ?>
@@ -32,7 +32,7 @@
         <div class="row">
             <div id="livestream" class="col-xl-9 col-lg-8 col-12">
                 <div class="ratio ratio-16x9">
-                    <?=getLivestream();?>
+                    <?= getLivestream(); ?>
                 </div>
             </div>
             <div id="chat" class="col-xl-3 col-lg-4 col-12 mt-4 mt-lg-0">
@@ -69,8 +69,7 @@
                                                     <a href="./points.php" class="btn text-right btn-success">Scorebord</a>
                                                     <button class="btn text-right btn-success vote-button">Stemmen</button>
                                                 </div>
-                                            <?php } else {
-                                            ?>
+                                            <?php } else { ?>
                                                 <div class="col-12">
                                                     <p>Login om te kunnen chatten</p>
                                                 </div>
@@ -117,7 +116,9 @@
     </div>
     <div class="text-center">
         <h3>Doet de livestream het niet?</h3>
-        <a target="_blank" href="https://www.twitch.tv/stendenbattlebot"><h6>Klik hier!</h6></a>
+        <a target="_blank" href="https://www.twitch.tv/stendenbattlebot">
+            <h6>Klik hier!</h6>
+        </a>
     </div>
     <footer>
         <?php include_once('../components/footer.php') ?>

@@ -28,17 +28,17 @@ switch (isset($_SESSION['error'])) {
 
     <!-- Hardcoded styling for .htacces file -->
     <style>
-    #error {
-        background: #dedede;
-    }
+        #error {
+            background: #dedede;
+        }
 
-    .page-wrap {
-        min-height: 100vh;
-    }
+        .page-wrap {
+            min-height: 100vh;
+        }
 
-    .fs10em {
-        font-size: 10em;
-    }
+        .fs10em {
+            font-size: 10em;
+        }
     </style>
 
     <title><?php echo $errormessage; ?></title>
@@ -53,7 +53,7 @@ switch (isset($_SESSION['error'])) {
                         <i class="fas fa-robot fs10em"></i>
                         <span class="display-1 d-block text-uppercase"><?php echo $errormessage; ?></span>
                         <div class="mb-4 lead">Neem contact op met de beheerder.</div>
-                        <?php 
+                        <?php
                         if (isset($_SESSION['error'])) {
                             echo '<a href="../index.php" class="btn btn-link">Terug naar de homepagina</a>';
                         } else {

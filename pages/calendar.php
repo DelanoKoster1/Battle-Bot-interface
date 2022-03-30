@@ -7,7 +7,7 @@ include_once('../functions/function.php');
 
 <head>
     <?php
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -30,7 +30,7 @@ include_once('../functions/function.php');
                     <span hidden id="dateOfEvent"><?= eventTimeDescent(); ?></span>
                 </div>
             </div>
-            
+
             <div class="row m-auto eventShowBox">
                 <?php showEvents(); ?>
             </div>

@@ -29,14 +29,7 @@ include_once('../functions/function.php');
 
         <div class="row m-auto eventShowBox">
             <?php
-            $query = "SELECT id, 
-                            name, 
-                            description, 
-                            date, 
-                            stream
-                      FROM event 
-                      WHERE date < now()
-                      ";
+            $query = "SELECT id, name, description, date, stream FROM event WHERE date < now()";
 
             $historyResults = stmtExec($query);
 

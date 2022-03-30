@@ -1,5 +1,5 @@
 :root {
-  --text-gray: #CBCBCB;
+  --text-gray: #cbcbcb;
   --text-nav-hover: #a7a7a7;
   --footer-bg: #292929;
 }
@@ -16,8 +16,8 @@ footer .rounded-circle {
   display: flex;
   justify-content: center;
   align-items: center;
-  aspect-ratio: 1.0;
-  background-color: rgba(255, 255, 255, .5);
+  aspect-ratio: 1;
+  background-color: rgba(255, 255, 255, 0.5);
 }
 .footerIMG {
   width: 160px;
@@ -25,10 +25,10 @@ footer .rounded-circle {
 }
 
 footer h6 {
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 footer .nav-link {
-  font-size: .9rem;
+  font-size: 0.9rem;
   color: white;
 }
 footer .nav-link:hover {
@@ -40,6 +40,6 @@ footer .nav-link:hover {
     width: 175px;
   }
   .footerIMG {
-    width:110px;
+    width: 110px;
   }
 }

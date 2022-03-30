@@ -23,7 +23,7 @@ if (isset($_POST['save'])) {
                     stmtExec($query, 0, $username, $email, $_SESSION['id']);
                     $success = true;
                 }
-            } 
+            }
         } else {
             $error[] = 'Deze gebruikersnaam is ongeldig!';
         }
@@ -48,12 +48,12 @@ if (isset($_POST['save'])) {
                             $error[] = 'Het nieuwe en herhaal wachtwoord mogen niet overeen komen met het huidige wachtwoord!';
                         }
                     }
-                } 
-            } 
+                }
+            }
         } else {
             $error[] = 'Het huidige wachtwoord is incorrect!';
         }
-    } 
+    }
 }
 
 $results = getProfileInfo();
@@ -63,7 +63,7 @@ $results = getProfileInfo();
 
 <head>
     <?php
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link href="../assets/img//logo/logo.ico" rel="icon" type="image/x-icon">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -86,28 +86,28 @@ $results = getProfileInfo();
                         <h1 class="text-center bg-white w-100 pt-5 mb-3">Welkom, <?= $results['username'][0] ?></h1>
                     </div>
                     <?php
-                    if($_SESSION['role'] == 2) {
+                    if ($_SESSION['role'] == 2) {
                     ?>
-                    <div class="col-12 text-center mb-3">
-                        <span>
-                            <a class="text-body" href="./addAdmin.php">
-                                <span class="material-icons align-middle">add</span>
-                                Administrator Toevoegen
-                            </a>
-                        </span>
-                    </div>
+                        <div class="col-12 text-center mb-3">
+                            <span>
+                                <a class="text-body" href="./addAdmin.php">
+                                    <span class="material-icons align-middle">add</span>
+                                    Administrator Toevoegen
+                                </a>
+                            </span>
+                        </div>
                     <?php
                     }
                     if ($_SESSION['role'] == 3) {
                     ?>
-                    <div class="col-12 text-center mb-3">
-                        <span>
-                            <a class="text-body" href="./editTeamInfo.php">
-                                <span class="material-icons align-middle">add</span>
-                                Team informatie bewerken
-                            </a>
-                        </span>
-                    </div>
+                        <div class="col-12 text-center mb-3">
+                            <span>
+                                <a class="text-body" href="./editTeamInfo.php">
+                                    <span class="material-icons align-middle">add</span>
+                                    Team informatie bewerken
+                                </a>
+                            </span>
+                        </div>
                     <?php
                     }
                     ?>
@@ -121,28 +121,27 @@ $results = getProfileInfo();
                                     </div>
                                 </div>
                             <?php
-                            }   
+                            }
                         }
                         if (isset($_POST['save'])) {
                             if ($success == true) {
-                                ?>
+                            ?>
                                 <div class="col-md-12 p-0">
                                     <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
                                         <?php echo "De gegevens zijn succesvol geüpdate!" ?>
                                     </div>
                                 </div>
-                                <?php
-                            } 
+                            <?php
+                            }
                             if ($success2 == true) {
-                               ?>
-                               <div class="col-md-12 p-0">
-                                   <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
-                                       <?php echo "Het wachtwoord is succesvol geüpdate!" ?>
-                                   </div>
-                               </div>
-                               <?php
-                           }
-                           
+                            ?>
+                                <div class="col-md-12 p-0">
+                                    <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                                        <?php echo "Het wachtwoord is succesvol geüpdate!" ?>
+                                    </div>
+                                </div>
+                        <?php
+                            }
                         }
                         ?>
                     </div>

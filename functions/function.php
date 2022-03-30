@@ -1,9 +1,14 @@
 <?php
 session_start();
 
-// $type:   1 for print_r(), 0 or empty for var_dump()
-function debug($var, int $type = 0)
-{
+/**
+ * Function debug
+ * $type:   1 for print_r(), 0 or empty for var_dump()
+ * @param void      $var
+ * @param int       $type  
+ * @return string   debug message
+ */
+function debug($var, int $type = 0) {
     echo "<pre>";
     if ($type) {
         print_r($var);
@@ -14,11 +19,11 @@ function debug($var, int $type = 0)
 }
 
 /**
+ * Function connectDB
  * Function to connect to Database
- * 
+ * @return object  $conn   Database connection
  */
-function connectDB()
-{
+function connectDB() {
     //Require ENV
     require_once('env.php');
 
@@ -34,8 +39,14 @@ function connectDB()
     return $conn;
 }
 
-function fail(?string $code = NULL, ?string $info = NULL)
-{
+/**
+ * Function fail
+ * Function to display fail message
+ * @param string    $code
+ * @param string    $info
+ * @return HTML
+ */
+function fail(?string $code = NULL, ?string $info = NULL) {
     switch ($code) {
             // Database Fail: Common
         case 'DB00':
@@ -78,16 +89,15 @@ function fail(?string $code = NULL, ?string $info = NULL)
     }
 }
 
-/*
- *                         
- * @param string $sql: Give the sql query to execute                                                                                    
- * @param int $failCode: Use a code for fail messages, You can easily create 1 above                           
- * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                                                                                                 
- *                                                                                                   
+ /**
+ * Function stmtExec
+ * Function to execute query
+ * @param   string           $sql: Give the sql query to execute                                                                                    
+ * @param   int              $failCode: Use a code for fail messages, You can easily create 1 above                           
+ * @param   ...              $BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables    
+ * @return  boolean/object   $results 
  */
-function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
-{
-
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
     //Require env.php
     require_once('env.php');
 
@@ -147,7 +157,7 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
 
                     // This piece of code just gets the names of the SELECT statement
                     // So there are logic variables to bind to the results
-                    
+
                     $sql = str_replace("DISTINCT ", "", $sql);
                     $totalFromKey = substr_count($sql, "FROM");
                     $totalEndKey = substr_count($sql, ")");
@@ -275,15 +285,13 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
 /**
  * Function checkLoginFields
  * Function to check if fields are correct and not empty.
- * Display Error message if needed.
  * @param String $username Filled in username
  * @param String $email Filled in email
  * @param String $password1 Filled in password
  * @param array $error Array with errors
- * @return String/boolean $error False or error message
+ * @return Array/boolean $error False or error message
  */
-function checkLoginFields(String $username, String $password)
-{
+function checkLoginFields(String $username, String $password) {
     //Call global variable(s)
     $error = array();
 
@@ -309,19 +317,17 @@ function checkLoginFields(String $username, String $password)
 }
 
 /**
- * Function checkRegisterFields.
+ * Function checkRegisterFields
  * Function to check if fields are correct and not empty.
- * Display Error message if needed.
  * @param string    $email  Filled in email
  * @param string    $firstname  Filled in firstname
  * @param string    $lastname  Filled in lastname
  * @param string    $password  Filled in password
  * @param string    $password2  Filled in password2
  * @param array     $error  Array with errors
- * @return string/boolean  $error  False or error message
+ * @return Array/boolean  $error  False or error message
  */
-function checkRegisterFields(string $username, string $email, string $password, string $password2)
-{
+function checkRegisterFields(string $username, string $email, string $password, string $password2) {
     //Call global variable(s)
     $error = array();
 
@@ -341,10 +347,10 @@ function checkRegisterFields(string $username, string $email, string $password, 
     if ($password != $password2) {
         $error[] = 'Wachtwoorden komen niet overeen!';
     }
-    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,49}$/', $username) ) {
+    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,49}$/', $username)) {
         $error[] = 'Gebruikersnaam voldoet niet aan de standaarden!';
     }
-    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,254}$/', $password) ) {
+    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,254}$/', $password)) {
         $error[] = 'Wachtwoord voldoet niet aan de standaarden!';
     }
     if (strlen($email) > 200) {
@@ -359,20 +365,15 @@ function checkRegisterFields(string $username, string $email, string $password, 
 }
 
 /**
- * Function checkRegisterFields.
+ * Function checkProfileFields
  * Function to check if fields are correct and not empty.
- * Display Error message if needed.
- * @param string    $email  Filled in email
- * @param string    $firstname  Filled in firstname
- * @param string    $lastname  Filled in lastname
- * @param string    $password  Filled in password
- * @param string    $password2  Filled in password2
- * @param array     $error  Array with errors
- * @return string/boolean  $error  False or error message
+ * @param string            $username  Filled in firstname
+ * @param string            $email  Filled in email 
+ * @param string            $password  Filled in password
+ * @param string            $password2  Filled in password2
+ * @return Array/boolean   $error  False or error message
  */
-
-function checkProfileFields(string $username, string $email, string $password, string $password2)
-{
+function checkProfileFields(string $username, string $email, string $password, string $password2) {
     //Call global variable(s)
     $error = array();
 
@@ -409,9 +410,14 @@ function checkProfileFields(string $username, string $email, string $password, s
     }
 }
 
-function checkProfilePassword($newPassword, $repeatPassword)
-{
-    //Call global variable(s)
+/**
+ * Function checkProfilePassword
+ * Function to check if fields are correct and not empty.
+ * @param string          $newPassword
+ * @param string          $repeatPassword
+ * @return boolean/array  $error  False or error message
+ */
+function checkProfilePassword($newPassword, $repeatPassword) {
     $error = array();
 
     if ($newPassword == $repeatPassword) {
@@ -431,17 +437,16 @@ function checkProfilePassword($newPassword, $repeatPassword)
         return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
+
 /**
  * Function checkUserInDatabase
  * Function to check if user already exists in database
- * Return Error message if needed.
  * @param   string          $username  Filled in username
  * @param   string          $email     Filled in email
  * @param   boolean         $profile   check if this is profile page
- * @return  string/boolean  $error  False or error message
+ * @return  boolean/array   $error  False or error message
  */
-function checkUserInDataBase(string $username, string $email, $profile = false)
-{
+function checkUserInDataBase(string $username, string $email, $profile = false) {
     //Call global variable(s)
     $error = array();
 
@@ -478,12 +483,14 @@ function checkUserInDataBase(string $username, string $email, $profile = false)
     }
 }
 
+
 /**
+ * Function includeHeader
  * Function to include header with correct map structure
- * 
+ * @param  string    $sort
+ * @return object    require_once
  */
-function includeHeader(String $sort)
-{
+function includeHeader(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');
@@ -492,12 +499,14 @@ function includeHeader(String $sort)
     }
 }
 
+
 /**
+ * Function includeHead
  * Function to include header with correct map structure
- * 
+ * @param  string    $sort
+ * @return object    require_once
  */
-function includeHead(String $sort)
-{
+function includeHead(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/head.php');
@@ -507,11 +516,12 @@ function includeHead(String $sort)
 }
 
 /**
+ * Function checkValidDate
  * Function to check if date is valid
- * 
+ * @param  string    $date
+ * @return boolean
  */
-function checkValidDate(String $date)
-{
+function checkValidDate(String $date) {
     $today = date('Y-m-d\TH:i');
 
     //Check if filled in date is older then today.
@@ -528,11 +538,12 @@ function checkValidDate(String $date)
 }
 
 /**
+ * Function formatdate
  * Function to format a date
- * 
+ * @param  string    $date
+ * @return string
  */
-function formatdate(string $date): string
-{
+function formatdate(string $date): string {
     switch (date("F", strtotime($date))) {
         case "January":
             $month = "\\J\\a\\n\\u\\a\\r\\i";
@@ -566,11 +577,14 @@ function formatdate(string $date): string
 }
 
 /**
+ * Function showEvents
  * Function to show events as HTML
- * 
+ * @param  boolean    $limit
+ * @param  boolean    $admin
+ * @param  boolean    $start
+ * @return HTML
  */
-function showEvents(bool $limit = false, bool $admin = false, $start = false)
-{
+function showEvents(bool $limit = false, bool $admin = false, $start = false) {
     $query = "SELECT id, name, date, description
               FROM event 
               WHERE date > NOW()
@@ -643,9 +657,12 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false)
     }
 }
 
-//function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
-function eventTimeDescent()
-{
+/**
+ * Function eventTimeDescent
+ * Function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
+ * @return String $typedOutDate
+ */
+function eventTimeDescent() {
     $query = "SELECT    date
               FROM      `event`
               WHERE     NOW() <= date;
@@ -659,8 +676,12 @@ function eventTimeDescent()
     }
 }
 
-function getLivestream()
-{
+/**
+ * Function getLivestream
+ * Function to get the livestream
+ * @return HTML
+ */
+function getLivestream() {
     $query = "SELECT name
               FROM `event`
               WHERE active = 1";
@@ -679,9 +700,19 @@ function getLivestream()
     }
 }
 
-//this function is there to activate another function if conditions are met
-function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
-{
+/**
+ * Function multiPoll
+ * this function is there to activate another function if conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @param  String    $answer3
+ * @param  String    $answer4
+ * @param  String    $answer5
+ * @return String
+ */
+function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
 
     if (!empty($question)) {
         if ($questionType == "multiChoice") {
@@ -698,9 +729,18 @@ function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answ
     }
 }
 
-//this function INSERTS a question into the database if certain conditions are met
-function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4)
-{
+/**
+ * Function multiChoicePoll
+ * this function INSERTS a question into the database if certain conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @param  String    $answer3
+ * @param  String    $answer4
+ * @return String
+ */
+function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -724,9 +764,16 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
     }
 }
 
-//this function INSERTS a question into the database if certain conditions are met
-function yesOrNoPoll($question, $questionType, $answer1, $answer2)
-{
+/**
+ * Function yesOrNoPoll
+ * this function INSERTS a question into the database if certain conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @return String
+ */
+function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -742,9 +789,19 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2)
     }
 }
 
-//this function INSERTS a question into the database if certain conditions are met
-function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
-{
+/**
+ * Function voteForBotPoll
+ * this function INSERTS a question into the database if certain conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @param  String    $answer3
+ * @param  String    $answer4
+ * @param  String    $answer5
+ * @return String
+ */
+function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -772,15 +829,15 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
     }
 }
 
-//this function retrieves the question and answers from the database if the conditions are met
-//it shows all possible answers depending on which question is retrieved
-function retrieveQuestionInfo()
-{
+/**
+ * Function retrieveQuestionInfo
+ * this function retrieves the question and answers from the database if the conditions are met
+ * it shows all possible answers depending on which question is retrieved
+ * @return HTML
+ */
+function retrieveQuestionInfo() {
 
-    $query = "SELECT    question, answer1, answer2, answer3, answer4, answer5, active 
-              FROM      poll
-              WHERE     active = 1
-             ";
+    $query = "SELECT question, answer1, answer2, answer3, answer4, answer5, active FROM poll WHERE active = 1";
 
     $results = stmtExec($query);
 
@@ -816,34 +873,30 @@ function retrieveQuestionInfo()
     }
 }
 
-function pollUserCheck($username, $givenAnswer)
-{
+/**
+ * Function pollUserCheck
+ * @param  String    $username
+ * @param  String    $givenAnswer
+ * @return boolean
+ */
+function pollUserCheck($username, $givenAnswer) {
 
-    $checkUserPoll = "SELECT    userName
-                      FROM      `poll-outcome` 
-                     ";
+    $checkUserPoll = "SELECT userName FROM `poll-outcome`";
 
     $usersOffPoll = stmtExec($checkUserPoll);
 
-    $checkUserAccount = "SELECT    username
-                         FROM      `account`
-                         WHERE     username = ?  
-                        ";
+    $checkUserAccount = "SELECT username FROM `account` WHERE username = ?  ";
 
     $usersOffAccount = stmtExec($checkUserAccount, 0, $username);
 
     if (empty($usersOffPoll['userName'])) {
 
-        $query =  "INSERT INTO `poll-outcome` (userName,`givenAnswer`)
-                   VALUES (?,?)
-                  ";
+        $query =  "INSERT INTO `poll-outcome` (userName,`givenAnswer`) VALUES (?,?)";
 
         if (!empty($username) && !empty($givenAnswer)) {
             stmtExec($query, 0, $username, $givenAnswer);
 
-            $getInsertedUser = "SELECT  userName
-                                FROM    `poll-outcome`   
-                               ";
+            $getInsertedUser = "SELECT userName FROM `poll-outcome`";
 
             $users = stmtExec($getInsertedUser);
 
@@ -866,24 +919,22 @@ function pollUserCheck($username, $givenAnswer)
     }
 }
 
-//this function adds a user which has answered a question of the poll within that moment
-function pollAddUser($username, $givenAnswer)
-{
-
-    //return debug(pollUserCheck($username, $givenAnswer));
+/**
+ * Function pollAddUser
+ * this function adds a user which has answered a question of the poll within that moment
+ * @param  String    $username
+ * @param  String    $givenAnswer
+ */
+function pollAddUser($username, $givenAnswer) {
 
     if (pollUserCheck($username, $givenAnswer) == true) {
 
-        $query = "INSERT INTO `poll-outcome` (userName,`givenAnswer`)
-                  VALUES (?,?)
-                ";
+        $query = "INSERT INTO `poll-outcome` (userName,`givenAnswer`) VALUES (?,?)";
 
         if (!empty($username) && !empty($givenAnswer)) {
             stmtExec($query, 0, $username, $givenAnswer);
 
-            $getInsertedUser = "SELECT  userName
-                                FROM    `poll-outcome`   
-                            ";
+            $getInsertedUser = "SELECT userName FROM `poll-outcome`";
 
             $users = stmtExec($getInsertedUser);
 
@@ -896,9 +947,11 @@ function pollAddUser($username, $givenAnswer)
     }
 }
 
-//this function ends the poll which has been activated
-function endPoll()
-{
+/**
+ * Function endPoll
+ * this function ends the poll which has been activated
+ */
+function endPoll() {
 
     $changeActive = "UPDATE `poll` SET active = NULL WHERE active = 1";
 
@@ -909,12 +962,13 @@ function endPoll()
     stmtExec($deletePollOutcome, 0);
 }
 
-//this function checks if there is a poll and shows an input if the conditions have been met
-function checkIfPoll()
-{
-    $checkIfPoll = "SELECT  active
-                    FROM    poll    
-                   ";
+/**
+ * Function checkIfPoll
+ * this function checks if there is a poll and shows an input if the conditions have been met
+ * @return HTML/String
+ */
+function checkIfPoll() {
+    $checkIfPoll = "SELECT  active FROM poll";
 
     $getActive = stmtExec($checkIfPoll);
 
@@ -930,8 +984,7 @@ function checkIfPoll()
 }
 
 //This function shows the answers of the user who have participated in the poll in percentage
-function pollQuestionAnswer()
-{
+function pollQuestionAnswer() {
 
     $voteArray = [];
 
@@ -966,8 +1019,7 @@ function pollQuestionAnswer()
     return $progressBar;
 }
 
-function getProfileInfo()
-{
+function getProfileInfo() {
     $query = "SELECT    username,
                         email,
                         password
@@ -981,8 +1033,7 @@ function getProfileInfo()
  * 
  * @return Array Array of all robots with names from db
  */
-function getAllRobots()
-{
+function getAllRobots() {
     $conn = connectDB();
     $arr = array();
 
@@ -1011,8 +1062,7 @@ function getAllRobots()
     return $arr;
 }
 
-function getAllTeams()
-{
+function getAllTeams() {
     $conn = connectDB();
     $arr = array();
 
@@ -1046,8 +1096,7 @@ function getAllTeams()
  * 
  * @return Array Array of all events with names from db
  */
-function getAllEvents()
-{
+function getAllEvents() {
     $conn = connectDB();
     $arr = array();
 
@@ -1080,8 +1129,7 @@ function getAllEvents()
  * Function to check selected team ID
  * 
  */
-function checkSelectedTeam($teamID)
-{
+function checkSelectedTeam($teamID) {
     $error = array();
 
     if (!$teamID && empty($teamID) || $teamID == 0) {
@@ -1112,8 +1160,7 @@ function checkSelectedTeam($teamID)
 /**
  * Function to check selected event ID
  */
-function checkSelectedEvent($eventID)
-{
+function checkSelectedEvent($eventID) {
     $error = array();
 
     if (!$eventID && empty($eventID) || $eventID == 0) {
@@ -1144,9 +1191,7 @@ function checkSelectedEvent($eventID)
  * @param: $file: returns file object with properties
  * @return: true or false
  */
-
-function checkIfFile($file)
-{
+function checkIfFile($file) {
     return is_uploaded_file($file["tmp_name"]);
 }
 
@@ -1154,9 +1199,7 @@ function checkIfFile($file)
  * @param: $file: returns file object with properties
  * @return: true or false
  */
-
-function checkFileSize($file)
-{
+function checkFileSize($file) {
     if ($file["size"] <= 5000000) {
         return true;
     } else {
@@ -1168,9 +1211,7 @@ function checkFileSize($file)
  * @param: $file: returns file object with properties
  * @return: true or false
  */
-
-function checkFileType($file)
-{
+function checkFileType($file) {
     $mimeArray = ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf", "video/mp4"];
     $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file["tmp_name"]);
     if (in_array($fileInfo, $mimeArray)) {
@@ -1189,9 +1230,7 @@ function checkFileType($file)
  * @param: $path: returns file path
  * @return: true or false
  */
-
-function makeFolder(int $id, string $path)
-{
+function makeFolder(int $id, string $path) {
     $directory = $path . $id;
     if (!file_exists($directory)) {
         mkdir($directory, 0777);
@@ -1205,9 +1244,7 @@ function makeFolder(int $id, string $path)
  * @param: $fileName: returns file name
  * @return: true or false
  */
-
-function checkFileExist(string $directory, string $fileName)
-{
+function checkFileExist(string $directory, string $fileName) {
     return file_exists($directory . $fileName);
 }
 
@@ -1215,9 +1252,7 @@ function checkFileExist(string $directory, string $fileName)
  * @param: $directory: returns directory to file
  * @return: true
  */
-
-function deleteFile(string $directory)
-{
+function deleteFile(string $directory) {
     $files = glob($directory . '*'); // get all file names
     foreach ($files as $file) { // iterate files
         if (is_file($file)) {
@@ -1234,9 +1269,7 @@ function deleteFile(string $directory)
  * @param: $directory: returns directory
  * @return: true or false
  */
-
-function uploadFile($file, string $query, int $id, string $directory)
-{
+function uploadFile($file, string $query, int $id, string $directory) {
     if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory . $file["name"], $id)) {
         return true;
     } else {
@@ -1244,8 +1277,7 @@ function uploadFile($file, string $query, int $id, string $directory)
     }
 }
 
-function getActiveEvent()
-{
+function getActiveEvent() {
     $sql = "SELECT teamId, points, team.`name`, eventId 
     FROM `team-event` 
     JOIN team ON team.id = `team-event`.teamId

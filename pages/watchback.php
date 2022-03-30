@@ -6,7 +6,7 @@ include_once('../functions/function.php');
 
 <head>
     <?php
-    includeHead('page'); 
+    includeHead('page');
     ?>
     <link rel="stylesheet" href="../assets/css/style.css">
     <link rel="stylesheet" href="../assets/css/footer.css">
@@ -21,23 +21,13 @@ include_once('../functions/function.php');
     </section>
 
     <?php
+    $query = "SELECT stream FROM event WHERE date < now() AND id = ?";
 
-    /**
-     * Function to show events as HTML
-     * 
-     */
-
-    $query = "SELECT stream
-              FROM event 
-              WHERE date < now()
-              AND id = ?
-    ";
-
-    $historyResults = stmtExec($query,0, $_GET['id']);
+    $historyResults = stmtExec($query, 0, $_GET['id']);
     ?>
 
-    <video width="250"  autoplay muted controls id="VideoPlayback">
-        <source src="..<?=$historyResults['stream'][0]?>" type="video/mp4">
+    <video width="250" autoplay muted controls id="VideoPlayback">
+        <source src="..<?= $historyResults['stream'][0] ?>" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 

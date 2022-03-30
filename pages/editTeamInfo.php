@@ -40,25 +40,25 @@ global $error;
             <?php
             }
             if (!empty($_SESSION['ERROR_MESSAGE'])) {
-                ?>
-                    <div class="row" id="errorBar">
-                        <div class="col-md-12">
-                            <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
-                                <ul class="mb-0">
-                                    <?php
-                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
+            ?>
+                <div class="row" id="errorBar">
+                    <div class="col-md-12">
+                        <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
+                            <ul class="mb-0">
+                                <?php
+                                foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
+                                    echo '<li>' . $errorMsg . '</li>';
+                                }
 
-                                    unset($_SESSION['ERROR_MESSAGE']);
-                                    ?>
-                                </ul>
-                            </div>
+                                unset($_SESSION['ERROR_MESSAGE']);
+                                ?>
+                            </ul>
                         </div>
                     </div>
-                <?php
-                }
-                ?>
+                </div>
+            <?php
+            }
+            ?>
             <form class="col-md-12 col-12 bg-white" method="post">
                 <h1 class="text-center">Team bewerken</h1>
                 <table class="table table-responisve">
@@ -74,15 +74,7 @@ global $error;
                     </thead>
                     <tbody>
                         <?php
-                        $query = "SELECT team.name,
-                                         bot.name,
-                                         bot.description,
-                                         specs.board,
-                                         specs.interface,
-                                         bot.imagePath
-                                  FROM team 
-                                  JOIN bot ON bot.id = team.botId 
-                                  JOIN specs ON bot.specsId = specs.id";
+                        $query = "SELECT team.name, bot.name, bot.description, specs.board, specs.interface, bot.imagePath FROM team JOIN bot ON bot.id = team.botId JOIN specs ON bot.specsId = specs.id";
                         $results = stmtExec($query, 0);
                         foreach ($results as $key => $id) {
                         ?>
@@ -93,14 +85,6 @@ global $error;
                                 <td class="align-middle"></td>
                                 <td class="align-middle"></td>
                                 <td class="align-middle"></td>
-                                <?php
-                                 //$results[''][$key]
-                                 //$results[''][$key] 
-                                 //$results[''][$key] 
-                                 //$results[''][$key] 
-                                 //$results[''][$key] 
-                                 //$results[''][$key] 
-                                ?>
                             </tr>
                         <?php
                         }
@@ -110,7 +94,7 @@ global $error;
             </form>
         </div>
     </div>
-    <div class="">
+    <div>
         <?php include_once("../components/footer.php"); ?>
     </div>
 </body>

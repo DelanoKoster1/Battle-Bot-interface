@@ -1,15 +1,15 @@
 .box {
-    border-radius: 18px;
-    background-color: gray;
+  border-radius: 18px;
+  background-color: gray;
 }
 
 .box img {
-    padding: 16px;
+  padding: 16px;
 }
 
 .botName {
-    border-radius: 18px;
-    background-color: #bfc9d3;
-    height: 35px;
-    line-height: 35px;
+  border-radius: 18px;
+  background-color: #bfc9d3;
+  height: 35px;
+  line-height: 35px;
 }
