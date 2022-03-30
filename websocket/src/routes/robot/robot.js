@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { v4: uuidv4 } = require('uuid');
 const Bots = require('../../classes/bots.js')
 const WebSocket = require("ws");
 
@@ -24,36 +25,50 @@ wss.on('connection', (client, req) => {
                 case "prepare":
                     if (ready(req.for)) {
                         createGame(req);
+                        sendActionToBot(req);
+                        setAttributeToClient("preparing", false, client)
                     } else {
                         sendMessageToClient(client, {
                             "error": "NOT_READY"
                         })
                     }
-                    case "start":
-                    case "ended":
+                    break;
+                case "start":
+                    if(preparingDone()){
+                        sendActionToBot(req);
+                        updateGameStatus(req);
+                    }else{
+                        sendMessageToClient(client, {
+                            "error": "NOT_READY"
+                        })
+                    }
+                case "ended":
 
-                        break;
+                    break;
             }
 
             switch (req.status) {
+                case true:
+                    setAttributeToClient("preparing", true, client);
+                    break;
                 case "preparing_game":
                 case "ready":
                 case "in_game":
                 case "finished":
-                    if(client.status !== req.status){
-                       sendMessageToInterface({
-                           "games": games
-                       }) 
+                    if (client.status !== req.status) {
+                        sendMessageToInterface({
+                            "games": games
+                        })
                         updateBotStatusInGame(client.id, req.status);
                     }
-                case "preparing":
-                    setAttributeToClient("status", req.status, client)
-                    break;
+                    case "preparing":
+                        setAttributeToClient("status", req.status, client)
+                        break;
 
             }
 
 
-            if (body.error) {
+            if (req.error) {
                 sendMessageToInterface({
                     "status": true,
                     "game": games
@@ -90,16 +105,23 @@ const heartbeat = (client) => {
  * @param {*} value 
  * @param {WSS Client} target 
  */
-const setAttributeToClient = (name, value, target = "all") => {
-
-    if (target == "all") {
+const setAttributeToClient = (name, value, targets = "all") => {
+    if (targets == "all") {
         wss.clients.forEach((client) => {
             if (client.role == "bot") {
                 client[name] = value;
             }
         })
-    } else {
-        target[name] = value;
+    } else if(Array.isArray(targets)) {
+        targets.forEach((target) => {
+            wss.clients.forEach((client) => {
+                if(client.id == target){
+                    client[name] = value;
+                }
+            })
+        })
+    }else{
+        targets[name] = value;
     }
 }
 
@@ -128,10 +150,57 @@ function addBotToGame(status, target = "all") {
     }
 }
 
-function updateBotStatusInGame(client, status){
+function updateBotStatusInGame(client, status) {
 
 }
 
+function preparingDone(targets = "all"){
+    let ready = false
+    if (targets == "all") {
+        wss.clients.forEach((client) => {
+            if (client.role == "bot") {
+                if (client.preparing) {
+                    ready = true
+                } else {
+                    ready = false;
+                }
+            }
+        });
+    } else {
+        for (let i of targets) {
+            wss.clients.forEach((client) => {
+                if (client.id == i) {
+                    if (client.preparing) {
+                        ready = true;
+                    } else {
+                        ready = false;
+                    }
+                }
+            })
+        }
+    }
+
+    return ready;
+}
+
+function sendActionToBot(message) {
+    let body = {
+        "action": message.action,
+        "game": message.game
+    }
+
+    if (message.for == "all") {
+        sendMessageToAllBots(body);
+    } else {
+        message.for.forEach((botId) => {
+            wss.clients.forEach((client) => {
+                if (client.id == botId) {
+                    sendMessageToClient(client, body)
+                }
+            })
+        })
+    }
+}
 
 /**
  * Log client in and give them role and id
@@ -141,7 +210,9 @@ function updateBotStatusInGame(client, status){
 function login(client, req) {
     if (req.key == "111") {
         setAttributeToClient("role", "admin", client);
-        client.send(JSON.stringify({"games": games}));
+        client.send(JSON.stringify({
+            "games": games
+        }));
     } else {
         setAttributeToClient("role", "bot", client);
         sendMessageToClient(client, {
@@ -186,8 +257,7 @@ function sendMessageToInterface(message, target = "all") {
  * @param {String || Array} target botId
  * @returns true || false
  */
-function ready(target) {
-    console.log(target);
+function ready(target, action = "") {
     let ready = false
     if (target == "all") {
         wss.clients.forEach((client) => {
@@ -201,10 +271,8 @@ function ready(target) {
         });
     } else {
         for (let i of target) {
-            console.log(i);
             wss.clients.forEach((client) => {
                 if (client.id == i) {
-                    console.log(client.status);
                     if (client.status == "ready") {
                         ready = true;
                     } else {
@@ -213,11 +281,11 @@ function ready(target) {
                 }
             })
         }
-
     }
 
     return ready;
 }
+
 
 /**
  * Start game for all bots
@@ -256,6 +324,7 @@ function sendActionToAllBots(game, action) {
  */
 function createGame(req) {
     games.push({
+        "id": uuidv4(),
         "game": req.game,
         "status": req.action,
         "bots": req.for
