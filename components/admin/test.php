@@ -25,7 +25,7 @@ let prepareButler = document.querySelector('.prepare-butler');
 let startButler = document.querySelector('.start-butler');
 let stopButler = document.querySelector('.stop-butler');
 
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 ws.addEventListener("open", () => {
     ws.send(JSON.stringify({
@@ -37,7 +37,7 @@ ws.addEventListener("open", () => {
     // Maze
     prepareMaze.addEventListener('click', () =>{
         ws.send(JSON.stringify({
-            "for": "all",
+            "for": ["FC:F5:C4:2F:45:5C"],
             "action": "prepare",
             "game": "maze"
         }))

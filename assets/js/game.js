@@ -16,6 +16,7 @@ selectBotBtn.addEventListener('click', (ev) => {
     console.log(getSelectValues(selectBot));
     selectBotDiv.setAttribute('class', 'd-none');
     selectGameDiv.setAttribute('class', '');
+    selectGame.value = "";
 })
 
 
@@ -25,14 +26,14 @@ selectGame.addEventListener('change', (ev) => {
     selectGameDiv.setAttribute('class', 'd-none');
     selectBotDiv.setAttribute('class', '');
     result = getSelectValues(selectBot);
-
-    result.forEach(botAdres => {
-        sendAction({
-            "action": "prepare",
-            "game": selectedGame,
-            "for": botAdres
-        })
-    });
+    sendAction({
+        "action": "prepare",
+        "game": selectedGame,
+        "for": result
+    })
+    // result.forEach(result => {
+        
+    // });
 })
 
 document.addEventListener('click',function(e){
@@ -52,12 +53,11 @@ ws.addEventListener("open", () => {
 
     ws.addEventListener('message', (message) => {
         let data = JSON.parse(message.data); 
-        console.log(data);
         
-        if(data.games){
+        if(data.games && data.games.length != 0){
             console.log(data.games);
             clearGameCard();
-            createGameCard(data.games, false);
+            createGameCard(data.games);
         }
     })
 
@@ -98,7 +98,7 @@ function createGameCard(game){
     gameBody.appendChild(h4);
     gameBody.appendChild(p);
     gameBody.appendChild(p2);
-
+    console.log(bots);
     game.bots.forEach(bot => {
         let p = document.createElement('p');
         p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
