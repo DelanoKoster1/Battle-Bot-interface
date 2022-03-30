@@ -40,7 +40,7 @@ function sendMsgToWS() {
         chatInput.value = "";
         
         showMessage(body);
-        ws.send(JSON.stringify(body));
+        ws.send(JSON.stringify(escapeHtml(body)));
     }
 }
 
