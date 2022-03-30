@@ -47,6 +47,28 @@ if (isset($_POST['endPoll'])) {
         </form>
     </div>
 </div>
+<?php
+//Require ENV
+require_once('../functions/env.php');
+
+// Connect to server (localhost server)
+$conn = mysqli_connect(HOSTNAME, USERNAME, PASSWORD, DATABASE);
+
+// Test the connection
+if (!$conn) {
+    $_SESSION['error'] = "database_connect_error";
+    header("location: error.php");
+}
+
+$stmt = mysqli_prepare($conn, "SELECT active FROM poll WHERE active = 1");
+mysqli_stmt_execute($stmt) or die(mysqli_error($conn));
+mysqli_stmt_store_result($stmt) or die(mysqli_error($conn));
+mysqli_stmt_bind_result($stmt, $isActive);
+mysqli_stmt_fetch($stmt);
+
+if($isActive == 1) {
+?>
+
 <div class="row">
     <div class="col-md-6">
         <h5 class="ms-1">Poll Uitslag:</h5>
@@ -55,5 +77,8 @@ if (isset($_POST['endPoll'])) {
         ?>
     </div>
 </div>
+<?php
+}
+?>
 
 <script src="../assets/js/poll.js"></script>
