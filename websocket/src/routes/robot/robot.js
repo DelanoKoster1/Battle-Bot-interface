@@ -18,6 +18,7 @@ wss.on('connection', (client, req) => {
         if (isValidJSONString(message)) {
             let req = JSON.parse(message);
             console.log(req);
+            sendMessageToInterface(req)
             switch (req.action) {
                 case "login":
                     login(client, req);
