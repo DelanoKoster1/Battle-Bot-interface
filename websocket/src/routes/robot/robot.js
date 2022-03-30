@@ -42,8 +42,9 @@ wss.on('connection', (client, req) => {
                             "error": "NOT_READY"
                         })
                     }
+                    break;
                 case "ended":
-
+                    sendActionToBot(req);
                     break;
             }
 
@@ -137,7 +138,7 @@ const interval = setInterval(() => {
 }, 5000)
 
 function updateGameStatus(){
-    
+
 }
 
 function addBotToGame(status, target = "all") {
