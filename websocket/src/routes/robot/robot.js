@@ -344,6 +344,10 @@ function createGame(req) {
         if(client.role == "bot"){
             if(req.for == "all"){
                 bots.push({"botId": client.id, "status": client.status}) 
+            }else{
+                if(req.for.includes(client.id)){
+                    bots.push({"botId": client.id, "status": client.status})
+                }
             }
         }
     })
