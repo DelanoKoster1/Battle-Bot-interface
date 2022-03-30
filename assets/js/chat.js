@@ -38,8 +38,9 @@ function sendMsgToWS() {
 
         body.msg = chatInput.value;
         chatInput.value = "";
+        
         showMessage(body);
-        ws.send(JSON.stringify(body));
+        ws.send(JSON.stringify(escapeHtml(body)));
     }
 }
 
@@ -55,9 +56,18 @@ function showMessage(data) {
     spanMessage.setAttribute('class', 'message');
 
     spanUsername.innerHTML = data.username + ": ";
-    spanMessage.innerHTML = data.msg;
+    spanMessage.innerHTML = escapeHtml(data.msg);
 
     chatLine.appendChild(div);
     div.appendChild(spanUsername);
     div.appendChild(spanMessage);
 }
+
+function escapeHtml(text) {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+  }

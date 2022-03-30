@@ -1,9 +1,14 @@
 <?php
 session_start();
 
-// $type:   1 for print_r(), 0 or empty for var_dump()
-function debug($var, int $type = 0)
-{
+/**
+ * Function debug
+ * $type:   1 for print_r(), 0 or empty for var_dump()
+ * @param void      $var
+ * @param int       $type  
+ * @return string   debug message
+ */
+function debug($var, int $type = 0) {
     echo "<pre>";
     if ($type) {
         print_r($var);
@@ -14,11 +19,11 @@ function debug($var, int $type = 0)
 }
 
 /**
+ * Function connectDB
  * Function to connect to Database
- * 
+ * @return object  $conn   Database connection
  */
-function connectDB()
-{
+function connectDB() {
     //Require ENV
     require_once('env.php');
 
@@ -34,8 +39,14 @@ function connectDB()
     return $conn;
 }
 
-function fail(?string $code = NULL, ?string $info = NULL)
-{
+/**
+ * Function fail
+ * Function to display fail message
+ * @param string    $code
+ * @param string    $info
+ * @return HTML
+ */
+function fail(?string $code = NULL, ?string $info = NULL) {
     switch ($code) {
             // Database Fail: Common
         case 'DB00':
@@ -78,35 +89,36 @@ function fail(?string $code = NULL, ?string $info = NULL)
     }
 }
 
-/*
- *                         
- * @param string $sql: Give the sql query to execute                                                                                    
- * @param int $failCode: Use a code for fail messages, You can easily create 1 above                           
- * @param ...$BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables                                                                                                                                 
- *                                                                                                   
+ /**
+ * Function stmtExec
+ * Function to execute query
+ * @param   string           $sql: Give the sql query to execute                                                                                    
+ * @param   int              $failCode: Use a code for fail messages, You can easily create 1 above                           
+ * @param   ...              $BindParamVars: Use this when need to use WHERE conditions -> Use known DB variables    
+ * @return  boolean/object   $results 
  */
-function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
-{
-
+function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars) {
     //Require env.php
     require_once('env.php');
 
+    // Create connection
     if ($conn = connectDB()) {
-        // $query = "SHOW DATABASES LIKE '".DATABASE."'";
-        // $result = mysqli_query($conn, $query);
-        // $row = mysqli_fetch_row($result);
 
         // Check if the statement can be prepared
         if ($stmt = mysqli_prepare($conn, $sql)) {
 
-            // If true
             // Check if the statement needs to bind
             if (substr_count($sql, "?")) {
 
                 // Check if the given params for binding in the query is the same as
                 // The total binding places
                 if (count($bindParamVars) == substr_count($sql, "?")) {
+
+                    // Initialize $paramChars, for the binding params
                     $paramChars = "";
+
+                    // Check each variables their data types for the
+                    // Right char
                     foreach ($bindParamVars as $var) {
                         if (is_int($var)) {
                             $paramChars .= "i";
@@ -119,19 +131,32 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
                         }
                     }
 
+                    // Check if it's NOT possible to bind
                     if (!mysqli_stmt_bind_param($stmt, $paramChars, ...$bindParamVars)) {
                         fail("DB" . $failCode . "4", mysqli_error($conn));
                         return false;
                     }
                 } else {
+                    // If not enough binding variables
+                    fail("DB11", substr_count($sql, "?"));
                     return false;
                 }
             }
 
+            // Check if it can be executed
             if (mysqli_stmt_execute($stmt)) {
-                $_SESSION['lastInsertedId'] = mysqli_insert_id($conn); // sets lastinserted id back into the session
+
+                // sets lastinserted id back into the session
+                $_SESSION['lastInsertedId'] = mysqli_insert_id($conn);
+
+                // Store results
                 mysqli_stmt_store_result($stmt);
+
+                // Check if there are any results
                 if (mysqli_stmt_num_rows($stmt) > 0) {
+
+                    // This piece of code just gets the names of the SELECT statement
+                    // So there are logic variables to bind to the results
 
                     $sql = str_replace("DISTINCT ", "", $sql);
                     $totalFromKey = substr_count($sql, "FROM");
@@ -217,6 +242,7 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
                         $bindResults[] = $selectResults[$i];
                     }
 
+                    // Bind results to the variables
                     if (mysqli_stmt_bind_result($stmt, ...$bindResults)) {
                         $i = 0;
                         while (mysqli_stmt_fetch($stmt)) {
@@ -237,16 +263,20 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
                     return true;
                 }
             } else {
+                // Execution error
                 fail("DB" . $failCode . "1", mysqli_error($conn));
                 return false;
             }
         } else {
+            // Preperation error
             fail("DB00", mysqli_error($conn));
-            echo $sql;
             return false;
         }
+
+        // Close connection
         mysqli_close($conn);
     } else {
+        // Fail connection
         fail("DB04", mysqli_error($conn));
         return false;
     }
@@ -255,12 +285,11 @@ function stmtExec(string $sql = "", int $failCode = 0, ...$bindParamVars)
 /**
  * Function checkLoginFields
  * Function to check if fields are correct and not empty.
- * Display Error message if needed.
  * @param String $username Filled in username
  * @param String $email Filled in email
  * @param String $password1 Filled in password
  * @param array $error Array with errors
- * @return String/boolean $error False or error message
+ * @return Array/boolean $error False or error message
  */
 function checkLoginFields(String $username, String $password) {
     //Call global variable(s)
@@ -288,19 +317,63 @@ function checkLoginFields(String $username, String $password) {
 }
 
 /**
- * Function checkRegisterFields.
+ * Function checkRegisterFields
  * Function to check if fields are correct and not empty.
- * Display Error message if needed.
  * @param string    $email  Filled in email
  * @param string    $firstname  Filled in firstname
  * @param string    $lastname  Filled in lastname
  * @param string    $password  Filled in password
  * @param string    $password2  Filled in password2
  * @param array     $error  Array with errors
- * @return string/boolean  $error  False or error message
+ * @return Array/boolean  $error  False or error message
  */
-function checkRegisterFields(string $username, string $email, string $password, string $password2)
-{
+function checkRegisterFields(string $username, string $email, string $password, string $password2) {
+    //Call global variable(s)
+    $error = array();
+
+    //If statements so the error messages will be displayed all at once instead of each individual.
+    if (!$username && empty($username)) {
+        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
+    }
+    if (!$email && empty($email)) {
+        $error[] = 'Email is onjuist!';
+    }
+    if (!$password && empty($password)) {
+        $error[] = 'Wachtwoord mag niet leeg zijn!';
+    }
+    if (!$password2 && empty($password2)) {
+        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
+    }
+    if ($password != $password2) {
+        $error[] = 'Wachtwoorden komen niet overeen!';
+    }
+    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,49}$/', $username)) {
+        $error[] = 'Gebruikersnaam voldoet niet aan de standaarden!';
+    }
+    if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,254}$/', $password)) {
+        $error[] = 'Wachtwoord voldoet niet aan de standaarden!';
+    }
+    if (strlen($email) > 200) {
+        $error[] = 'E-mail is te lang!';
+    }
+
+    if (empty($error)) {
+        return false;
+    } else {
+        return $_SESSION['ERROR_MESSAGE'] = $error;
+    }
+}
+
+/**
+ * Function checkProfileFields
+ * Function to check if fields are correct and not empty.
+ * @param string            $username  Filled in firstname
+ * @param string            $email  Filled in email 
+ * @param string            $password  Filled in password
+ * @param string            $password2  Filled in password2
+ * @return Array/boolean   $error  False or error message
+ */
+function checkProfileFields(string $username, string $email, string $password, string $password2) {
     //Call global variable(s)
     $error = array();
 
@@ -338,59 +411,13 @@ function checkRegisterFields(string $username, string $email, string $password, 
 }
 
 /**
- * Function checkRegisterFields.
+ * Function checkProfilePassword
  * Function to check if fields are correct and not empty.
- * Display Error message if needed.
- * @param string    $email  Filled in email
- * @param string    $firstname  Filled in firstname
- * @param string    $lastname  Filled in lastname
- * @param string    $password  Filled in password
- * @param string    $password2  Filled in password2
- * @param array     $error  Array with errors
- * @return string/boolean  $error  False or error message
+ * @param string          $newPassword
+ * @param string          $repeatPassword
+ * @return boolean/array  $error  False or error message
  */
-
-function checkProfileFields(string $username, string $email, string $password, string $password2)
-{
-    //Call global variable(s)
-    $error = array();
-
-    //If statements so the error messages will be displayed all at once instead of each individual.
-    if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
-    }
-    if (!$email && empty($email)) {
-        $error[] = 'Email is onjuist!';
-    }
-    if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
-    }
-    if (!$password2 && empty($password2)) {
-        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
-    }
-    if ($password != $password2) {
-        $error[] = 'Wachtwoorden komen niet overeen!';
-    }
-    if (strlen($email) > 200) {
-        $error[] = 'E-mail is te lang!';
-    }
-    if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
-    }
-    if (strlen($password) > 255) {
-        $error[] = 'Wachtwoord is te lang!';
-    }
-
-    if (empty($error)) {
-        return false;
-    } else {
-        return $_SESSION['ERROR_MESSAGE'] = $error;
-    }
-}
-
-function checkProfilePassword($newPassword, $repeatPassword)
-{
-    //Call global variable(s)
+function checkProfilePassword($newPassword, $repeatPassword) {
     $error = array();
 
     if ($newPassword == $repeatPassword) {
@@ -410,17 +437,16 @@ function checkProfilePassword($newPassword, $repeatPassword)
         return $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
+
 /**
  * Function checkUserInDatabase
  * Function to check if user already exists in database
- * Return Error message if needed.
  * @param   string          $username  Filled in username
  * @param   string          $email     Filled in email
  * @param   boolean         $profile   check if this is profile page
- * @return  string/boolean  $error  False or error message
+ * @return  boolean/array   $error  False or error message
  */
-function checkUserInDataBase(string $username, string $email, $profile = false)
-{
+function checkUserInDataBase(string $username, string $email, $profile = false) {
     //Call global variable(s)
     $error = array();
 
@@ -457,12 +483,14 @@ function checkUserInDataBase(string $username, string $email, $profile = false)
     }
 }
 
+
 /**
+ * Function includeHeader
  * Function to include header with correct map structure
- * 
+ * @param  string    $sort
+ * @return object    require_once
  */
-function includeHeader(String $sort)
-{
+function includeHeader(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/header.php');
@@ -471,12 +499,14 @@ function includeHeader(String $sort)
     }
 }
 
+
 /**
+ * Function includeHead
  * Function to include header with correct map structure
- * 
+ * @param  string    $sort
+ * @return object    require_once
  */
-function includeHead(String $sort)
-{
+function includeHead(String $sort) {
     $_SESSION['sort'] = $sort;
     if ($sort == 'page') {
         require_once('../components/head.php');
@@ -486,11 +516,12 @@ function includeHead(String $sort)
 }
 
 /**
+ * Function checkValidDate
  * Function to check if date is valid
- * 
+ * @param  string    $date
+ * @return boolean
  */
-function checkValidDate(String $date)
-{
+function checkValidDate(String $date) {
     $today = date('Y-m-d\TH:i');
 
     //Check if filled in date is older then today.
@@ -507,11 +538,12 @@ function checkValidDate(String $date)
 }
 
 /**
+ * Function formatdate
  * Function to format a date
- * 
+ * @param  string    $date
+ * @return string
  */
-function formatdate(string $date): string
-{
+function formatdate(string $date): string {
     switch (date("F", strtotime($date))) {
         case "January":
             $month = "\\J\\a\\n\\u\\a\\r\\i";
@@ -545,8 +577,12 @@ function formatdate(string $date): string
 }
 
 /**
+ * Function showEvents
  * Function to show events as HTML
- * 
+ * @param  boolean    $limit
+ * @param  boolean    $admin
+ * @param  boolean    $start
+ * @return HTML
  */
 function showEvents(bool $limit = false, bool $admin = false, $start = false) {
     $query = "SELECT id, name, date, description
@@ -574,13 +610,13 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                     <div class="card eventsCard">
                         <div class="card-body">
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
-                            <span class="calendarTitle d-block text-capitalize"><a href="../pages/admin.php?points&eventId=' . $id .'" class="text-white stretched-link">' . $name . '</a></span>
+                            <span class="calendarTitle d-block text-capitalize"><a href="../pages/admin.php?points&eventId=' . $id . '" class="text-white stretched-link">' . $name . '</a></span>
                             <span class="calendarInfo mt-4 d-block">' . $description . '</span>    
                         </div>
                     </div>
                 </div>
                 ';
-            } else if($start){
+            } else if ($start) {
                 echo '
                 <div class="col-sm-3 mb-4">
                     <div class="card eventsCard">
@@ -588,14 +624,14 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                             <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>
                             <span class="calendarTitle d-block text-capitalize">' . $name . '</span>
                             <form action="" method="post">
-                                <button class="bg-success border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="startEvent" value="'.$id.'">Start</button>
-                                <button class="bg-danger border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="stopEvent" value="'.$id.'">Stop</button>
+                                <button class="bg-success border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="startEvent" value="' . $id . '">Start</button>
+                                <button class="bg-danger border-0 rounded text-light p-1 me-3 mt-3 mb-3" type="submit" name="stopEvent" value="' . $id . '">Stop</button>
                             </form>
                         </div>
                     </div>
                 </div>
                 ';
-            }else {
+            } else {
                 echo '
                 <div class="col-sm-3 mb-4">
                 <div class="card eventsCard">
@@ -621,9 +657,12 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
     }
 }
 
-//function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
-function eventTimeDescent()
-{
+/**
+ * Function eventTimeDescent
+ * Function which shows the amount of time that's left until the event, displayed through {days, hours, minutes, seconds}
+ * @return String $typedOutDate
+ */
+function eventTimeDescent() {
     $query = "SELECT    date
               FROM      `event`
               WHERE     NOW() <= date;
@@ -637,16 +676,43 @@ function eventTimeDescent()
     }
 }
 
-function getLivestream()
-{
-    return '
-        <img
-        src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
-        ';
+/**
+ * Function getLivestream
+ * Function to get the livestream
+ * @return HTML
+ */
+function getLivestream() {
+    $query = "SELECT name
+              FROM `event`
+              WHERE active = 1";
+    $results = stmtExec($query, 0);
+    if ($results == 1) {
+        echo '<div class="col-md-12 p-0">
+                  <div class="alert alert-danger text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                      Er is op het moment geen livestream actief!
+                  </div>
+              </div>';
+    } else {
+        return '
+            <img
+            src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
+            ';
+    }
 }
 
-function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
-{
+/**
+ * Function multiPoll
+ * this function is there to activate another function if conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @param  String    $answer3
+ * @param  String    $answer4
+ * @param  String    $answer5
+ * @return String
+ */
+function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
 
     if (!empty($question)) {
         if ($questionType == "multiChoice") {
@@ -659,12 +725,22 @@ function multiPoll($question, $questionType, $answer1, $answer2, $answer3, $answ
             return "Deze optie bestaat niet";
         }
     } else {
-        return "de vraag kan niet leeg zijn";
+        return "De vraag kan niet leeg zijn";
     }
 }
 
-function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4)
-{
+/**
+ * Function multiChoicePoll
+ * this function INSERTS a question into the database if certain conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @param  String    $answer3
+ * @param  String    $answer4
+ * @return String
+ */
+function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3, $answer4) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -675,21 +751,29 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
 
                     stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4);
                 } else {
-                    return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                    return "Het antwoord mag niet leeg zijn voor dit vraag type!";
                 }
             } else {
-                return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                return "Het antwoord mag niet leeg zijn voor dit vraag type!";
             }
         } else {
-            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            return "Het antwoord mag niet leeg zijn voor dit vraag type!";
         }
     } else {
-        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
     }
 }
 
-function yesOrNoPoll($question, $questionType, $answer1, $answer2)
-{
+/**
+ * Function yesOrNoPoll
+ * this function INSERTS a question into the database if certain conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @return String
+ */
+function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -698,15 +782,26 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2)
 
             stmtExec($query, 0, $questionType, $question, $answer1, $answer2);
         } else {
-            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            return "Het antwoord mag niet leeg zijn voor dit vraag type!";
         }
     } else {
-        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
     }
 }
 
-function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5)
-{
+/**
+ * Function voteForBotPoll
+ * this function INSERTS a question into the database if certain conditions are met
+ * @param  String    $question
+ * @param  String    $questionType
+ * @param  String    $answer1
+ * @param  String    $answer2
+ * @param  String    $answer3
+ * @param  String    $answer4
+ * @param  String    $answer5
+ * @return String
+ */
+function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, $answer4, $answer5) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
@@ -718,73 +813,178 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
 
                         stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4, $answer5);
                     } else {
-                        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
                     }
                 } else {
-                    return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                    return "Het antwoord mag niet leeg zijn voor dit vraag type!";
                 }
             } else {
-                return "het antwoord mag niet leeg zijn voor deze vraagtype";
+                return "Het antwoord mag niet leeg zijn voor dit vraag type!";
             }
         } else {
-            return "het antwoord mag niet leeg zijn voor deze vraagtype";
+            return "Het antwoord mag niet leeg zijn voor dit vraag type!";
         }
     } else {
-        return "het antwoord mag niet leeg zijn voor deze vraagtype";
+        return "Het antwoord mag niet leeg zijn voor dit vraag type!";
     }
 }
 
-function retrieveQuestionInfo()
-{
+/**
+ * Function retrieveQuestionInfo
+ * this function retrieves the question and answers from the database if the conditions are met
+ * it shows all possible answers depending on which question is retrieved
+ * @return HTML
+ */
+function retrieveQuestionInfo() {
 
-    $query = "SELECT    question, answer1, answer2, answer3, answer4, answer5, active 
-              FROM      poll
-              WHERE     active = 1
-             ";
+    $query = "SELECT question, answer1, answer2, answer3, answer4, answer5, active FROM poll WHERE active = 1";
 
     $results = stmtExec($query);
 
     $questionnaire = "";
 
-    if ($results['active'][0] != NULL) {
+    if (!empty($results['active'][0])) {
+        if ($results['active'][0] != NULL) {
 
-        $questionnaire .= '<h4>De vraag luid: ' . $results['question'][0] . '</h4>';
-        $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer1'][0] . '">';
-        $questionnaire .= '<label class="custom-control-label" for="question1">' . $results['answer1'][0] . '</label> <br>';
-        $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer2'][0] . '">';
-        $questionnaire .= '<label class="custom-control-label" for="question2">' . $results['answer2'][0] . '</label> <br>';
-        if ($results['answer3'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer3'][0] . '">';
-            $questionnaire .= '<label class="custom-control-label" for="question3">' . $results['answer3'][0] . '</label> <br>';
-        }
-        if ($results['answer4'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer4'][0] . '">';
-            $questionnaire .= '<label class="custom-control-label" for="question4">' . $results['answer4'][0] . '</label> <br>';
-        }
-        if ($results['answer4'][0] != NULL) {
-            $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer5'][0] . '">';
-            $questionnaire .= '<label class="custom-control-label" for="question5">' . $results['answer5'][0] . '</label> <br>';
-        }
+            $questionnaire .= '<h4>De vraag luid: ' . $results['question'][0] . '</h4>';
+            $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer1'][0] . '">';
+            $questionnaire .= '<label class="custom-control-label" for="question1">' . $results['answer1'][0] . '</label> <br>';
+            $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer2'][0] . '">';
+            $questionnaire .= '<label class="custom-control-label" for="question2">' . $results['answer2'][0] . '</label> <br>';
+            if ($results['answer3'][0] != NULL) {
+                $questionnaire .= '<input type="radio" id="question3" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer3'][0] . '">';
+                $questionnaire .= '<label class="custom-control-label" for="question3">' . $results['answer3'][0] . '</label> <br>';
+            }
+            if ($results['answer4'][0] != NULL) {
+                $questionnaire .= '<input type="radio" id="question4" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer4'][0] . '">';
+                $questionnaire .= '<label class="custom-control-label" for="question4">' . $results['answer4'][0] . '</label> <br>';
+            }
+            if ($results['answer5'][0] != NULL) {
+                $questionnaire .= '<input type="radio" id="question5" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer5'][0] . '">';
+                $questionnaire .= '<label class="custom-control-label" for="question5">' . $results['answer5'][0] . '</label> <br>';
+            }
 
-        return $questionnaire;
+            return $questionnaire;
+        } else {
+            return "<h5 class='alert alert-danger mt-3'>Er is op het moment geen poll actief!</h5>";
+        }
     } else {
-        return "<h4>Er is momenteel geen poll gaande.</h4>";
+        return "<h5 class='alert alert-danger mt-3'>Er is op het moment geen poll actief!</h5>";
     }
 }
 
+/**
+ * Function pollUserCheck
+ * @param  String    $username
+ * @param  String    $givenAnswer
+ * @return boolean
+ */
+function pollUserCheck($username, $givenAnswer) {
 
-function pollAddUser($username, $givenAnswer)
-{
+    $checkUserPoll = "SELECT userName FROM `poll-outcome`";
 
-    $query = "INSERT INTO `poll-outcome` (`userName`,`givenAnswer`)
-              VALUES (?,?)
-             ";
+    $usersOffPoll = stmtExec($checkUserPoll);
 
-    stmtExec($query, 0, $username, $givenAnswer);
+    $checkUserAccount = "SELECT username FROM `account` WHERE username = ?  ";
+
+    $usersOffAccount = stmtExec($checkUserAccount, 0, $username);
+
+    if (empty($usersOffPoll['userName'])) {
+
+        $query =  "INSERT INTO `poll-outcome` (userName,`givenAnswer`) VALUES (?,?)";
+
+        if (!empty($username) && !empty($givenAnswer)) {
+            stmtExec($query, 0, $username, $givenAnswer);
+
+            $getInsertedUser = "SELECT userName FROM `poll-outcome`";
+
+            $users = stmtExec($getInsertedUser);
+
+            $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
+
+            foreach ($users['userName'] as $user) {
+                stmtExec($insertPoints, 0, $user);
+            }
+        }
+    } else {
+        foreach ($usersOffPoll['userName'] as $userResponse) {
+            foreach ($usersOffAccount['username'] as $userAccount) {
+                if (ucfirst(strtolower($userResponse)) != ucfirst(strtolower($userAccount))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+    }
 }
 
-function pollQuestionAnswer()
-{
+/**
+ * Function pollAddUser
+ * this function adds a user which has answered a question of the poll within that moment
+ * @param  String    $username
+ * @param  String    $givenAnswer
+ */
+function pollAddUser($username, $givenAnswer) {
+
+    if (pollUserCheck($username, $givenAnswer) == true) {
+
+        $query = "INSERT INTO `poll-outcome` (userName,`givenAnswer`) VALUES (?,?)";
+
+        if (!empty($username) && !empty($givenAnswer)) {
+            stmtExec($query, 0, $username, $givenAnswer);
+
+            $getInsertedUser = "SELECT userName FROM `poll-outcome`";
+
+            $users = stmtExec($getInsertedUser);
+
+            $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
+
+            foreach ($users['userName'] as $user) {
+                stmtExec($insertPoints, 0, $user);
+            }
+        }
+    }
+}
+
+/**
+ * Function endPoll
+ * this function ends the poll which has been activated
+ */
+function endPoll() {
+
+    $changeActive = "UPDATE `poll` SET active = NULL WHERE active = 1";
+
+    stmtExec($changeActive, 0);
+
+    $deletePollOutcome = "TRUNCATE TABLE `poll-outcome`";
+
+    stmtExec($deletePollOutcome, 0);
+}
+
+/**
+ * Function checkIfPoll
+ * this function checks if there is a poll and shows an input if the conditions have been met
+ * @return HTML/String
+ */
+function checkIfPoll() {
+    $checkIfPoll = "SELECT  active FROM poll";
+
+    $getActive = stmtExec($checkIfPoll);
+
+    if (!empty($getActive['active'])) {
+        foreach ($getActive['active'] as $active) {
+            if ($active == 1) {
+                return '<input type="submit" name="endPoll" class="btn btn-danger mt-3" value="eindig poll" />';
+            } else {
+                return "Er is op het moment geen poll actief!";
+            }
+        }
+    }
+}
+
+//This function shows the answers of the user who have participated in the poll in percentage
+function pollQuestionAnswer() {
 
     $voteArray = [];
 
@@ -794,8 +994,11 @@ function pollQuestionAnswer()
 
     $results = stmtExec($query);
 
-    foreach ($results['givenAnswer'] as $postQuestion) {
-        array_push($voteArray, $postQuestion);
+    if (!empty($results['givenAnswer'])) {
+
+        foreach ($results['givenAnswer'] as $postQuestion) {
+            array_push($voteArray, $postQuestion);
+        }
     }
 
     $values = array_count_values($voteArray);
@@ -816,8 +1019,7 @@ function pollQuestionAnswer()
     return $progressBar;
 }
 
-function getProfileInfo()
-{
+function getProfileInfo() {
     $query = "SELECT    username,
                         email,
                         password
@@ -831,8 +1033,7 @@ function getProfileInfo()
  * 
  * @return Array Array of all robots with names from db
  */
-function getAllRobots()
-{
+function getAllRobots() {
     $conn = connectDB();
     $arr = array();
 
@@ -861,8 +1062,7 @@ function getAllRobots()
     return $arr;
 }
 
-function getAllTeams()
-{
+function getAllTeams() {
     $conn = connectDB();
     $arr = array();
 
@@ -896,8 +1096,7 @@ function getAllTeams()
  * 
  * @return Array Array of all events with names from db
  */
-function getAllEvents()
-{
+function getAllEvents() {
     $conn = connectDB();
     $arr = array();
 
@@ -917,7 +1116,7 @@ function getAllEvents()
     }
 
     //Bind the STMT results(sql statement) to variables
-    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type, $active);
+    mysqli_stmt_bind_result($stmt, $id, $name, $date, $description, $type, $active, $stream);
 
     while (mysqli_stmt_fetch($stmt)) {
         $arr[] = ['id' => $id, 'name' => $name, 'date' => $date, 'description' => $description, 'type' => $type, 'active' => $active];
@@ -930,7 +1129,7 @@ function getAllEvents()
  * Function to check selected team ID
  * 
  */
-function checkSelectedTeam ($teamID) {
+function checkSelectedTeam($teamID) {
     $error = array();
 
     if (!$teamID && empty($teamID) || $teamID == 0) {
@@ -961,12 +1160,11 @@ function checkSelectedTeam ($teamID) {
 /**
  * Function to check selected event ID
  */
-function checkSelectedEvent($eventID)
-{
+function checkSelectedEvent($eventID) {
     $error = array();
 
     if (!$eventID && empty($eventID) || $eventID == 0) {
-        $error[] = 'Kies een event!';
+        $error[] = 'Kies een evenement!';
     }
 
     //Check if ID is in database
@@ -979,7 +1177,7 @@ function checkSelectedEvent($eventID)
     if (is_array($results) && count($results) > 0 && empty($error)) {
         //Do nothing
     } else {
-        $error[] = 'Dit event bestaat niet!';
+        $error[] = 'Dit evenement bestaat niet!';
     }
 
     if (empty($error)) {
@@ -993,9 +1191,7 @@ function checkSelectedEvent($eventID)
  * @param: $file: returns file object with properties
  * @return: true or false
  */
-
-function checkIfFile($file)
-{
+function checkIfFile($file) {
     return is_uploaded_file($file["tmp_name"]);
 }
 
@@ -1003,9 +1199,7 @@ function checkIfFile($file)
  * @param: $file: returns file object with properties
  * @return: true or false
  */
-
-function checkFileSize($file)
-{
+function checkFileSize($file) {
     if ($file["size"] <= 5000000) {
         return true;
     } else {
@@ -1017,9 +1211,7 @@ function checkFileSize($file)
  * @param: $file: returns file object with properties
  * @return: true or false
  */
-
-function checkFileType($file)
-{
+function checkFileType($file) {
     $mimeArray = ["image/jpg", "image/jpeg", "image/png", "image/gif", "application/pdf", "video/mp4"];
     $fileInfo = finfo_file(finfo_open(FILEINFO_MIME_TYPE), $file["tmp_name"]);
     if (in_array($fileInfo, $mimeArray)) {
@@ -1038,9 +1230,7 @@ function checkFileType($file)
  * @param: $path: returns file path
  * @return: true or false
  */
-
-function makeFolder(int $id, string $path)
-{
+function makeFolder(int $id, string $path) {
     $directory = $path . $id;
     if (!file_exists($directory)) {
         mkdir($directory, 0777);
@@ -1054,9 +1244,7 @@ function makeFolder(int $id, string $path)
  * @param: $fileName: returns file name
  * @return: true or false
  */
-
-function checkFileExist(string $directory, string $fileName)
-{
+function checkFileExist(string $directory, string $fileName) {
     return file_exists($directory . $fileName);
 }
 
@@ -1064,9 +1252,7 @@ function checkFileExist(string $directory, string $fileName)
  * @param: $directory: returns directory to file
  * @return: true
  */
-
-function deleteFile(string $directory)
-{
+function deleteFile(string $directory) {
     $files = glob($directory . '*'); // get all file names
     foreach ($files as $file) { // iterate files
         if (is_file($file)) {
@@ -1083,23 +1269,20 @@ function deleteFile(string $directory)
  * @param: $directory: returns directory
  * @return: true or false
  */
-
-function uploadFile($file, string $query, int $id, string $directory)
-{
-    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory.$file["name"], $id)) {
+function uploadFile($file, string $query, int $id, string $directory) {
+    if (move_uploaded_file($file["tmp_name"], realpath(dirname(getcwd())) . $directory . $file["name"]) && stmtExec($query, 0, $directory . $file["name"], $id)) {
         return true;
     } else {
         return false;
     }
 }
 
-function getActiveEvent()
-{
+function getActiveEvent() {
     $sql = "SELECT teamId, points, team.`name`, eventId 
     FROM `team-event` 
-    JOIN team ON team.id = `team-event`.teamId
-    JOIN `event` ON `team-event`.eventId = `event`.id
+    INNER JOIN team ON team.id = `team-event`.teamId
+    INNER JOIN `event` ON `team-event`.eventId = `event`.id
     WHERE `event`.active = 1";
-    
+
     return stmtExec($sql);
 }

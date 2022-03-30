@@ -7,5 +7,8 @@
 <link href="https://fonts.googleapis.com/css2?family=PT+Serif:ital,wght@0,400;0,700;1,700&family=Roboto:wght@100;300;400;700&display=swap" rel="stylesheet">
 <link href="<?= ($_SESSION['sort'] == 'page') ? '../node_modules/bootstrap/dist/css/bootstrap.min.css' : 'node_modules/bootstrap/dist/css/bootstrap.min.css' ?>" rel="stylesheet">
 <script src="<?= ($_SESSION['sort'] == 'page') ? '../node_modules/bootstrap/dist/js/bootstrap.min.js' : 'node_modules/bootstrap/dist/js/bootstrap.min.js' ?>"></script>
+<script src="<?= ($_SESSION['sort'] == 'page') ? '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' : 'node_modules/bootstrap/dist/js/bootstrap.bundle.min.js' ?>"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>

@@ -1,24 +1,39 @@
 .commandLine {
-    padding: 0 16px;
+  padding: 0 16px;
 }
 
 .chatbox .card-header {
-    line-height: 34px;
+  line-height: 34px;
 }
 .chatmessage-container {
-    max-height: 75vw;
-    overflow-y: auto;
+  max-height: 75vh;
+  overflow-y: auto;
 }
 @media only screen and (max-width: 990px) {
-    .chatbox {
-        height: 450px!important;
-    }
-    .commandLine {
-        width: 100%;
-    }
-    .buttons-group {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
+  .chatbox {
+    height: 450px !important;
+  }
+  .commandLine {
+    width: 100%;
+  }
+  .buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+  .chatmessage-container {
+    max-height: 170px;
+    overflow-y: scroll;
+  }
+}
+@media (max-width: 990px) {
+  .chatmessage-container {
+    max-height: 285.475px;
+  }
+  .chatbox {
+    height: 600px !important;
+  }
 }

@@ -9,19 +9,18 @@ $events = getAllEvents();
             <?php
             if (!isset($_SESSION['selectedTeam'])) {
             ?>
-                <div>
-                    <span>Selecteer een team</span>
-                    <select onchange="this.form.submit()" class="form-select" name="selectedTeam">
-                        <option value="" disabled selected>Kies een team</option>
+            <div>
+                <span>Selecteer een team</span>
+                <select onchange="this.form.submit()" class="form-select" name="selectedTeam">
+                    <option value="" disabled selected>Kies een team</option>
                         <?php
                         foreach ($teams as $team) {
-                            echo '<option value="'. $team['id'] .'">' . $team['name'] . '</option>';
+                            echo '<option value="' . $team['id'] . '">' . $team['name'] . '</option>';
                         }
                         ?>
-                    </select>
-                </div>
-                <i>Bij het selecteren van een keuze wordt een nieuw menu getoond</i>
-                <!-- <input class="btn btn-danger mt-3" type="submit" name="selectRobot" value="Selecteer robot"> -->
+                </select>
+            </div>
+            <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
             <?php
             }
             ?>
@@ -29,24 +28,22 @@ $events = getAllEvents();
             <?php
             if (isset($_SESSION['selectedTeam'])) {
             ?>
-                <div>
-                    <span>Selecteer een event</span>
-                    <select onchange="this.form.submit()" class="form-select" name="selectedEvent">
-                        <option value="" disabled selected>Kies een event</option>
-                        <?php
+            <div>
+                <span>Selecteer een evenement</span>
+                <select onchange="this.form.submit()" class="form-select" name="selectedEvent">
+                    <option value="" disabled selected>Kies een evenement</option>
+                    <?php
                         foreach ($events as $event) {
-                            echo '<option value="'. $event['id'] .'">' . $event['name'] . '</option>';
+                            echo '<option value="' . $event['id'] . '">' . $event['name'] . '</option>';
                         }
                         ?>
-                    </select>
-                </div>
-                <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
-                <input class="btn btn-danger mt-3" type="submit" name="robotEventAnnuleren" value="Annuleren">
+                </select>
+            </div>
+            <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
+            <input class="btn btn-danger mt-3" type="submit" name="robotEventAnnuleren" value="Annuleren">
             <?php
             }
             ?>
-
-            
         </div>
     </form>
 </div>

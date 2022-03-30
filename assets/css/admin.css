@@ -9,12 +9,12 @@
   }
 }
 .sidebar .nav-item {
-    background-color: rgb(75, 75, 75);
-    margin: 0 0 10px 0;
-    word-wrap: break-word; 
+  background-color: rgb(75, 75, 75);
+  margin: 0 0 10px 0;
+  word-wrap: break-word;
 }
 .sidebar .nav-item:hover {
-    background-color: rgb(58, 58, 58);
+  background-color: rgb(58, 58, 58);
 }
 
 /* Event page */
@@ -25,4 +25,47 @@
 /* Add robot to event page*/
 .eventRobotBox {
   max-width: 500px;
+}
+
+/* Game page */
+.game {
+  height: 200px;
+  width: 200px;
+  margin: 10px;
+  padding: 10px;
+  background-color: lightgrey;
+  border-radius: 20px;
+}
+
+.underText {
+  background-color: grey;
+  border-radius: 10px;
+}
+
+.box {
+  height: 150px;
+  border-radius: 18px;
+  background-color: gray;
+}
+
+.box img {
+  padding-top: 5px;
+}
+
+.botName {
+  border-radius: 18px;
+  background-color: #bfc9d3;
+  height: 35px;
+  line-height: 35px;
+}
+
+.game-card-all,
+.start-button-all,
+.game-card-single {
+  cursor: pointer;
+}
+
+.start {
+  margin: 10px;
+  padding: 10px;
 }
