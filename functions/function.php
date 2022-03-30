@@ -1280,8 +1280,8 @@ function uploadFile($file, string $query, int $id, string $directory) {
 function getActiveEvent() {
     $sql = "SELECT teamId, points, team.`name`, eventId 
     FROM `team-event` 
-    JOIN team ON team.id = `team-event`.teamId
-    JOIN `event` ON `team-event`.eventId = `event`.id
+    INNER JOIN team ON team.id = `team-event`.teamId
+    INNER JOIN `event` ON `team-event`.eventId = `event`.id
     WHERE `event`.active = 1";
 
     return stmtExec($sql);

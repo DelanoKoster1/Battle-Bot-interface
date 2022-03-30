@@ -83,7 +83,7 @@
                                     <div class="box bg-secondary d-flex justify-content-center">
                                         <div class="row g-0 w-100 text-center">
                                             <div class="col-12 my-auto">
-                                                <img class="img-fluid" src="../assets/img/person.svg" alt="' . $teamName . '">
+                                                <img class="img-fluid mb-4" src="../assets/img/person.svg" alt="' . $teamName . '">
                                             </div>
                                             <div class="col-12 position-relative">
                                                 <div class="botName position-absolute w-100 bottom-0">

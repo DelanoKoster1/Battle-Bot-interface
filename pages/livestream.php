@@ -38,12 +38,9 @@
             <div id="chat" class="col-xl-3 col-lg-4 col-12 mt-4 mt-lg-0">
                 <div class="row h-100">
                     <div class="col-12">
-                        <div id="chatbox" class="chatbox h-100 collsapse show collapse-horizontal">
+                        <div id="chatbox" class="chatbox h-100 collapsed collapse-horizontal">
                             <div class="card h-100 posistion-relative">
                                 <div class="card-header text-center">
-                                    <div data-bs-toggle="collapse" data-bs-target="#chatbox" aria-expanded="true" aria-controls="chatbox" class="btn btn-sm btn-outline-success float-start d-none d-lg-block">
-                                        <span class="material-icons align-middle">keyboard_arrow_right </span>
-                                    </div>
                                     <span class="fw-bold">
                                         Chat
                                     </span>
@@ -81,12 +78,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div data-bs-toggle="collapse" id="openChatBtn" data-bs-target="#chatbox" aria-expanded="true" aria-controls="chatbox" class="btn d-none btn-sm btn-outline-success float-end">
-                            <span class="material-icons align-middle">keyboard_arrow_left</span>
-                        </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -124,31 +116,6 @@
         <?php include_once('../components/footer.php') ?>
     </footer>
     <script>
-        let myCollapsible = document.getElementById('chatbox');
-        let chat = document.getElementById("chat");
-        let livestream = document.getElementById("livestream");
-        let openChatBtn = document.getElementById("openChatBtn");
-
-        myCollapsible.addEventListener('hidden.bs.collapse', function() {
-            chat.classList.remove("col-xl-3", "col-lg-4", "col-12");
-            chat.classList.add("col-md-1");
-
-            livestream.classList.remove("col-xl-9", "col-lg-8", "col-12");
-            livestream.classList.add("col-md-11");
-
-            openChatBtn.classList.remove("d-none");
-        });
-
-        myCollapsible.addEventListener('show.bs.collapse', function() {
-            chat.classList.add("col-xl-3", "col-lg-4", "col-12");
-            chat.classList.remove("col-md-1");
-
-            livestream.classList.add("col-xl-9", "col-lg-8", "col-12");
-            livestream.classList.remove("col-md-11");
-
-            openChatBtn.classList.add("d-none");
-        });
-
         $(document).ready(function() {
             $("button.vote-button").click(function() {
                 $("#modalEdit").modal("show");
@@ -160,7 +127,6 @@
     </script>
     <script src="../assets/js/functions.js"></script>
     <script src="../assets/js/chat.js"></script>
-    <script src="../assets/js/function.js"></script>
 </body>
 
 </html>
