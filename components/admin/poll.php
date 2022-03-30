@@ -48,23 +48,13 @@ if (isset($_POST['endPoll'])) {
     </div>
 </div>
 <?php
-//Require ENV
-require_once('../functions/env.php');
+$sql = "SELECT active FROM poll WHERE active = 1";
 
-// Connect to server (localhost server)
-$conn = mysqli_connect(HOSTNAME, USERNAME, PASSWORD, DATABASE);
+$polls = stmtExec($sql);
 
-// Test the connection
-if (!$conn) {
-    $_SESSION['error'] = "database_connect_error";
-    header("location: error.php");
+if(is_array($polls) && count($polls["active"]) > 0) {
+    $isActive = $polls["active"][0];
 }
-
-$stmt = mysqli_prepare($conn, "SELECT active FROM poll WHERE active = 1");
-mysqli_stmt_execute($stmt) or die(mysqli_error($conn));
-mysqli_stmt_store_result($stmt) or die(mysqli_error($conn));
-mysqli_stmt_bind_result($stmt, $isActive);
-mysqli_stmt_fetch($stmt);
 
 if($isActive == 1) {
 ?>

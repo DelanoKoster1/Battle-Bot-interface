@@ -1287,8 +1287,7 @@ function getActiveEvent() {
     return stmtExec($sql);
 }
 
-function changeTeamInfo() 
-{
+function changeTeamInfo() {
     $sql = "SELECT  bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
             FROM    `bot`
             JOIN    `specs`     ON specs.id = bot.specsId
