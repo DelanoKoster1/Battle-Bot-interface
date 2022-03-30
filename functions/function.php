@@ -1312,7 +1312,7 @@ function changeTeamInfo()
             $returnForm .= '<input type="text" id="botDescription" class="form-control mt-3" value="'. $botInfo['bot.description'][0] .'" placeholder="'. $botInfo['bot.description'][0] .'" />';
             $returnForm .= '<label for="botImagePath" class="mt-3">bot foto</label>';
             $returnForm .= '<img src="..'.$botInfo['bot.imagePath'][0].'" height="100" width="100">';
-            $returnForm .= '<input type="file" id="botImagePath" class="form-control mt-3" value="..'.$botInfo['bot.imagePath'][0].'" />';
+            $returnForm .= '<input type="file" id="botImagePath" name="botTeamImage" class="form-control mt-3" value="..'.$botInfo['bot.imagePath'][0].'" />';
             $returnForm .= '<label for="specsBoard" class="mt-3">specificatie board</label>';
             $returnForm .= '<input type="text" id="specsBoard" class="form-control mt-3" value="'. $botInfo['specs.board'][0] .'" placeholder="'. $botInfo['specs.board'][0] .'" />';
             $returnForm .= '<label for="specsInterface" class="mt-3">specificatie interface</label>';
