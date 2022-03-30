@@ -104,7 +104,7 @@ INSERT INTO `role` (id, name) VALUES
 (2, "Admin"), 
 (3, "Team");
 
-INSERT INTO `stats` (id) VALUES (1), (2), (3), (4), (5);
+INSERT INTO `stats` (id) VALUES (6), (7), (8), (9), (10);
 
 INSERT INTO `specs` (id, board, interface) VALUES 
 (1, "ESP32", "Arduino IDE"), 
@@ -114,11 +114,11 @@ INSERT INTO `specs` (id, board, interface) VALUES
 (5, "ESP32", "Arduino IDE");
 
 INSERT INTO `bot` (`id`, `statsId`, `specsId`, `name`, `description`, `imagePath`, `macAddress`) VALUES
-(6, 1, 1, 'INF1A', 'Robot INF1A', '/assets/img/bots/6/Robot_INF1A.png', 'FC:F5:C4:2F:45:5C'),
-(7, 2, 2, 'INF1B', 'Robot INF1B', '/assets/img/bots/7/Robot_INF1B.png', 'F0:08:D1:D1:72:A0'),
-(8, 3, 3, 'INF1C', 'Robot INF1C', '/assets/img/bots/8/Robot_INF1C.png', '84:CC:A8:7A:A2:A8'),
-(9, 4, 4, 'INF1D', 'Robot INF1D', '/assets/img/bots/9/Robot_INF1D.png', '24:0A:C4:61:A6:88'),
-(10, 5, 5, 'INF1E', 'Robot INF1E', '/assets/img/bots/10/Robot_INF1E.png', '84:CC:A8:7A:AF:D8');
+(6, 6, 1, 'INF1A', 'Robot INF1A', '/assets/img/bots/6/Robot_INF1A.png', 'FC:F5:C4:2F:45:5C'),
+(7, 7, 2, 'INF1B', 'Robot INF1B', '/assets/img/bots/7/Robot_INF1B.png', 'F0:08:D1:D1:72:A0'),
+(8, 8, 3, 'INF1C', 'Robot INF1C', '/assets/img/bots/8/Robot_INF1C.png', '84:CC:A8:7A:A2:A8'),
+(9, 9, 4, 'INF1D', 'Robot INF1D', '/assets/img/bots/9/Robot_INF1D.png', '24:0A:C4:61:A6:88'),
+(10, 10, 5, 'INF1E', 'Robot INF1E', '/assets/img/bots/10/Robot_INF1E.png', '84:CC:A8:7A:AF:D8');
 
 INSERT INTO `team` (`id`, `botId`, `name`) VALUES
 (6, 6, 'INF1A'),
@@ -136,4 +136,4 @@ INSERT INTO `event` (id, name, date, description, stream) VALUES
 (1, "Main Event", "2022-04-14 08:30:00", "The main BattleBot Event!", ""),
 (2, "Past Event", "2022-01-01 08:30:00", "The Past BattleBot Event!", "2022-01-01-08-03-00.mp4");
 
-INSERT INTO `team-event` (eventId, teamId) VALUES (1, 1);
+INSERT INTO `team-event` (eventId, teamId) VALUES (1, 6);
