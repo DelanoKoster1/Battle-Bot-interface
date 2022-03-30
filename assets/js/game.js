@@ -1,4 +1,4 @@
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 let selectBot = document.querySelector('#selectBot');
 let selectGame = document.querySelector('#selectGame');
