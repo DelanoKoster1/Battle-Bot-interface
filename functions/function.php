@@ -694,9 +694,7 @@ function getLivestream() {
               </div>';
     } else {
         return '
-            <img
-            src="http://foscam.serverict.nl/mjpg/1/video.mjpg?1647876232941&Axis-Orig-Sw=true">
-            ';
+        <iframe src="https://www.youtube.com/embed/m1sHe1gfIKE" frameborder="0" autoplay="1" allowfullscreen></iframe>';
     }
 }
 
