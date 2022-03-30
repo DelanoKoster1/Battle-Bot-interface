@@ -1,4 +1,4 @@
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 let selectBot = document.querySelector('#selectBot');
 let selectBotBtn = document.querySelector('#selectBotBtn');
@@ -31,9 +31,6 @@ selectGame.addEventListener('change', (ev) => {
         "game": selectedGame,
         "for": result
     })
-    // result.forEach(result => {
-        
-    // });
 })
 
 document.addEventListener('click',function(e){
@@ -53,9 +50,8 @@ ws.addEventListener("open", () => {
 
     ws.addEventListener('message', (message) => {
         let data = JSON.parse(message.data); 
-        
+        console.log(data);
         if(data.games && data.games.length != 0){
-            console.log(data.games);
             clearGameCard();
             createGameCard(data.games);
         }
@@ -65,49 +61,51 @@ ws.addEventListener("open", () => {
 
 
 function createGameCard(game){
-    var gameDiv;
-    if(!document.getElementById(`${game.game}`)){
-        gameDiv = document.createElement('div');
-        gameDiv.setAttribute('class','card mb-3');
-    }else { 
-        gameDiv = document.getElementById(`${game.game}`)
-    }
+    for (let index = 0; index < game.length; index++) {      
     
-    let gameBody = document.createElement('div');
-    gameBody.setAttribute('class','card-body')
+        var gameDiv;
+        if(!document.getElementById(`${game[index].game}`)){
+            gameDiv = document.createElement('div');
+            gameDiv.setAttribute('class','card mb-3');
+        }else { 
+            gameDiv = document.getElementById(`${game[index].game}`)
+        }
+        
+        let gameBody = document.createElement('div');
+        gameBody.setAttribute('class','card-body')
 
-    let h4 = document.createElement('h4');
-    h4.innerHTML = game.game;
+        let h4 = document.createElement('h4');
+        h4.innerHTML = game[index].game;
 
-    let p = document.createElement('p');
-    p.innerHTML = "Status: " + game.action;
-
-    let button = document.createElement('button');
-    button.setAttribute('class', 'btn btn-primary float-end');
-    
-    if (game.action == "preparing_game") {
-        button.setAttribute('id', 'preparing_game');
-    }else {
-        button.setAttribute('id', 'start');
-    }
-
-    button.innerHTML = game.action;
-    let p2 = document.createElement('p');
-    p2.innerHTML = "Bots: ";
-
-    gameBody.appendChild(h4);
-    gameBody.appendChild(p);
-    gameBody.appendChild(p2);
-    console.log(bots);
-    game.bots.forEach(bot => {
         let p = document.createElement('p');
-        p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
-        gameBody.appendChild(p);
-    });
+        p.innerHTML = "Status: " + game[index].status;
 
-    gameBody.appendChild(button);
-    gameDiv.appendChild(gameBody);
-    gamesDiv.appendChild(gameDiv);
+        let button = document.createElement('button');
+        button.setAttribute('class', 'btn btn-primary float-end');
+        
+        if (game.action == "preparing_game") {
+            button.setAttribute('id', 'preparing_game');
+        }else {
+            button.setAttribute('id', 'start');
+        }
+
+        button.innerHTML = game[index].action;
+        let p2 = document.createElement('p');
+        p2.innerHTML = "Bots: ";
+
+        gameBody.appendChild(h4);
+        gameBody.appendChild(p);
+        gameBody.appendChild(p2);
+        game[index].bots.forEach(bot => {
+            let p = document.createElement('p');
+            p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
+            gameBody.appendChild(p);
+        });
+
+        gameBody.appendChild(button);
+        gameDiv.appendChild(gameBody);
+        gamesDiv.appendChild(gameDiv);
+    }
 }
 
 function clearGameCard() {
