@@ -90,9 +90,9 @@ $results = getProfileInfo();
                     ?>
                     <div class="col-12 text-center mb-3">
                         <span>
-                            <a class="text-body" href="./addAdmin.php">
+                            <a class="text-body" href="./roles.php">
                                 <span class="material-icons align-middle">add</span>
-                                Administrator Toevoegen
+                                Rol Aanpassen
                             </a>
                         </span>
                     </div>
