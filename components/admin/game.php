@@ -8,9 +8,10 @@
     <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="POST">
         <div class="form-group">
                 <div id="bot">
-                    <span>Selecteer een bot</span>
-                    <select id="selectBot" class="form-select" name="selectBot">
-                        <option value="" disabled selected>Kies een bot</option>
+                    <span class="d-block">Selecteer een bot</span>
+                    <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
+                    <select id="selectBot" class="form-select mb-3" size="8" multiple name="selectBot[]">
+                        <option value="" disabled>Kies een bot</option>
                         <option value="all">All bots</option>
                         <?php
                         foreach ($robots as $bot) {
@@ -18,7 +19,8 @@
                         }
                         ?>
                     </select>
-                    <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
+                    <button id="selectBotBtn" type="button" name="submitotBtn" class="btn btn-primary">submit</button>
+                    
                 </div>
 
                 <div class="d-none" id="game">
@@ -39,7 +41,7 @@
 
     <h4 style="text-align: center; margin: 10px; padding: 10px;">Huidige games</h4>
 
-    <div class="games">
+    <div id="gameContainer" class="games">
     </div>
     
 </div>
