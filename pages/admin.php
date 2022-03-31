@@ -513,7 +513,28 @@ if (isset($_POST['stopEvent'])) {
 }
 
 if(isset($_POST['accounts'])) {
-    header('location: ../pages/admin.php?addTeamToAccount&setAcc=true');
+    $userId = filter_input(INPUT_POST, 'accounts', FILTER_SANITIZE_NUMBER_INT);
+    header('location: ../pages/admin.php?addTeamToAccount&setAcc=' . $userId);
+}
+
+if(isset($_POST['teams'])) {
+    $teamId = filter_input(INPUT_POST, 'teams', FILTER_SANITIZE_NUMBER_INT);
+    $userId = filter_input(INPUT_GET, 'setAcc', FILTER_SANITIZE_NUMBER_INT);
+
+    $sql = "UPDATE account
+            SET teamId = ?
+            WHERE account.id = ?";
+
+    $result = stmtExec($sql, 0, $teamId, $userId);
+
+    if(!stmtExec($sql, 0, $teamId, $userId)) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    }
+
+    $_SESSION['succes'] = 'Het team is succesvol aan het account toegevoegd!';
+    header('location: admin.php?addTeamToAccount');
+    exit();
 }
 ?>
 
