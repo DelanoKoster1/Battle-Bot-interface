@@ -33,12 +33,16 @@ selectGame.addEventListener('change', (ev) => {
     })
 })
 
-document.addEventListener('click',function(e){
-    if(e.target && e.target.id == 'preparing_game'){
-        let btn = document.getElementById('preparing_game');
-        btn.setAttribute("disabled", true)
-     }
- });
+
+
+//  prepareMaze.addEventListener('click', () =>{
+//     ws.send(JSON.stringify({
+//         "for": ["FC:F5:C4:2F:45:5C"],
+//         "action": "prepare",
+//         "game": "maze"
+//     }))
+// })
+
 
 ws.addEventListener("open", () => {
 
@@ -54,7 +58,33 @@ ws.addEventListener("open", () => {
         if(data.games && data.games.length != 0){
             clearGameCard();
             createGameCard(data.games);
+            
+            // send game action to bots
+            document.addEventListener('click',function(e){
+                action = e.target.value
+                for (let index = 0; index < data.games.length; index++) {
+                    if (data.games[index].id == e.target.id) {
+                        action = e.target.value;
+                        game = data.games[index].game;
+                        
+                        robots = data.games[index].bots
+                        robotadres = [];
+                        robots.forEach(robot => {
+                            robotadres.push(robot.botId);
+                        });
+
+                        sendAction({
+                            "action": action,
+                            "game": game,
+                            "for" : robotadres
+                        })
+                    }
+                    
+                }
+             });
         }
+
+        
     })
 
 });
@@ -80,16 +110,24 @@ function createGameCard(game){
         let p = document.createElement('p');
         p.innerHTML = "Status: " + game[index].status;
 
-        let button = document.createElement('button');
-        button.setAttribute('class', 'btn btn-primary float-end');
+        let buttonPrepare = document.createElement('button');
+        buttonPrepare.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonPrepare.setAttribute('id', game[index].id);
+        buttonPrepare.setAttribute('value', "prepare_game");
+        buttonPrepare.innerHTML = "Prepare";
         
-        if (game.action == "preparing_game") {
-            button.setAttribute('id', 'preparing_game');
-        }else {
-            button.setAttribute('id', 'start');
-        }
+        let buttonStart = document.createElement('button');
+        buttonStart.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonStart.setAttribute('id', game[index].id);
+        buttonStart.setAttribute('value', "start_game");
+        buttonStart.innerHTML = "Start";
 
-        button.innerHTML = game[index].action;
+        let buttonEnd = document.createElement('button');
+        buttonEnd.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonEnd.setAttribute('id', game[index].id);
+        buttonEnd.setAttribute('value', "end_game");
+        buttonEnd.innerHTML = "End";
+        
         let p2 = document.createElement('p');
         p2.innerHTML = "Bots: ";
 
@@ -102,7 +140,9 @@ function createGameCard(game){
             gameBody.appendChild(p);
         });
 
-        gameBody.appendChild(button);
+        gameBody.appendChild(buttonEnd);
+        gameBody.appendChild(buttonStart);
+        gameBody.appendChild(buttonPrepare);
         gameDiv.appendChild(gameBody);
         gamesDiv.appendChild(gameDiv);
     }
