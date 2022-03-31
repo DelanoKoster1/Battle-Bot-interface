@@ -231,7 +231,6 @@ function sendActionToBot(message) {
  */
 function login(client, req) {
     console.log(req);
-    console.log("hallo");
     if (req.key == 111) {
         setAttributeToClient("role", "admin", client);
         client.send(JSON.stringify({
