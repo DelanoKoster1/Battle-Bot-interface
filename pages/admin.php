@@ -568,6 +568,9 @@ if (isset($_POST['stopEvent'])) {
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addStreamCode">Livestream code toevoegen</a>
                         </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="roles.php">Rollen aanpassen</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
