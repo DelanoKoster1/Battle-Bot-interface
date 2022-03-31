@@ -1,103 +1,18 @@
-let prepareMaze = document.querySelector('.prepare-maze');
-let startMaze = document.querySelector('.start-maze');
-let stopMaze = document.querySelector('.stop-maze');
+const ws = new WebSocket(`ws://localhost:3003/websocket/robot`);
 
-let prepareRace = document.querySelector('.prepare-race');
-let startRace = document.querySelector('.start-race');
-let stopRace = document.querySelector('.stop-race');
-
-let prepareButler = document.querySelector('.prepare-butler');
-let startButler = document.querySelector('.start-butler');
-let stopButler = document.querySelector('.stop-butler');
-
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
 
 ws.addEventListener("open", () => {
+
     ws.send(JSON.stringify({
         "action": "login",
-        "key": "111",
-        "id": "admin1"
+        "key": "115",
+        "id": "interface"
     }));
 
-    // Maze
-    prepareMaze.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "prepare",
-            "game": "maze"
-        }))
-    })
-    pong.addEventListener('click', () =>{
-        alert('ping')
-    })
-    startMaze.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "start",
-            "game": "maze"
-        }))
-    })
-    stopMaze.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "ended",
-            "game": "maze"
-        }))
-    })
-  
-    //race
-    prepareRace.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "prepare",
-            "game": "race"
-        }))
-    })
-    startRace.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "start",
-            "game": "race"
-        }))
-    })
-    stopRace.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "ended",
-            "game": "race"
-        }))
+    ws.addEventListener('message', (message) => {
+        let data = JSON.parse(message.data); 
+        console.log(data);
+
     })
 
-    // Butler
-    prepareButler.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "prepare",
-            "game": "butler"
-        }))
-    })
-    startButler.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "start",
-            "game": "butler"
-        }))
-    })
-    stopButler.addEventListener('click', () =>{
-        ws.send(JSON.stringify({
-            "for": "all",
-            "action": "ended",
-            "game": "butler"
-        }))
-    })
-
-
-    ws.addEventListener("message", ({data}) => {
-
-        console.log(JSON.parse(data));
-    })
-
-
-
-});
-
+})

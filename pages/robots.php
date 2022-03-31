@@ -159,6 +159,8 @@
     <footer>
         <?php include_once('../components/footer.php') ?>
     </footer>
+
+    <script src="../assets/js/test.js"></script>
 </body>
 
 </html>

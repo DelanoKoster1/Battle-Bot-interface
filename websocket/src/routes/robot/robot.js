@@ -76,10 +76,14 @@ wss.on('connection', (client, req) => {
                         })
                         updateBotStatusInGame(client.id, req.status);
                     }
-                    case "preparing":
+                case "preparing":
                         setAttributeToClient("status", req.status, client)
-                        break;
-
+                    wss.clients.forEach((interface) => {
+                        if(interface.role == "interface"){
+                            sendMessageToClient(interface, {"botId": client.id, "req": req});
+                        }
+                    })
+                break;
             }
 
 
@@ -226,11 +230,16 @@ function sendActionToBot(message) {
  * @param {Object} req 
  */
 function login(client, req) {
-    if (req.key == "111") {
+    console.log(req);
+    console.log("hallo");
+    if (req.key == 111) {
         setAttributeToClient("role", "admin", client);
         client.send(JSON.stringify({
             "games": games
         }));
+    } else if(req.key == 115){
+        setAttributeToClient("role", "interface", client);
+        
     } else {
         setAttributeToClient("role", "bot", client);
         sendMessageToClient(client, {
