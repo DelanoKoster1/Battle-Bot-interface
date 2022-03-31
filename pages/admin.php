@@ -568,6 +568,9 @@ if (isset($_POST['stopEvent'])) {
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addStreamCode">Livestream code toevoegen</a>
                         </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="roles.php">Rollen aanpassen</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -595,21 +598,22 @@ if (isset($_POST['stopEvent'])) {
                 }
 
                 if (!empty($_SESSION['ERROR_MESSAGE'])) {
+                    foreach($_SESSION['ERROR_MESSAGE'] as $msg) {
                 ?>
                     <div class="row" id="errorBar">
                         <div class="col-md-12">
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">
                                     <?php
-                                    echo '<li>' . $_SESSION['ERROR_MESSAGE'] . '</li>';
-                                    
-                                    unset($_SESSION['ERROR_MESSAGE']);
+                                    echo '<li>' . $msg . '</li>';
                                     ?>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 <?php
+                    }
+                    unset($_SESSION['ERROR_MESSAGE']);
                 }
                 ?>
                 <div class="row">
