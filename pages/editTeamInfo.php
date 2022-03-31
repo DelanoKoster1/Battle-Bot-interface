@@ -4,52 +4,75 @@ include_once('../functions/function.php');
 global $error;
 
 if (isset($_POST['playerInfoChange'])) {
+    $teamname = filter_input(INPUT_POST, "teamName", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $botname = filter_input(INPUT_POST, "botName", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $description = filter_input(INPUT_POST, "botDescription", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $board = filter_input(INPUT_POST, "specsBoard", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $interface = filter_input(INPUT_POST, "specsInterface", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    
+    $query ="  UPDATE  `bot`
+                JOIN    `specs`     ON specs.id = bot.specsId
+                JOIN    `team`      ON team.botId = bot.id  
+                JOIN    `account`   ON account.teamId = team.id
+                SET     bot.name = ?, 
+                        bot.description = ?,
+                        specs.board = ?, 
+                        specs.interface = ?, 
+                        team.name = ?
+                WHERE   account.username = ?
+            ";
+
+    if (stmtExec($query, 0, $botname, $description, $board, $interface, $teamname, $_SESSION['username'])) {
+        $_SESSION['succes'] = 'De gegevens zijn succesvol aangepast!';
+    } else {
+        $error[] = "Er ging iets mis bij het aanpassen van de gegevens, probeer het opnieuw!";
+        $_SESSION['ERROR_MESSAGE'] = $error;
+    }
+    
     if (checkIfFile($_FILES['botTeamImage'])) {
         if (checkFileSize($_FILES['botTeamImage'])) {
             if (checkFileType($_FILES['botTeamImage'])) {
-                if (makeFolder($botId, "../assets/img/bots/")) {
+                if (makeFolder($botId, "../assets/img/bots/")) {         
                     if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botTeamImage']['name'])) {
-                        $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
-
                         if (uploadFile($_FILES['botTeamImage'], $query, $botId, "/assets/img/bots/{$botId}/")) {
-                            $_SESSION['succes'] = 'De robot is succesvol toegevoegd!';
-                            header("location:../pages/admin.php?bot");
-                            exit();
-                        } else {
-                            $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
-                            $_SESSION['ERROR_MESSAGE'] = $error;
-                            header('location: admin.php?bot');
-                            exit();
+                            $query = "  UPDATE  `bot`
+                                        JOIN    `account`   ON account.botId = bot.id
+                                        SET     bot.imagePath = ?
+                                        WHERE   account.username = ?
+                                    ";
+                            if (stmtExec($query, 0, $imagePath, $_SESSION['username'])) {
+                                $_SESSION['succes'] = 'De foto is succesvol aangepast!';
+                            } else {
+                                $error[] = "Er is iets fout gegaan bij het uploaden van het bestand!";
+                                $_SESSION['ERROR_MESSAGE'] = $error;
+                            }
+                                        
+                            $_SESSION['succes'] = 'Het bestand is succesvol geüpload!';
                         }
                     } else {
                         $error[] = "Het geüploade bestand bestaat al!";
                         $_SESSION['ERROR_MESSAGE'] = $error;
-                        header('location: admin.php?bot');
-                        exit();
+                        echo "1";
                     }
                 } else {
-                    $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                    $error[] = "Er is iets fout gegaan bij het uploaden van het bestand!";
                     $_SESSION['ERROR_MESSAGE'] = $error;
-                    header('location: admin.php?bot');
-                    exit();
+                    echo "2";
                 }
             } else {
                 $error[] = "Dit bestandstype wordt niet geaccepteerd!";
                 $_SESSION['ERROR_MESSAGE'] = $error;
-                header('location: admin.php?bot');
-                exit();
+                echo "3";
             }
         } else {
             $error[] = "Het geüploade bestand is te groot!";
             $_SESSION['ERROR_MESSAGE'] = $error;
-            header('location: admin.php?bot');
-            exit();
+            echo "4";
         }
     } else {
-        $_SESSION['succes'] = "De robot is succesvol toegevoegd!";
-        $_SESSION['ERROR_MESSAGE'] = $error;
-        header('location: admin.php?bot');
-        exit();
+        // $_SESSION['succes'] = "De robot is succesvol toegevoegd!";
+        // $_SESSION['ERROR_MESSAGE'] = $error;
+        echo "5";
     }
 }
 ?>
@@ -108,7 +131,7 @@ if (isset($_POST['playerInfoChange'])) {
                 <?php
                 }
                 ?>
-            <h3 class="mt-3">verander team informatie</h3>
+            <h3 class="mt-3 text-center">Team informatie</h3>
             <?php echo changeTeamInfo(); ?>
         </div>
     </div>
