@@ -1,27 +1,79 @@
 <?php
-$conn = connectDB();
 if (isset($_POST['change'])) {
     if (!empty($_POST['botName'])) {
         if (!empty($_POST['description'])) {
+            if (isset($_FILES['imagePath'])) {
+                if(!empty($_POST['macAdress'])) {
 
-            $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
-            $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
-            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+                    $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
+                    $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
+                    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+                    $macAdress = filter_input(INPUT_POST, 'macAdress', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            $sql = "UPDATE bot SET name = ?, description = ? WHERE id = ?";
+                    if (checkIfFile($_FILES['imagePath'])) {
+                        if (checkFileSize($_FILES['imagePath'])) {
+                            if (checkFileType($_FILES['imagePath'])) {
+                                if (makeFolder($botId, "../assets/img/bots/")) {
+                                    if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['imagePath']['name'])) {
+                                        $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
+                                        
+                                        deleteFile("../assets/img/bots/{$botId}/");
             
-            if (!stmtExec($sql, 0, $botName, $description, $botId)) {
-                $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
-                header("location: ../components/error.php");
-                exit();
+                                        if (!uploadFile($_FILES['imagePath'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                                            $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                            $_SESSION['ERROR_MESSAGE'] = $error;
+                                            header('location: admin.php?info');
+                                            exit();
+                                        } 
+                                    } else {
+                                        $error[] = "Het geüploade bestand bestaat al!";
+                                        $_SESSION['ERROR_MESSAGE'] = $error;
+                                        header('location: admin.php?info');
+                                        exit();
+                                    }
+                                } else {
+                                    $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                    $_SESSION['ERROR_MESSAGE'] = $error;
+                                    header('location: admin.php?info');
+                                    exit();
+                                }
+                            } else {
+                                $error[] = "Dit bestandstype wordt niet geaccepteerd!";
+                                $_SESSION['ERROR_MESSAGE'] = $error;
+                                header('location: admin.php?info');
+                                exit();
+                            }
+                        } else {
+                            $error[] = "Het geüploade bestand is te groot!";
+                            $_SESSION['ERROR_MESSAGE'] = $error;
+                            header('location: admin.php?info');
+                            exit();
+                        }
+                    }
+
+                    $sql = "UPDATE bot SET name = ?, description = ?, macAddress = ? WHERE id = ?";
+                    
+                    if (!stmtExec($sql, 0, $botName, $description, $macAdress, $botId)) {
+                        $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
+                        header("location: ../components/error.php");
+                        exit();
+                    }
+
+                    ?>
+
+                    <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                        <?php echo "De informatie is succesvol gewijzigd!" ?>
+                    </div>
+
+                <?php
+                } else {
+                    echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
+                    $error[] = "Het Mac adres mag niet leeg zijn!";
+                }
+            } else {
+                echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
+                $error[] = "De robot afbeelding mag niet leeg zijn!";
             }
-            ?>
-
-            <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
-                <?php echo "De informatie is succesvol gewijzigd!" ?>
-            </div>
-
-        <?php
         } else {
             echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
             $error[] = "De robot omschrijving mag niet leeg zijn!";
@@ -72,7 +124,7 @@ if (!empty($error)) {
     <div class="col-md-6">
         <h3>Robot Informatie</h3>
         <?php
-        $sql = "SELECT id, name, description FROM bot";
+        $sql = "SELECT id, name, description, imagePath, macAddress FROM bot";
         
         $bots = stmtExec($sql);
         
@@ -83,16 +135,28 @@ if (!empty($error)) {
             echo "<table class='border border-dark'>";
             echo "<th class='infotable'>Name</th>
                  <th class='infotable'>Description</th>
+                 <th class='infotable'>Image Path</th>
+                 <th class='infotable'>Mac Adress</th>
                  <th class='infotable'>Edit</th>";
 
             for ($i = 0; $i < count($bots["id"]); $i++) {
                 $botId = $bots["id"][$i];
                 $botName = $bots["name"][$i];
                 $description = $bots["description"][$i];
+                $imagePath = $bots['imagePath'][$i];
+                $macAdress = $bots['macAddress'][$i];
+
+                if($imagePath == NULL) {
+                    $imagePath = "No image";
+                } else {
+                    $imagePath = "<img src='..{$imagePath}'>";
+                }
 
                 echo "<tr class='infotable'>";
                 echo "<th class='infotable'>" . $botName . "</th>";
                 echo "<th class='infotable'>" . $description . "</th>";
+                echo "<th class='infotable'>" . $imagePath . "</th>";
+                echo "<th class='infotable'>" . $macAdress . "</th>";
                 echo "<th class='infotable'><a href=admin.php?info&botId=" . $botId . ">Edit</a></th>";
                 echo "</tr>";
             }
@@ -105,7 +169,7 @@ if (!empty($error)) {
         if (isset($_GET["botId"])) {
             $id = filter_input(INPUT_GET, "botId", FILTER_VALIDATE_INT);
 
-            $sql = "SELECT id, name, description FROM bot WHERE id = ?";
+            $sql = "SELECT id, name, description, imagePath, macAddress FROM bot WHERE id = ?";
 
             $bots = stmtExec($sql, 0, $id);
 
@@ -118,6 +182,8 @@ if (!empty($error)) {
             $botId = $bots["id"][0];
             $botName = $bots["name"][0];
             $description = $bots["description"][0];
+            $imagePath = $bots["imagePath"][0];
+            $macAdress = $bots["macAddress"][0];
         }
         ?>
     </div>
@@ -168,12 +234,16 @@ if (!empty($error)) {
 <div class="row">
     <div class="col-md-6">
         <h3>Robot informatie</h3>
-        <form method="POST" action="">
-            <p><input type="hidden" class="form-control mt-3" value="<?php echo $botId; ?>" name="botId" id="id"></p>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <p><input type="hidden" class="form-control mt-3" value="<?= $botId; ?>" name="botId" id="id"></p>
             <h6>Robot naam</h6>
-            <p><input type="text" class="form-control mt-3" value="<?php echo $botName; ?>" name="botName"></p>
+            <p><input type="text" class="form-control mt-3" value="<?= $botName; ?>" name="botName"></p>
             <h6>Robot beschrijving</h6>
-            <p><input type="text" class="form-control mt-3" value="<?php echo $description; ?>" name="description"></p>
+            <p><input type="text" class="form-control mt-3" value="<?= $description; ?>" name="description"></p>
+            <h6>Robot MAC adres</h6>
+            <p><input type="text" class="form-control mt-3" value="<?= $macAdress; ?>" name="macAdress" id="macAdress"></p>
+            <h6>Robot fotopagina</h6>
+            <p><input type="file" class="form-control mt-3" name="imagePath"></p>
             <input type="submit" name="change" class="btn btn-primary mt-3" value="Wijzigen">
         </form>
     </div>
@@ -181,9 +251,9 @@ if (!empty($error)) {
     <div class="col-md-6">
         <h3>Team informatie</h3>
         <form method="POST" action="">
-            <input type="hidden" class="form-control mt-3" value="<?php echo $teamId; ?>" name="teamId" id="id">
+            <p><input type="hidden" class="form-control mt-3" value="<?= $teamId; ?>" name="teamId" id="id"></p>
             <h6>Team naam</h6>
-            <p><input type="text" class="form-control mt-3" value="<?php echo $teamName; ?>" name="teamName"></p>
+            <p><input type="text" class="form-control mt-3" value="<?= $teamName; ?>" name="teamName"></p>
             <input type="submit" name="change2" class="btn btn-primary mt-3" value="Wijzigen">
         </form>
     </div>

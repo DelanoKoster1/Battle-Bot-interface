@@ -63,8 +63,13 @@ switch (true) {
         break;
 
     case isset($_GET['addStream']);
-        $headerTitle = 'Stream toevoegen';
+        $headerTitle = 'Oude Stream toevoegen';
         $content = "../components/admin/addStreamToEvent.php";
+        break;
+    
+    case isset($_GET['addStreamCode']);
+        $headerTitle = 'Livestream toevoegen';
+        $content = "../components/admin/addLiveStreamcode.php";
         break;
 
     default:
@@ -274,7 +279,6 @@ if (isset($_POST['bot'])) {
 }
 
 if (isset($_GET['points']) && isset($_GET['eventId'])) {
-    $conn = connectDB();
     $teams = array();
     $eventIds = array();
     $teamPoints = array();
@@ -327,21 +331,9 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
         }
 
         if (isset($sql)) {
-            $stmt = mysqli_prepare($conn, $sql);
-
-            if (!$stmt) {
+            if (!stmtExec($sql, 0, $assignedPoints, $radioTeamId)) {
                 header("location: ../components/error.php");
             }
-
-            if (!mysqli_stmt_bind_param($stmt, 'ii', $assignedPoints, $radioTeamId)) {
-                header('location: ../components/error.php');
-            }
-
-            if (!mysqli_stmt_execute($stmt)) {
-                header('location ../components/error.php');
-            }
-
-            mysqli_stmt_close($stmt);
         }
         break;
     }
@@ -353,26 +345,23 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
             FROM     `team-event` 
             JOIN    team ON     team.id = `team-event`.teamId 
             WHERE   eventId = ?";
-    $stmt = mysqli_prepare($conn, $sql);
 
-    mysqli_stmt_bind_param($stmt, 'i', $eventId);
+    $results = stmtExec($sql, 0, $eventId);
 
-    if (!$stmt) {
+    if (is_array($results) && count($results["teamId"]) > 0) {
+        $teamIds = $results["teamId"];
+        $teamNames = $results["name"];
+        $eventIds = $results["eventId"];
+        $points = $results["points"];
+        
+        for($i = 0; $i < count($teamIds); $i++) {
+            $teams += [$teamIds[$i] => $teamNames[$i]];
+            $teamPoints += [$teamIds[$i] => $points[$i]];
+            $eventIds += [$teamIds[$i] => $eventIds[$i]];
+        }
+    } else {
         header("location: ../components/error.php");
     }
-
-    if (!mysqli_stmt_execute($stmt)) {
-        header("location: ../components/error.php");
-    }
-
-    mysqli_stmt_bind_result($stmt, $teamId, $teamName, $eventId, $points);
-    mysqli_stmt_store_result($stmt);
-    while (mysqli_stmt_fetch($stmt)) {
-        $teams += [$teamId => $teamName];
-        $teamPoints += [$teamId => $points];
-        $eventIds += [$teamId => $eventId];
-    }
-    mysqli_stmt_close($stmt);
 }
 
 /**
@@ -574,7 +563,10 @@ if (isset($_POST['stopEvent'])) {
                             <a class="nav-link text-white" href="admin.php?createTeam">Team aanmaken</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?addStream">Stream toevoegen</a>
+                            <a class="nav-link text-white" href="admin.php?addStream">Oude Stream toevoegen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?addStreamCode">Livestream code toevoegen</a>
                         </li>
                     </ul>
                 </nav>
@@ -609,9 +601,7 @@ if (isset($_POST['stopEvent'])) {
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">
                                     <?php
-                                    foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
-                                        echo '<li>' . $errorMsg . '</li>';
-                                    }
+                                    echo '<li>' . $_SESSION['ERROR_MESSAGE'] . '</li>';
                                     
                                     unset($_SESSION['ERROR_MESSAGE']);
                                     ?>

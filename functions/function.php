@@ -420,21 +420,21 @@ function checkProfileFields(string $username, string $email, string $password, s
 function checkProfilePassword($newPassword, $repeatPassword) {
     $error = array();
 
-    if ($newPassword == $repeatPassword) {
-    } else {
-        $error[] = 'Het nieuwe wachtwoord en het herhaal wachtwoord komen niet overeen.';
+    if ($newPassword != $repeatPassword) {
+        $error[] = 'Het nieuwe wachtwoord en de herhaal wachtwoord velden komen niet overeen.';
     }
-    if (!$newPassword && empty($newPassword)) {
-        $error[] = 'Het nieuwe wachtwoord mag niet leeg zijn!';
+    if (empty($newPassword)) {
+        $error[] = 'Nieuw wachtwoord mag niet leeg zijn!';
     }
-    if (!$repeatPassword && empty($repeatPassword)) {
-        $error[] = 'Het wachtwoord herhalen mag niet leeg zijn!';
+    if (empty($repeatPassword)) {
+        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
     }
 
     if (empty($error)) {
         return true;
     } else {
-        return $_SESSION['ERROR_MESSAGE'] = $error;
+        $_SESSION['ERROR_MESSAGE'] = $error;
+        return false;
     }
 }
 
@@ -1364,9 +1364,8 @@ function getActiveEvent() {
     return stmtExec($sql);
 }
 
-function changeTeamInfo() 
-{
-    $sql = "SELECT  bot.id, bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
+function changeTeamInfo() {
+    $sql = "SELECT  bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
             FROM    `bot`
             JOIN    `specs`     ON specs.id = bot.specsId
             JOIN    `team`      ON team.botId = bot.id  
