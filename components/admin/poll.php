@@ -54,21 +54,32 @@ $polls = stmtExec($sql);
 
 if(is_array($polls) && count($polls["active"]) > 0) {
     $isActive = $polls["active"][0];
+    ?>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="ms-1">Poll Uitslag:</h5>
+            <?php
+            echo pollQuestionAnswer();
+            ?>
+        </div>
+    </div>
+    <?php
 }
 
-if($isActive == 1) {
+// if($isActive == 1) {
 ?>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-6">
         <h5 class="ms-1">Poll Uitslag:</h5>
         <?php
         echo pollQuestionAnswer();
         ?>
     </div>
-</div>
+</div> -->
 <?php
-}
+// }
 ?>
 
 <script src="../assets/js/poll.js"></script>
