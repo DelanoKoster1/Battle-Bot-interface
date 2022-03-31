@@ -1,86 +1,91 @@
 <?php
 if (isset($_POST['change'])) {
-    if (!empty($_POST['botName'])) {
-        if (!empty($_POST['description'])) {
-            if (isset($_FILES['imagePath'])) {
-                if(!empty($_POST['macAdress'])) {
+    if(isset($_GET['botId'])) {
+        if (!empty($_POST['botName'])) {
+            if (!empty($_POST['description'])) {
+                if (isset($_FILES['imagePath'])) {
+                    if(!empty($_POST['macAdress'])) {
 
-                    $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
-                    $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
-                    $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
-                    $macAdress = filter_input(INPUT_POST, 'macAdress', FILTER_SANITIZE_SPECIAL_CHARS);
+                        $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
+                        $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
+                        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+                        $macAdress = filter_input(INPUT_POST, 'macAdress', FILTER_SANITIZE_SPECIAL_CHARS);
 
-                    if (checkIfFile($_FILES['imagePath'])) {
-                        if (checkFileSize($_FILES['imagePath'])) {
-                            if (checkFileType($_FILES['imagePath'])) {
-                                if (makeFolder($botId, "../assets/img/bots/")) {
-                                    if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['imagePath']['name'])) {
-                                        $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
-                                        
-                                        deleteFile("../assets/img/bots/{$botId}/");
-            
-                                        if (!uploadFile($_FILES['imagePath'], $query, $botId, "/assets/img/bots/{$botId}/")) {
-                                            $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                        if (checkIfFile($_FILES['imagePath'])) {
+                            if (checkFileSize($_FILES['imagePath'])) {
+                                if (checkFileType($_FILES['imagePath'])) {
+                                    if (makeFolder($botId, "../assets/img/bots/")) {
+                                        if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['imagePath']['name'])) {
+                                            $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
+                                            
+                                            deleteFile("../assets/img/bots/{$botId}/");
+                
+                                            if (!uploadFile($_FILES['imagePath'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                                                $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                                $_SESSION['ERROR_MESSAGE'] = $error;
+                                                header('location: admin.php?info');
+                                                exit();
+                                            } 
+                                        } else {
+                                            $error[] = "Het geüploade bestand bestaat al!";
                                             $_SESSION['ERROR_MESSAGE'] = $error;
                                             header('location: admin.php?info');
                                             exit();
-                                        } 
+                                        }
                                     } else {
-                                        $error[] = "Het geüploade bestand bestaat al!";
+                                        $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
                                         $_SESSION['ERROR_MESSAGE'] = $error;
                                         header('location: admin.php?info');
                                         exit();
                                     }
                                 } else {
-                                    $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                    $error[] = "Dit bestandstype wordt niet geaccepteerd!";
                                     $_SESSION['ERROR_MESSAGE'] = $error;
                                     header('location: admin.php?info');
                                     exit();
                                 }
                             } else {
-                                $error[] = "Dit bestandstype wordt niet geaccepteerd!";
+                                $error[] = "Het geüploade bestand is te groot!";
                                 $_SESSION['ERROR_MESSAGE'] = $error;
                                 header('location: admin.php?info');
                                 exit();
                             }
-                        } else {
-                            $error[] = "Het geüploade bestand is te groot!";
-                            $_SESSION['ERROR_MESSAGE'] = $error;
-                            header('location: admin.php?info');
+                        }
+
+                        $sql = "UPDATE bot SET name = ?, description = ?, macAddress = ? WHERE id = ?";
+                        
+                        if (!stmtExec($sql, 0, $botName, $description, $macAdress, $botId)) {
+                            $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
+                            header("location: ../components/error.php");
                             exit();
                         }
+
+                        ?>
+
+                        <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                            <?php echo "De informatie is succesvol gewijzigd!" ?>
+                        </div>
+
+                    <?php
+                    } else {
+                        echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
+                        $error[] = "Het Mac adres mag niet leeg zijn!";
                     }
-
-                    $sql = "UPDATE bot SET name = ?, description = ?, macAddress = ? WHERE id = ?";
-                    
-                    if (!stmtExec($sql, 0, $botName, $description, $macAdress, $botId)) {
-                        $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
-                        header("location: ../components/error.php");
-                        exit();
-                    }
-
-                    ?>
-
-                    <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
-                        <?php echo "De informatie is succesvol gewijzigd!" ?>
-                    </div>
-
-                <?php
                 } else {
                     echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
-                    $error[] = "Het Mac adres mag niet leeg zijn!";
+                    $error[] = "De robot afbeelding mag niet leeg zijn!";
                 }
             } else {
                 echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
-                $error[] = "De robot afbeelding mag niet leeg zijn!";
+                $error[] = "De robot omschrijving mag niet leeg zijn!";
             }
         } else {
             echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
-            $error[] = "De robot omschrijving mag niet leeg zijn!";
+            $error[] = "De robot naam mag niet leeg zijn!";
         }
     } else {
         echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
-        $error[] = "De robot naam mag niet leeg zijn!";
+        $error[] = "Selecteer een robot!";
     }
 }
 
