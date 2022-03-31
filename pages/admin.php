@@ -71,6 +71,11 @@ switch (true) {
         $headerTitle = 'Livestream toevoegen';
         $content = "../components/admin/addLiveStreamcode.php";
         break;
+    
+    case isset($_GET['addTeamToAccount']);
+        $headerTitle = 'Team toevoegen aan account';
+        $content = "../components/admin/addTeamToAccount.php";
+        break;
 
     default:
         $headerTitle = 'Evenement toevoegen';
@@ -506,6 +511,10 @@ if (isset($_POST['stopEvent'])) {
     $id = filter_input(INPUT_POST, "stopEvent", FILTER_SANITIZE_NUMBER_INT);
     $result = stmtExec($query, 0, $id);
 }
+
+if(isset($_POST['accounts'])) {
+    header('location: ../pages/admin.php?addTeamToAccount&setAcc=true');
+}
 ?>
 
 <!DOCTYPE html>
@@ -570,6 +579,9 @@ if (isset($_POST['stopEvent'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="roles.php">Rollen aanpassen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?addTeamToAccount">Team toeveogen aan account</a>
                         </li>
                     </ul>
                 </nav>
