@@ -77,11 +77,9 @@
                     echo ' 
                         <div class="tab-pane" id="' . $botName . '" role="tabpanel" aria-labelledby="' . $botName . '">
                             <div class="row">
-                                <div class="col-12">
-                                    <h1>Live status</h1>
-                                </div>
+                                
                                 <div class="liveStatus" macAdres =' . $botAdres . '>
-                                    
+                                
                                 </div>
                                 <div class="col-12">
                                     <h1>Team</h1>
