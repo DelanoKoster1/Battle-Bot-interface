@@ -757,7 +757,7 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
         if (!empty($answer2)) {
             if (!empty($answer3)) {
                 if (!empty($answer4)) {
-                    $query = "  INSERT INTO `poll` (
+                    $query = "INSERT INTO   `poll` (
                                             questionType,
                                             question,
                                             answer1,
@@ -767,7 +767,7 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
                                             answer5,
                                             pollOutcome,
                                             active)  
-                                VALUES      (?,?,?,?,?,?,NULL,NULL,1)";
+                              VALUES        (?,?,?,?,?,?,NULL,NULL,1)";
 
                     stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4);
                 } else {
@@ -797,7 +797,7 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
-            $query = "  INSERT INTO `poll` (
+            $query = "INSERT INTO   `poll` (
                                     questionType,
                                     question,
                                     answer1,
@@ -807,7 +807,7 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
                                     answer5,
                                     pollOutcome,
                                     active) 
-                        VALUES      (?,?,?,?,NULL,NULL,NULL,NULL,1)";
+                      VALUES        (?,?,?,?,NULL,NULL,NULL,NULL,1)";
 
             stmtExec($query, 0, $questionType, $question, $answer1, $answer2);
         } else {
@@ -837,7 +837,7 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
             if (!empty($answer3)) {
                 if (!empty($answer4)) {
                     if (!empty($answer5)) {
-                        $query = "  INSERT INTO `poll` (
+                        $query = "INSERT INTO   `poll` (
                                                 questionType,
                                                 question,
                                                 answer1,
@@ -847,7 +847,7 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
                                                 answer5,
                                                 pollOutcome,
                                                 active) 
-                                    VALUES      (?,?,?,?,?,?,?,NULL,1)";
+                                  VALUES        (?,?,?,?,?,?,?,NULL,1)";
 
                         stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4, $answer5);
                     } else {
@@ -875,18 +875,17 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
  */
 function retrieveQuestionInfo() {
 
-    $query = "  SELECT  question, 
+    $query = "SELECT    question, 
                         answer1, 
                         answer2, 
                         answer3, 
                         answer4, 
                         answer5, 
                         active 
-                FROM    poll
-                WHERE   active = 1";
+              FROM      poll
+              WHERE     active = 1";
 
     $results = stmtExec($query);
-
     $questionnaire = "";
 
     if (!empty($results['active'][0])) {
@@ -927,23 +926,23 @@ function retrieveQuestionInfo() {
  */
 function pollUserCheck($username, $givenAnswer) {
 
-    $checkUserPoll = "  SELECT  userName 
-                        FROM    `poll-outcome`";
+    $checkUserPoll = "SELECT  userName 
+                      FROM    `poll-outcome`";
 
     $usersOffPoll = stmtExec($checkUserPoll);
 
-    $checkUserAccount = "   SELECT  username 
-                            FROM    `account` 
-                            WHERE   username = ?  ";
+    $checkUserAccount = "SELECT  username 
+                         FROM    `account` 
+                         WHERE   username = ?  ";
 
     $usersOffAccount = stmtExec($checkUserAccount, 0, $username);
 
     if (empty($usersOffPoll['userName'])) {
 
-        $query =  " INSERT INTO `poll-outcome` (
+        $query =  "INSERT INTO `poll-outcome` (
                                 userName,
                                 `givenAnswer`) 
-                    VALUES      (?,?)";
+                   VALUES      (?,?)";
 
         if (!empty($username) && !empty($givenAnswer)) {
             stmtExec($query, 0, $username, $givenAnswer);
@@ -953,9 +952,9 @@ function pollUserCheck($username, $givenAnswer) {
 
             $users = stmtExec($getInsertedUser);
 
-            $insertPoints = "   UPDATE  `account` 
-                                SET     points = points + 3 
-                                WHERE   userName = ?";
+            $insertPoints = "UPDATE  `account` 
+                             SET     points = points + 3 
+                             WHERE   userName = ?";
 
             foreach ($users['userName'] as $user) {
                 stmtExec($insertPoints, 0, $user);
@@ -984,22 +983,22 @@ function pollAddUser($username, $givenAnswer) {
 
     if (pollUserCheck($username, $givenAnswer) == true) {
 
-        $query = "  INSERT INTO `poll-outcome` (
+        $query = "INSERT INTO   `poll-outcome` (
                                 userName,
                                 `givenAnswer`) 
-                    VALUES      (?,?)";
+                  VALUES        (?,?)";
 
         if (!empty($username) && !empty($givenAnswer)) {
             stmtExec($query, 0, $username, $givenAnswer);
 
-            $getInsertedUser = "    SELECT  userName 
-                                    FROM    `poll-outcome`";
+            $getInsertedUser = "SELECT  userName 
+                                FROM    `poll-outcome`";
 
             $users = stmtExec($getInsertedUser);
 
-            $insertPoints = "   UPDATE  `account` 
-                                SET     points = points + 3 
-                                WHERE   userName = ?";
+            $insertPoints = "UPDATE  `account` 
+                             SET     points = points + 3 
+                             WHERE   userName = ?";
 
             foreach ($users['userName'] as $user) {
                 stmtExec($insertPoints, 0, $user);
@@ -1014,9 +1013,9 @@ function pollAddUser($username, $givenAnswer) {
  */
 function endPoll() {
 
-    $changeActive = "   UPDATE  `poll` 
-                        SET     active = NULL 
-                        WHERE   active = 1";
+    $changeActive = "UPDATE  `poll` 
+                     SET     active = NULL 
+                     WHERE   active = 1";
 
     stmtExec($changeActive, 0);
 
@@ -1039,9 +1038,7 @@ function checkIfPoll() {
     if (!empty($getActive['active'])) {
         foreach ($getActive['active'] as $active) {
             if ($active == 1) {
-                return '<input type="submit" name="endPoll" class="btn btn-danger mt-3" value="eindig poll" />';
-            } else {
-                return "Er is op het moment geen poll actief!";
+                return '<input type="submit" name="endPoll" class="btn btn-danger mt-3" value="Eindig poll" />';
             }
         }
     }
@@ -1087,8 +1084,8 @@ function getProfileInfo() {
     $query = "SELECT    username,
                         email,
                         password
-                FROM    `account`
-                WHERE   id = ?
+              FROM    `account`
+              WHERE   id = ?
             ";
     return stmtExec($query, 0, $_SESSION['id']);
 }
@@ -1102,8 +1099,8 @@ function getAllRobots() {
     $arr = array();
 
     //Creating a table
-    $query = "  SELECT  * 
-                FROM    bot";
+    $query = "SELECT  * 
+              FROM    bot";
 
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
@@ -1132,8 +1129,8 @@ function getAllTeams() {
     $arr = array();
 
     //Creating a table
-    $query = "  SELECT  * 
-                FROM    team";
+    $query = "SELECT  * 
+              FROM    team";
 
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
@@ -1167,8 +1164,8 @@ function getAllEvents() {
     $arr = array();
 
     //Creating a table
-    $query = "  SELECT * 
-                FROM `event`";
+    $query = "SELECT * 
+              FROM `event`";
 
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
@@ -1239,13 +1236,13 @@ function checkSelectedEvent($eventID) {
     }
 
     //Check if ID is in database
-    $sql = "    SELECT  id, 
-                        name, 
-                        date, 
-                        description, 
-                        type 
-                FROM    event 
-                WHERE   id = ?";
+    $sql = "SELECT  id, 
+                    name, 
+                    date, 
+                    description, 
+                    type 
+            FROM    event 
+            WHERE   id = ?";
 
     //Get results from the database
     $results = stmtExec($sql, 0, $eventID);
@@ -1355,11 +1352,11 @@ function uploadFile($file, string $query, int $id, string $directory) {
 }
 
 function getActiveEvent() {
-    $sql = "    SELECT  teamId, points, team.`name`, eventId 
-                FROM    `team-event` 
-                INNER JOIN team     ON team.id = `team-event`.teamId
-                INNER JOIN `event`  ON `team-event`.eventId = `event`.id
-                WHERE   `event`.active = 1";
+    $sql = "SELECT  teamId, points, team.`name`, eventId 
+            FROM    `team-event` 
+            INNER JOIN  team     ON team.id = `team-event`.teamId
+            INNER JOIN  `event`  ON `team-event`.eventId = `event`.id
+            WHERE   `event`.active = 1";
 
     return stmtExec($sql);
 }
