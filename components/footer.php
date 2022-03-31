@@ -29,4 +29,3 @@
         </div>
     </div>
 </footer>
-<script src="https://use.fontawesome.com/ef0ace9f36.js"></script>
