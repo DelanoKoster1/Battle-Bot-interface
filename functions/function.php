@@ -420,21 +420,21 @@ function checkProfileFields(string $username, string $email, string $password, s
 function checkProfilePassword($newPassword, $repeatPassword) {
     $error = array();
 
-    if ($newPassword == $repeatPassword) {
-    } else {
+    if ($newPassword != $repeatPassword) {
         $error[] = 'Het nieuwe wachtwoord en de herhaal wachtwoord velden komen niet overeen.';
     }
-    if (!$newPassword && empty($newPassword)) {
+    if (empty($newPassword)) {
         $error[] = 'Nieuw wachtwoord mag niet leeg zijn!';
     }
-    if (!$repeatPassword && empty($repeatPassword)) {
+    if (empty($repeatPassword)) {
         $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
     }
 
     if (empty($error)) {
         return true;
     } else {
-        return $_SESSION['ERROR_MESSAGE'] = $error;
+        $_SESSION['ERROR_MESSAGE'] = $error;
+        return false;
     }
 }
 
