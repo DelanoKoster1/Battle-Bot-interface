@@ -29,8 +29,7 @@
             </li>
             <?php if (!isset($_SESSION['email'])) { ?>
               <li class="nav-item">
-                <a class="nav-link text-danger" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/login.php' : 'pages/login.php' ?>">Login
-                  / Registeren</a>
+                <a class="nav-link text-danger" href="<?= ($_SESSION['sort'] == 'page') ? '../pages/login.php' : 'pages/login.php' ?>">Inloggen / Registeren</a>
               </li>
             <?php } ?>
             <?php if (isset($_SESSION['email']) && $_SESSION['role'] == 2) { ?>

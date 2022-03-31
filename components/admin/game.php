@@ -17,7 +17,7 @@
             <img class="card-img-top" src="../assets/img/games/race.jpg" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">Race</h5>
-                <p class="card-text">Race tussen verschillende bots, de eerste over de finishlijn wint.</p>
+                <p class="card-text">Een race tussen verschillende robots. De eerste over de finishlijn wint.</p>
                 <a id="race-prepare" class="btn btn-primary action-button">Prepare</a>
             </div>
         </div>
@@ -28,7 +28,7 @@
             <img class="card-img-top" src="../assets/img/games/race.jpg" alt="Card image cap">
             <div class="card-body">
                 <h5 class="card-title">Butler</h5>
-                <p class="card-text">De robot moet door een gat heen zonder dat de objecten van de robot af valt</p>
+                <p class="card-text">De robot moet door een gat heen zonder dat de objecten van de robot af vallen.</p>
                 <a id="butler-prepare" class="btn btn-primary action-button">Prepare</a>
             </div>
         </div>

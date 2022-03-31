@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/robots.css">
 
-    <title>Livestream - Battlebot</title>
+    <title>Livestream - Battlebots</title>
 </head>
 
 <body>
@@ -68,7 +68,7 @@
                                                 </div>
                                             <?php } else { ?>
                                                 <div class="col-12">
-                                                    <p>Login om te kunnen chatten</p>
+                                                    <p>Log in om te kunnen chatten</p>
                                                 </div>
                                             <?php
                                             } ?>

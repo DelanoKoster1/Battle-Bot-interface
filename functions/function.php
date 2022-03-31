@@ -297,16 +297,16 @@ function checkLoginFields(String $username, String $password) {
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam is niet correct!';
+        $error[] = 'De gebruikersnaam is niet correct!';
     }
     if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
+        $error[] = 'De gebruikersnaam is te lang!';
     }
     if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
+        $error[] = 'Het wachtwoord mag niet leeg zijn!';
     }
     if (strlen($password) > 200) {
-        $error[] = 'Wachtwoord is te lang!';
+        $error[] = 'Het wachtwoord is te lang!';
     }
 
     if (empty($error)) {
@@ -333,28 +333,28 @@ function checkRegisterFields(string $username, string $email, string $password, 
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
+        $error[] = 'De gebruikersnaam mag niet leeg zijn!';
     }
     if (!$email && empty($email)) {
-        $error[] = 'Email is onjuist!';
+        $error[] = 'Het e-mailadres is onjuist!';
     }
     if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
+        $error[] = 'Het wachtwoord mag niet leeg zijn!';
     }
     if (!$password2 && empty($password2)) {
-        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
+        $error[] = 'Het wachtwoord herhalen mag niet leeg zijn!';
     }
     if ($password != $password2) {
-        $error[] = 'Wachtwoorden komen niet overeen!';
+        $error[] = 'De wachtwoorden komen niet overeen!';
     }
     if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,49}$/', $username)) {
-        $error[] = 'Gebruikersnaam voldoet niet aan de standaarden!';
+        $error[] = 'De gebruikersnaam voldoet niet aan de standaarden!';
     }
     if (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,254}$/', $password)) {
-        $error[] = 'Wachtwoord voldoet niet aan de standaarden!';
+        $error[] = 'Het wachtwoord voldoet niet aan de standaarden!';
     }
     if (strlen($email) > 200) {
-        $error[] = 'E-mail is te lang!';
+        $error[] = 'Het e-mailadres is te lang!';
     }
 
     if (empty($error)) {
@@ -379,28 +379,28 @@ function checkProfileFields(string $username, string $email, string $password, s
 
     //If statements so the error messages will be displayed all at once instead of each individual.
     if (!$username && empty($username)) {
-        $error[] = 'Gebruikersnaam mag niet leeg zijn!';
+        $error[] = 'De gebruikersnaam mag niet leeg zijn!';
     }
     if (!$email && empty($email)) {
-        $error[] = 'Email is onjuist!';
+        $error[] = 'Het e-mailadres is onjuist!';
     }
     if (!$password && empty($password)) {
-        $error[] = 'Wachtwoord mag niet leeg zijn!';
+        $error[] = 'Het wachtwoord mag niet leeg zijn!';
     }
     if (!$password2 && empty($password2)) {
-        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
+        $error[] = 'Het wachtwoord herhalen mag niet leeg zijn!';
     }
     if ($password != $password2) {
-        $error[] = 'Wachtwoorden komen niet overeen!';
+        $error[] = 'De wachtwoorden komen niet overeen!';
     }
     if (strlen($email) > 200) {
-        $error[] = 'E-mail is te lang!';
+        $error[] = 'De e-mailadres is te lang!';
     }
     if (strlen($username) > 50) {
-        $error[] = 'Gebruikersnaam is te lang!';
+        $error[] = 'De gebruikersnaam is te lang!';
     }
     if (strlen($password) > 255) {
-        $error[] = 'Wachtwoord is te lang!';
+        $error[] = 'Het wachtwoord is te lang!';
     }
 
     if (empty($error)) {
@@ -422,13 +422,13 @@ function checkProfilePassword($newPassword, $repeatPassword) {
 
     if ($newPassword == $repeatPassword) {
     } else {
-        $error[] = 'Het nieuwe wachtwoord en de herhaal wachtwoord velden komen niet overeen.';
+        $error[] = 'Het nieuwe wachtwoord en het herhaal wachtwoord komen niet overeen.';
     }
     if (!$newPassword && empty($newPassword)) {
-        $error[] = 'Nieuw wachtwoord mag niet leeg zijn!';
+        $error[] = 'Het nieuwe wachtwoord mag niet leeg zijn!';
     }
     if (!$repeatPassword && empty($repeatPassword)) {
-        $error[] = 'Wachtwoord herhalen mag niet leeg zijn!';
+        $error[] = 'Het wachtwoord herhalen mag niet leeg zijn!';
     }
 
     if (empty($error)) {
@@ -452,9 +452,17 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
 
     //SQL Query for selecting all users where an email is in DB
     if ($profile) {
-        $sql = "SELECT username, email FROM account WHERE username = ? AND email = ?";
+        $sql = "SELECT  username, 
+                        email 
+                FROM    account 
+                WHERE   username = ? 
+                AND     email = ?";
     } else {
-        $sql = "SELECT username, email FROM account WHERE username = ? OR email = ?";
+        $sql = "SELECT  username, 
+                        email 
+                FROM    account 
+                WHERE   username = ? 
+                OR      email = ?";
     }
 
     $results = stmtExec($sql, 0, $username, $email);
@@ -465,7 +473,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
             $email = $results['email'][$i];
 
             if ($email == filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)) {
-                $error[] = 'Er bestaat al een account met deze email';
+                $error[] = 'Er bestaat al een account met dit e-mailadres!';
             }
         }
 
@@ -473,7 +481,7 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
             $username = $results['username'][$i];
 
             if ($username == filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam';
+                $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam!';
             }
         }
 
@@ -585,11 +593,14 @@ function formatdate(string $date): string {
  * @return HTML
  */
 function showEvents(bool $limit = false, bool $admin = false, $start = false) {
-    $query = "SELECT id, name, date, description
-              FROM event 
-              WHERE date > NOW()
-              AND type = 'public'
-              ORDER BY date ASC ";
+    $query = "SELECT    id, 
+                        name, 
+                        date, 
+                        description
+              FROM      event 
+              WHERE     date > NOW()
+              AND       type = 'public'
+              ORDER BY  date ASC ";
 
     $query .= ($limit) ? "LIMIT 4" : "";
 
@@ -682,9 +693,9 @@ function eventTimeDescent() {
  * @return HTML
  */
 function getLivestream() {
-    $query = "SELECT name
-              FROM `event`
-              WHERE active = 1";
+    $query = "SELECT    name
+              FROM      `event`
+              WHERE     active = 1";
     $results = stmtExec($query, 0);
     if ($results == 1) {
         echo '<div class="col-md-12 p-0">
@@ -746,8 +757,17 @@ function multiChoicePoll($question, $questionType, $answer1, $answer2, $answer3,
         if (!empty($answer2)) {
             if (!empty($answer3)) {
                 if (!empty($answer4)) {
-                    $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
-                                VALUES (?,?,?,?,?,?,NULL,NULL,1)";
+                    $query = "  INSERT INTO `poll` (
+                                            questionType,
+                                            question,
+                                            answer1,
+                                            answer2,
+                                            answer3,
+                                            answer4,
+                                            answer5,
+                                            pollOutcome,
+                                            active)  
+                                VALUES      (?,?,?,?,?,?,NULL,NULL,1)";
 
                     stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4);
                 } else {
@@ -777,8 +797,17 @@ function yesOrNoPoll($question, $questionType, $answer1, $answer2) {
 
     if (!empty($answer1)) {
         if (!empty($answer2)) {
-            $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
-            VALUES (?,?,?,?,NULL,NULL,NULL,NULL,1)";
+            $query = "  INSERT INTO `poll` (
+                                    questionType,
+                                    question,
+                                    answer1,
+                                    answer2,
+                                    answer3,
+                                    answer4,
+                                    answer5,
+                                    pollOutcome,
+                                    active) 
+                        VALUES      (?,?,?,?,NULL,NULL,NULL,NULL,1)";
 
             stmtExec($query, 0, $questionType, $question, $answer1, $answer2);
         } else {
@@ -808,8 +837,17 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
             if (!empty($answer3)) {
                 if (!empty($answer4)) {
                     if (!empty($answer5)) {
-                        $query = "INSERT INTO `poll` (questionType,question,answer1,answer2,answer3,answer4,answer5,pollOutcome,active) 
-                        VALUES (?,?,?,?,?,?,?,NULL,1)";
+                        $query = "  INSERT INTO `poll` (
+                                                questionType,
+                                                question,
+                                                answer1,
+                                                answer2,
+                                                answer3,
+                                                answer4,
+                                                answer5,
+                                                pollOutcome,
+                                                active) 
+                                    VALUES      (?,?,?,?,?,?,?,NULL,1)";
 
                         stmtExec($query, 0, $questionType, $question, $answer1, $answer2, $answer3, $answer4, $answer5);
                     } else {
@@ -837,7 +875,15 @@ function voteForBotPoll($question, $questionType, $answer1, $answer2, $answer3, 
  */
 function retrieveQuestionInfo() {
 
-    $query = "SELECT question, answer1, answer2, answer3, answer4, answer5, active FROM poll WHERE active = 1";
+    $query = "  SELECT  question, 
+                        answer1, 
+                        answer2, 
+                        answer3, 
+                        answer4, 
+                        answer5, 
+                        active 
+                FROM    poll
+                WHERE   active = 1";
 
     $results = stmtExec($query);
 
@@ -846,7 +892,7 @@ function retrieveQuestionInfo() {
     if (!empty($results['active'][0])) {
         if ($results['active'][0] != NULL) {
 
-            $questionnaire .= '<h4>De vraag luid: ' . $results['question'][0] . '</h4>';
+            $questionnaire .= '<h4>De vraag luidt: ' . $results['question'][0] . '</h4>';
             $questionnaire .= '<input type="radio" id="question1" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer1'][0] . '">';
             $questionnaire .= '<label class="custom-control-label" for="question1">' . $results['answer1'][0] . '</label> <br>';
             $questionnaire .= '<input type="radio" id="question2" class="custom-control-input mt-3" name="questionAnswer" value="' . $results['answer2'][0] . '">';
@@ -881,26 +927,35 @@ function retrieveQuestionInfo() {
  */
 function pollUserCheck($username, $givenAnswer) {
 
-    $checkUserPoll = "SELECT userName FROM `poll-outcome`";
+    $checkUserPoll = "  SELECT  userName 
+                        FROM    `poll-outcome`";
 
     $usersOffPoll = stmtExec($checkUserPoll);
 
-    $checkUserAccount = "SELECT username FROM `account` WHERE username = ?  ";
+    $checkUserAccount = "   SELECT  username 
+                            FROM    `account` 
+                            WHERE   username = ?  ";
 
     $usersOffAccount = stmtExec($checkUserAccount, 0, $username);
 
     if (empty($usersOffPoll['userName'])) {
 
-        $query =  "INSERT INTO `poll-outcome` (userName,`givenAnswer`) VALUES (?,?)";
+        $query =  " INSERT INTO `poll-outcome` (
+                                userName,
+                                `givenAnswer`) 
+                    VALUES      (?,?)";
 
         if (!empty($username) && !empty($givenAnswer)) {
             stmtExec($query, 0, $username, $givenAnswer);
 
-            $getInsertedUser = "SELECT userName FROM `poll-outcome`";
+            $getInsertedUser = "SELECT  userName 
+                                FROM    `poll-outcome`";
 
             $users = stmtExec($getInsertedUser);
 
-            $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
+            $insertPoints = "   UPDATE  `account` 
+                                SET     points = points + 3 
+                                WHERE   userName = ?";
 
             foreach ($users['userName'] as $user) {
                 stmtExec($insertPoints, 0, $user);
@@ -929,16 +984,22 @@ function pollAddUser($username, $givenAnswer) {
 
     if (pollUserCheck($username, $givenAnswer) == true) {
 
-        $query = "INSERT INTO `poll-outcome` (userName,`givenAnswer`) VALUES (?,?)";
+        $query = "  INSERT INTO `poll-outcome` (
+                                userName,
+                                `givenAnswer`) 
+                    VALUES      (?,?)";
 
         if (!empty($username) && !empty($givenAnswer)) {
             stmtExec($query, 0, $username, $givenAnswer);
 
-            $getInsertedUser = "SELECT userName FROM `poll-outcome`";
+            $getInsertedUser = "    SELECT  userName 
+                                    FROM    `poll-outcome`";
 
             $users = stmtExec($getInsertedUser);
 
-            $insertPoints = "UPDATE `account` SET points = points + 3 WHERE userName = ?";
+            $insertPoints = "   UPDATE  `account` 
+                                SET     points = points + 3 
+                                WHERE   userName = ?";
 
             foreach ($users['userName'] as $user) {
                 stmtExec($insertPoints, 0, $user);
@@ -953,7 +1014,9 @@ function pollAddUser($username, $givenAnswer) {
  */
 function endPoll() {
 
-    $changeActive = "UPDATE `poll` SET active = NULL WHERE active = 1";
+    $changeActive = "   UPDATE  `poll` 
+                        SET     active = NULL 
+                        WHERE   active = 1";
 
     stmtExec($changeActive, 0);
 
@@ -968,7 +1031,8 @@ function endPoll() {
  * @return HTML/String
  */
 function checkIfPoll() {
-    $checkIfPoll = "SELECT  active FROM poll";
+    $checkIfPoll = "SELECT  active 
+                    FROM    poll";
 
     $getActive = stmtExec($checkIfPoll);
 
@@ -1038,7 +1102,8 @@ function getAllRobots() {
     $arr = array();
 
     //Creating a table
-    $query = "SELECT * FROM bot";
+    $query = "  SELECT  * 
+                FROM    bot";
 
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
@@ -1067,7 +1132,8 @@ function getAllTeams() {
     $arr = array();
 
     //Creating a table
-    $query = "SELECT * FROM team";
+    $query = "  SELECT  * 
+                FROM    team";
 
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
@@ -1101,7 +1167,8 @@ function getAllEvents() {
     $arr = array();
 
     //Creating a table
-    $query = "SELECT * FROM `event`";
+    $query = "  SELECT * 
+                FROM `event`";
 
     //Prpeparing SQL Query with database connection
     if (!$stmt = mysqli_prepare($conn, $query)) {
@@ -1137,7 +1204,11 @@ function checkSelectedTeam($teamID) {
     }
 
     //Check if ID is in database
-    $sql = "SELECT id, botId, name FROM team WHERE id = ?";
+    $sql = "SELECT  id, 
+                    botId, 
+                    name 
+            FROM    team 
+            WHERE   id = ?";
 
     //Get results from the database
     $results = stmtExec($sql, 0, $teamID);
@@ -1168,7 +1239,13 @@ function checkSelectedEvent($eventID) {
     }
 
     //Check if ID is in database
-    $sql = "SELECT id, name, date, description, type FROM event WHERE id = ?";
+    $sql = "    SELECT  id, 
+                        name, 
+                        date, 
+                        description, 
+                        type 
+                FROM    event 
+                WHERE   id = ?";
 
     //Get results from the database
     $results = stmtExec($sql, 0, $eventID);
@@ -1278,18 +1355,18 @@ function uploadFile($file, string $query, int $id, string $directory) {
 }
 
 function getActiveEvent() {
-    $sql = "SELECT teamId, points, team.`name`, eventId 
-    FROM `team-event` 
-    INNER JOIN team ON team.id = `team-event`.teamId
-    INNER JOIN `event` ON `team-event`.eventId = `event`.id
-    WHERE `event`.active = 1";
+    $sql = "    SELECT  teamId, points, team.`name`, eventId 
+                FROM    `team-event` 
+                INNER JOIN team     ON team.id = `team-event`.teamId
+                INNER JOIN `event`  ON `team-event`.eventId = `event`.id
+                WHERE   `event`.active = 1";
 
     return stmtExec($sql);
 }
 
 function changeTeamInfo() 
 {
-    $sql = "SELECT  bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
+    $sql = "SELECT  bot.id, bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
             FROM    `bot`
             JOIN    `specs`     ON specs.id = bot.specsId
             JOIN    `team`      ON team.botId = bot.id  
@@ -1299,25 +1376,25 @@ function changeTeamInfo()
 
 
     $botInfo = stmtExec($sql, 0, $_SESSION['username']);
-    
     $returnForm = '';
 
-    $returnForm .= '<form method="post" action="" enctype="multipart/form-data">';
+    $returnForm .= '<form method="post" action="editTeamInfo.php" enctype="multipart/form-data">';
         $returnForm .= '<div class="form-group">';
-            $returnForm .= '<label for="teamNaam" class="mt-3">team naam</label>';
-            $returnForm .= '<input type="text" id="teamNaam" class="form-control mt-3" value="'. $botInfo['team.name'][0] .'" placeholder="'. $botInfo['team.name'][0] .'" />';
-            $returnForm .= '<label for="botName" class="mt-3">Bot naam</label>';
-            $returnForm .= '<input type="text" id="botName" class="form-control mt-3" value="'. $botInfo['bot.name'][0] .'" placeholder="'. $botInfo['bot.name'][0] .'" />';
-            $returnForm .= '<label for="botDescription" class="mt-3">bot omschrijving</label>';
-            $returnForm .= '<input type="text" id="botDescription" class="form-control mt-3" value="'. $botInfo['bot.description'][0] .'" placeholder="'. $botInfo['bot.description'][0] .'" />';
-            $returnForm .= '<label for="botImagePath" class="mt-3">bot foto</label>';
+            $returnForm .= '<input type="hidden" name="botId" id="botId" class="form-control mt-3" value="'. $botInfo['bot.id'][0] .'"/>';
+            $returnForm .= '<label for="teamName" class="mt-3">Team naam</label>';
+            $returnForm .= '<input type="text" name="teamName" id="teamName" class="form-control mt-3" value="'. $botInfo['team.name'][0] .'" placeholder="'. $botInfo['team.name'][0] .'" />';
+            $returnForm .= '<label for="botName" class="mt-3">Robot naam</label>';
+            $returnForm .= '<input type="text" name="botName" id="botName" class="form-control mt-3" value="'. $botInfo['bot.name'][0] .'" placeholder="'. $botInfo['bot.name'][0] .'" />';
+            $returnForm .= '<label for="botDescription" class="mt-3">Robot omschrijving</label>';
+            $returnForm .= '<input type="text" name="botDescription" id="botDescription" class="form-control mt-3" value="'. $botInfo['bot.description'][0] .'" placeholder="'. $botInfo['bot.description'][0] .'" />';
+            $returnForm .= '<label for="botImagePath" class="mt-3">Robot foto</label>';
             $returnForm .= '<img src="..'.$botInfo['bot.imagePath'][0].'" height="100" width="100">';
-            $returnForm .= '<input type="file" id="botImagePath" name="botTeamImage" class="form-control mt-3" value="..'.$botInfo['bot.imagePath'][0].'" />';
-            $returnForm .= '<label for="specsBoard" class="mt-3">specificatie board</label>';
-            $returnForm .= '<input type="text" id="specsBoard" class="form-control mt-3" value="'. $botInfo['specs.board'][0] .'" placeholder="'. $botInfo['specs.board'][0] .'" />';
-            $returnForm .= '<label for="specsInterface" class="mt-3">specificatie interface</label>';
-            $returnForm .= '<input type="text" id="specsInterface" class="form-control mt-3" value="'. $botInfo['specs.interface'][0] .'" placeholder="'. $botInfo['specs.interface'][0] .'" />';
-            $returnForm .= '<input type="submit" class="btn btn-primary mt-3" value="verander info" name="playerInfoChange">';
+            $returnForm .= '<input type="file" id="botImagePath" name="botTeamImage" class="form-control mt-3"/>';
+            $returnForm .= '<label for="specsBoard" class="mt-3">Specificatie board</label>';
+            $returnForm .= '<input type="text" name="specsBoard" id="specsBoard" class="form-control mt-3" value="'. $botInfo['specs.board'][0] .'" placeholder="'. $botInfo['specs.board'][0] .'" />';
+            $returnForm .= '<label for="specsInterface" class="mt-3">Specificatie interface</label>';
+            $returnForm .= '<input type="text" name="specsInterface" id="specsInterface" class="form-control mt-3" value="'. $botInfo['specs.interface'][0] .'" placeholder="'. $botInfo['specs.interface'][0] .'" />';
+            $returnForm .= '<input type="submit" class="btn btn-primary mt-3" value="Opslaan" name="playerInfoChange">';
         $returnForm .= '</div>';
     $returnForm .= '</form>';
 
