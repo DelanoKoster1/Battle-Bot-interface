@@ -32,7 +32,7 @@ if (isset($_POST['endPoll'])) {
                 </select>
                 <div id="pollTypes">
                 </div>
-                <input type="submit" name="submitPull" class="btn btn-primary mt-3" value="submit poll" />
+                <input type="submit" name="submitPull" class="btn btn-primary mt-3" value="Submit poll" />
                 <?php echo checkIfPoll(); ?>
             </div>
         </form>
@@ -48,7 +48,9 @@ if (isset($_POST['endPoll'])) {
     </div>
 </div>
 <?php
-$sql = "SELECT active FROM poll WHERE active = 1";
+$sql = "SELECT  active 
+        FROM    poll 
+        WHERE   active = 1";
 
 $polls = stmtExec($sql);
 

@@ -16,7 +16,9 @@ if (isset($_POST['change'])) {
                                 if (checkFileType($_FILES['imagePath'])) {
                                     if (makeFolder($botId, "../assets/img/bots/")) {
                                         if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['imagePath']['name'])) {
-                                            $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
+                                            $query = "UPDATE    `bot` 
+                                                      SET       imagePath = ? 
+                                                      WHERE     id = ?";
                                             
                                             deleteFile("../assets/img/bots/{$botId}/");
                 
@@ -52,7 +54,11 @@ if (isset($_POST['change'])) {
                             }
                         }
 
-                        $sql = "UPDATE bot SET name = ?, description = ?, macAddress = ? WHERE id = ?";
+                        $sql = "UPDATE  bot 
+                                SET     name = ?, 
+                                        description = ?, 
+                                        macAddress = ? 
+                                WHERE   id = ?";
                         
                         if (!stmtExec($sql, 0, $botName, $description, $macAdress, $botId)) {
                             $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
@@ -165,11 +171,11 @@ if (!empty($error)) {
             $botIds = $bots["id"];
 
             echo "<table class='border border-dark'>";
-            echo "<th class='infotable'>Name</th>
-                 <th class='infotable'>Description</th>
-                 <th class='infotable'>Image Path</th>
-                 <th class='infotable'>Mac Adress</th>
-                 <th class='infotable'>Edit</th>";
+            echo "<th class='infotable'>Naam</th>
+                 <th class='infotable'>Beschrijving</th>
+                 <th class='infotable'>Robot foto</th>
+                 <th class='infotable'>Mac adres</th>
+                 <th class='infotable'></th>";
 
             for ($i = 0; $i < count($bots["id"]); $i++) {
                 $botId = $bots["id"][$i];
@@ -189,7 +195,7 @@ if (!empty($error)) {
                 echo "<th class='infotable'>" . $description . "</th>";
                 echo "<th class='infotable'>" . $imagePath . "</th>";
                 echo "<th class='infotable'>" . $macAdress . "</th>";
-                echo "<th class='infotable'><a href=admin.php?info&botId=" . $botId . ">Edit</a></th>";
+                echo "<th class='infotable'><a href=admin.php?info&botId=" . $botId . ">Wijzigen</a></th>";
                 echo "</tr>";
             }
             echo "</table>";
@@ -236,8 +242,8 @@ if (!empty($error)) {
 
         if (is_array($teams) && count($teams["id"]) > 0) {
             echo "<table class='border border-dark'>";
-            echo "<th class='infotable'>Name</th>
-                  <th class='infotable'>Edit</th>";
+            echo "<th class='infotable'>Naam</th>
+                  <th class='infotable'></th>";
 
             for ($i = 0; $i < count($teams["id"]); $i ++) {
                 $teamId = $teams["id"][$i];
@@ -245,7 +251,7 @@ if (!empty($error)) {
 
                 echo "<tr class='infotable'>";
                 echo "<th class='infotable'>" . $teamName . "</th>";
-                echo "<th class='infotable'><a href=admin.php?info&teamId=" . $teamId . ">Edit</a></th>";
+                echo "<th class='infotable'><a href=admin.php?info&teamId=" . $teamId . ">Wijzigen</a></th>";
                 echo "</tr>";
             }
             echo "</table>";
@@ -287,7 +293,7 @@ if (!empty($error)) {
             <p><input type="text" class="form-control mt-3" value="<?= $macAdress; ?>" name="macAdress" id="macAdress"></p>
             <h6>Robot foto</h6>
             <p><input type="file" class="form-control mt-3" name="imagePath"></p>
-            <input type="submit" name="change" class="btn btn-primary mt-3" value="Wijzigen">
+            <input type="submit" name="change" class="btn btn-primary mt-3 mb-3" value="Opslaan">
         </form>
     </div>
 
@@ -297,7 +303,7 @@ if (!empty($error)) {
             <p><input type="hidden" class="form-control mt-3" value="<?= $teamId; ?>" name="teamId" id="id"></p>
             <h6>Team naam</h6>
             <p><input type="text" class="form-control mt-3" value="<?= $teamName; ?>" name="teamName"></p>
-            <input type="submit" name="change2" class="btn btn-primary mt-3" value="Wijzigen">
+            <input type="submit" name="change2" class="btn btn-primary mt-3" value="Opslaan">
         </form>
     </div>
 </div>

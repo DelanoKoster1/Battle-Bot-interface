@@ -68,7 +68,7 @@ switch (true) {
         break;
     
     case isset($_GET['addStreamCode']);
-        $headerTitle = 'Livestream toevoegen';
+        $headerTitle = 'Livestream code toevoegen';
         $content = "../components/admin/addLiveStreamcode.php";
         break;
 

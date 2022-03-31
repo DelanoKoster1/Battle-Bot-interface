@@ -1,6 +1,8 @@
 <?php
 
-$query = "SELECT name FROM `event` WHERE `active` = 1";
+$query = "SELECT    name 
+          FROM      `event` 
+          WHERE     `active` = 1";
 $results = stmtExec($query);
 
 if(is_array($results)) {
@@ -10,13 +12,15 @@ if(is_array($results)) {
             $event = $results["name"][0];
 
             if($stream) {
-                $query = "UPDATE event SET stream = ? WHERE name = ?";
+                $query = "UPDATE    event 
+                          SET       stream = ? 
+                          WHERE     name = ?";
                 stmtExec($query, 0, $stream, $event);
             } else {
                 $error[] = 'Dit is geen valide stream!';
             }
         } else {
-            $error[] = 'Je hebt geen stream meegegeven!';
+            $error[] = 'Er is geen stream geüpload!';
         }
     }
 } else {
@@ -24,6 +28,8 @@ if(is_array($results)) {
 }
 
 ?>
+
+
 
 <div class="eventRobotBox">
     <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="POST">
@@ -40,10 +46,12 @@ if(is_array($results)) {
         }
         ?>
         <div class="form-group">
+            <span>Voeg een livestream toe</span>
             <div>
-                <span>Voeg Livestream toe</span>
-                <input type="text" name="stream">
-                <input type="submit" name="add" value="Voeg toe">
+                <input class="form-control" type="file" name="stream">
+            </div>
+            <div>
+                <input class="mt-3 btn btn-success" type="submit" name="add" value="Toevoegen">
             </div>
         </div>
     </form>
