@@ -2,6 +2,7 @@ const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 let selectBot = document.querySelector('#selectBot');
 let selectBotBtn = document.querySelector('#selectBotBtn');
+let deleteGamesBtn = document.querySelector('#deleteGames');
 let selectGame = document.querySelector('#selectGame');
 
 let selectBotDiv = document.querySelector('#bot');
@@ -19,8 +20,12 @@ selectBotBtn.addEventListener('click', (ev) => {
     selectGame.value = "";
 })
 
-
-
+deleteGamesBtn.addEventListener('click', (ev) => {
+    sendAction({
+        "action": "delete_games"
+    });
+    clearGameCard();
+})
 selectGame.addEventListener('change', (ev) => {
     selectedGame = selectGame.value;
     selectGameDiv.setAttribute('class', 'd-none');
@@ -32,17 +37,6 @@ selectGame.addEventListener('change', (ev) => {
         "for": result
     })
 })
-
-
-
-//  prepareMaze.addEventListener('click', () =>{
-//     ws.send(JSON.stringify({
-//         "for": ["FC:F5:C4:2F:45:5C"],
-//         "action": "prepare",
-//         "game": "maze"
-//     }))
-// })
-
 
 ws.addEventListener("open", () => {
 
@@ -58,34 +52,7 @@ ws.addEventListener("open", () => {
         if(data.games && data.games.length != 0){
             clearGameCard();
             createGameCard(data.games);
-            
-            // send game action to bots
-            // document.addEventListener('click',function(e){
-            //     action = e.target.value
-            //     for (let index = 0; index < data.games.length; index++) {
-            //         if (data.games[index].id == e.target.id) {
-            //             action = e.target.value;
-            //             game = data.games[index].game;
-                        
-            //             robots = data.games[index].bots
-            //             robotadres = [];
-            //             robots.forEach(robot => {
-            //                 robotadres.push(robot.botId);
-            //             });
-
-            //             sendAction({
-            //                 "action": action,
-            //                 "game": selectedGame,
-            //                 "gameId": e.target.id,
-            //                 "for" : robotadres
-            //             })
-            //         }
-                    
-            //     }
-            //  });
         }
-
-        
     })
 
 });
@@ -108,14 +75,11 @@ function createGameCard(game){
         let h4 = document.createElement('h4');
         h4.innerHTML = game[index].game;
 
+        let pAction = document.createElement('p');
+        pAction.innerHTML = "Actie: " + game[index].action;
+
         let p = document.createElement('p');
         p.innerHTML = "Status: " + game[index].status;
-
-        let buttonPrepare = document.createElement('button');
-        buttonPrepare.setAttribute('class', 'btn btn-primary mx-2 float-end');
-        buttonPrepare.setAttribute('id', game[index].id);
-        buttonPrepare.setAttribute('value', "prepare");
-        buttonPrepare.innerHTML = "Prepare";
         
         let buttonStart = document.createElement('button');
         buttonStart.setAttribute('class', 'btn btn-primary mx-2 float-end');
@@ -123,13 +87,19 @@ function createGameCard(game){
         buttonStart.setAttribute('value', "start");
         buttonStart.innerHTML = "Start";
 
+        let buttonEnd = document.createElement('button');
+        buttonEnd.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonEnd.setAttribute('id', game[index].id);
+        buttonEnd.setAttribute('value', "ended");
+        buttonEnd.innerHTML = "End";
+
+        // send game action to bots to start game
         buttonStart.addEventListener("click", (e) => {
-            action = e.target.value
+            
             for (let index = 0; index < game.length; index++) {
-                if (game[index].id == e.target.id) {
-                    action = e.target.value;
-                   
-                    
+                if (game[index].id == e.target.id) {                   
+                    action = e.target.value
+                    curruntGame = game[index].game
                     robots = game[index].bots
                     robotadres = [];
                     robots.forEach(robot => {
@@ -138,7 +108,7 @@ function createGameCard(game){
 
                     sendAction({
                         "action": action,
-                        "game": selectedGame,
+                        "game": curruntGame,
                         "gameId": e.target.id,
                         "for" : robotadres
                     })
@@ -147,16 +117,39 @@ function createGameCard(game){
             }
         })
 
-        let buttonEnd = document.createElement('button');
-        buttonEnd.setAttribute('class', 'btn btn-primary mx-2 float-end');
-        buttonEnd.setAttribute('id', game[index].id);
-        buttonEnd.setAttribute('value', "ended");
-        buttonEnd.innerHTML = "End";
+         // send game action to bots to end
+        buttonEnd.addEventListener("click", (e) => {
+            for (let index = 0; index < game.length; index++) {
+                if (game[index].id == e.target.id) {
+                    action = e.target.value
+                    curruntGame = game[index].game
+                    robots = game[index].bots
+                    robotadres = [];
+                    robots.forEach(robot => {
+                        robotadres.push(robot.botId);
+                    });
+
+                    sendAction({
+                        "action": action,
+                        "game": curruntGame,
+                        "gameId": e.target.id,
+                        "for" : robotadres
+                    })
+
+                    sendAction({
+                        "action": "delete_games"
+                    })
+                    
+                }
+                
+            }
+        })
         
         let p2 = document.createElement('p');
         p2.innerHTML = "Bots: ";
 
         gameBody.appendChild(h4);
+        gameBody.appendChild(pAction);
         gameBody.appendChild(p);
         gameBody.appendChild(p2);
         game[index].bots.forEach(bot => {
@@ -167,7 +160,6 @@ function createGameCard(game){
 
         gameBody.appendChild(buttonEnd);
         gameBody.appendChild(buttonStart);
-        gameBody.appendChild(buttonPrepare);
         gameDiv.appendChild(gameBody);
         gamesDiv.appendChild(gameDiv);
     }
