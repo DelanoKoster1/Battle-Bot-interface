@@ -370,7 +370,8 @@ function createGame(req) {
     let game = {
         "id": uuidv4(),
         "game": req.game,
-        "status": req.action,
+        "action": req.action,
+        "status": false,
         "bots": []
     }
     let bots = [];
