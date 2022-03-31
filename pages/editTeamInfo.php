@@ -9,6 +9,7 @@ if (isset($_POST['playerInfoChange'])) {
     $description = filter_input(INPUT_POST, "botDescription", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $board = filter_input(INPUT_POST, "specsBoard", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
     $interface = filter_input(INPUT_POST, "specsInterface", FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $botId = filter_input(INPUT_POST, 'botId' , FILTER_SANITIZE_NUMBER_INT);
     
     $query ="  UPDATE  `bot`
                 JOIN    `specs`     ON specs.id = bot.specsId
@@ -34,21 +35,19 @@ if (isset($_POST['playerInfoChange'])) {
             if (checkFileType($_FILES['botTeamImage'])) {
                 if (makeFolder($botId, "../assets/img/bots/")) {         
                     if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botTeamImage']['name'])) {
-                        if (uploadFile($_FILES['botTeamImage'], $query, $botId, "/assets/img/bots/{$botId}/")) {
-                            $query = "  UPDATE  `bot`
-                                        JOIN    `account`   ON account.botId = bot.id
-                                        SET     bot.imagePath = ?
-                                        WHERE   account.username = ?
+                        $query = "  UPDATE  `bot`
+                                        SET     imagePath = ?
+                                        WHERE   id = ?
                                     ";
-                            if (stmtExec($query, 0, $imagePath, $_SESSION['username'])) {
-                                $_SESSION['succes'] = 'De foto is succesvol aangepast!';
-                            } else {
-                                $error[] = "Er is iets fout gegaan bij het uploaden van het bestand!";
-                                $_SESSION['ERROR_MESSAGE'] = $error;
-                            }
-                                        
-                            $_SESSION['succes'] = 'Het bestand is succesvol geüpload!';
-                        }
+
+                        deleteFile("../assets/img/bots/{$botId}/");
+
+                        if (!uploadFile($_FILES['botTeamImage'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                            $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                            $_SESSION['ERROR_MESSAGE'] = $error;
+                            header('location: admin.php?info');
+                            exit();
+                        } 
                     } else {
                         $error[] = "Het geüploade bestand bestaat al!";
                         $_SESSION['ERROR_MESSAGE'] = $error;
