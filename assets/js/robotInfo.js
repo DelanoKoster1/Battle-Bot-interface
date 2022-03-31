@@ -1,5 +1,5 @@
 const ws = new WebSocket(`ws://localhost:3003/websocket/robot`);
-let statusDivs = document.querySelector('#liveStatus');
+
 
 ws.addEventListener("open", () => {
 
@@ -12,37 +12,50 @@ ws.addEventListener("open", () => {
     ws.addEventListener('message', (message) => {
         let data = JSON.parse(message.data); 
         console.log(data);
-        clearLiveCard();
         createLiveCard(data)
     })
 
 })
-function clearLiveCard(){
-    statusDivs.innerHTML = "";
+function clearLiveCard(div){
+        div.innerHTML= "";
 }
 
 function createLiveCard(bot){
     // for (let index = 0; index < bot.length; index++) {      
-       
+        let statusDivs = document.querySelectorAll('.liveStatus');
+        
+        statusDivs.forEach(botAdres => {
+            let dataAttribute = botAdres.getAttribute('macAdres')
+            if (bot.botId == dataAttribute) {
+              curruntDiv = botAdres  
+            }
+        })
+        
         let driveDiv = document.createElement('div');
         driveDiv.setAttribute('class', 'card d-inline-block')
-
-        let driveHeader = document.createElement('h5')
-        driveHeader.setAttribute('class', "card-header bg-success text-white")
-        driveHeader.innerText = "Rijdend"
 
         let driveBody = document.createElement('div')
         driveBody.setAttribute('class', "card-body")
 
         let driveTitle = document.createElement('div');
         driveTitle.setAttribute('class', 'card-title');
-        driveTitle.innerHTML= "Vroemmm";
+
+        let driveHeader = document.createElement('h5')
+        if (bot.req.isDriving) {
+            driveHeader.setAttribute('class', "card-header bg-success text-white")
+            driveTitle.innerHTML= "Vroemmm";
+        }else{
+            driveHeader.setAttribute('class', "card-header")
+            driveTitle.innerHTML= "Stil";
+        }
+        driveHeader.innerText = "Rijdend"
+        
 
         let accelerationDiv = document.createElement('div');
         accelerationDiv.setAttribute('class', 'card d-inline-block')
         
         let accelerationHeader = document.createElement('h5')
-        accelerationHeader.setAttribute('class', "card-header bg-success text-white")
+        
         accelerationHeader.innerText = "Acceleratatie"
 
         let accelerationBody = document.createElement('div')
@@ -50,7 +63,18 @@ function createLiveCard(bot){
 
         let accelerationTitle = document.createElement('div');
         accelerationTitle.setAttribute('class', 'card-title');
-        accelerationTitle.innerText= "22"
+        
+
+        if (bot.req.acceleration > 0) {
+            accelerationHeader.setAttribute('class', "card-header bg-success text-white")
+        }else{
+            accelerationHeader.setAttribute('class', "card-header")
+        }
+        accelerationTitle.innerText= bot.req.acceleration
+        
+        
+
+        
 
 
 
@@ -63,7 +87,7 @@ function createLiveCard(bot){
         accelerationBody.appendChild(accelerationTitle);
         accelerationDiv.appendChild(accelerationBody)
 
-        statusDivs.appendChild(driveDiv);
-        statusDivs.appendChild(accelerationDiv);
+        curruntDiv.appendChild(driveDiv);
+        curruntDiv.appendChild(accelerationDiv);
     // }
 }

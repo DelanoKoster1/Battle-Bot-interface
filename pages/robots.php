@@ -80,7 +80,7 @@
                                 <div class="col-12">
                                     <h1>Live status</h1>
                                 </div>
-                                <div id="liveStatus" macAdres =' . $botAdres . '>
+                                <div class="liveStatus" macAdres =' . $botAdres . '>
                                     
                                 </div>
                                 <div class="col-12">
