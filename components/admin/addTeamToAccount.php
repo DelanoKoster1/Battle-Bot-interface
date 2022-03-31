@@ -1,8 +1,7 @@
 <?php 
     $sql = "SELECT username, id  
-            FROM account 
-            WHERE teamId = ?";
-    $results = stmtExec($sql, 0, 0);
+            FROM account";
+    $results = stmtExec($sql, 0);
 
     $sql = "SELECT team.name, team.id
             FROM team";
