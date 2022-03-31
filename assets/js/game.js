@@ -75,7 +75,8 @@ ws.addEventListener("open", () => {
 
                         sendAction({
                             "action": action,
-                            "game": game,
+                            "game": selectGame,
+                            "gameId": e.target.id,
                             "for" : robotadres
                         })
                     }
@@ -113,19 +114,19 @@ function createGameCard(game){
         let buttonPrepare = document.createElement('button');
         buttonPrepare.setAttribute('class', 'btn btn-primary mx-2 float-end');
         buttonPrepare.setAttribute('id', game[index].id);
-        buttonPrepare.setAttribute('value', "prepare_game");
+        buttonPrepare.setAttribute('value', "prepare");
         buttonPrepare.innerHTML = "Prepare";
         
         let buttonStart = document.createElement('button');
         buttonStart.setAttribute('class', 'btn btn-primary mx-2 float-end');
         buttonStart.setAttribute('id', game[index].id);
-        buttonStart.setAttribute('value', "start_game");
+        buttonStart.setAttribute('value', "start");
         buttonStart.innerHTML = "Start";
 
         let buttonEnd = document.createElement('button');
         buttonEnd.setAttribute('class', 'btn btn-primary mx-2 float-end');
         buttonEnd.setAttribute('id', game[index].id);
-        buttonEnd.setAttribute('value', "end_game");
+        buttonEnd.setAttribute('value', "ended");
         buttonEnd.innerHTML = "End";
         
         let p2 = document.createElement('p');

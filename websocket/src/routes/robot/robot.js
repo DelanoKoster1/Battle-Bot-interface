@@ -10,6 +10,7 @@ const wss = new WebSocket.Server({
 });
 
 var games = [];
+var botStats = [];
 
 wss.on('connection', (client, req) => {
     console.info("Total connected clients:", wss.clients.size);
@@ -41,13 +42,15 @@ wss.on('connection', (client, req) => {
                                 "error": "NOT_READY"
                             })
                         }
-                    }else{
+                    } else {
                         sendMessageToClient(client, {
                             "error": "BOT_DOES_NOT_EXIST"
                         })
                     }
                     break;
                 case "start":
+                case "ended":
+
                     if (preparingDone()) {
                         sendActionToBot(req);
                         updateGameStatus(req);
@@ -56,8 +59,6 @@ wss.on('connection', (client, req) => {
                             "error": "NOT_READY"
                         })
                     }
-                    break;
-                case "ended":
                     sendActionToBot(req);
                     break;
             }
@@ -71,19 +72,23 @@ wss.on('connection', (client, req) => {
                 case "in_game":
                 case "finished":
                     if (client.status !== req.status) {
+                        updateBotStatusInGame(client.id, req.status);
                         sendMessageToInterface({
                             "games": games
                         })
-                        updateBotStatusInGame(client.id, req.status);
                     }
-                case "preparing":
+                    case "preparing":
+                        setBotStats(client.id, req);
                         setAttributeToClient("status", req.status, client)
-                    wss.clients.forEach((interface) => {
-                        if(interface.role == "interface"){
-                            sendMessageToClient(interface, {"botId": client.id, "req": req});
-                        }
-                    })
-                break;
+                        wss.clients.forEach((interface) => {
+                            if (interface.role == "interface") {
+                                let body = {
+
+                                }
+                                sendMessageToClient(interface, Object.assign(body, botStats));
+                            }
+                        })
+                        break;
             }
 
 
@@ -116,6 +121,14 @@ wss.on('connection', (client, req) => {
 
 const heartbeat = (client) => {
     client.isAlive = true;
+}
+
+function setBotStats(clientId, stats){
+    botStats[`${clientId}`] = stats;
+}
+
+function getBotStats(){
+    return this.botStats;
 }
 
 /**
@@ -153,10 +166,14 @@ const interval = setInterval(() => {
         client.isAlive = false
         client.ping()
     })
-}, 5000)
+}, 10000)
 
 function updateGameStatus(body) {
-
+    for(let game of games){
+        if(game.id == body.game){
+            game.action = body.action;
+        }
+    }
 }
 
 function addBotToGame(status, target = "all") {
@@ -230,16 +247,14 @@ function sendActionToBot(message) {
  * @param {Object} req 
  */
 function login(client, req) {
-    console.log(req);
-    console.log("hallo");
     if (req.key == 111) {
         setAttributeToClient("role", "admin", client);
         client.send(JSON.stringify({
             "games": games
         }));
-    } else if(req.key == 115){
+    } else if (req.key == 115) {
         setAttributeToClient("role", "interface", client);
-        
+
     } else {
         setAttributeToClient("role", "bot", client);
         sendMessageToClient(client, {
@@ -284,7 +299,7 @@ function sendMessageToInterface(message, target = "all") {
  * @param {String || Array} target botId
  * @returns true || false
  */
-function ready(target, action = "") {
+function ready(target) {
     let ready = false
     if (target == "all") {
         wss.clients.forEach((client) => {
@@ -433,83 +448,3 @@ function isValidJSONString(str) {
 }
 
 module.exports = router;
-
-
-
-
-
-// switch (body.action) {
-//     case "login":
-//         if (body.key == "111") {
-//             setAttributeToClient("role", "admin", client);
-//             client.send(JSON.stringify(games));
-//         } else {
-//             setAttributeToClient("role", "bot", client);
-//             client.send(JSON.stringify({
-//                 "loggedin": true
-//             }));
-//         }
-//         setAttributeToClient("id", body.id, client);
-//         break;
-//     case "prepare":
-//     case "start":
-//         if (client.role == "admin") {
-//             if (body.for == "all" && ready() && body.action != "ended") {
-//                 sendActionToAllBots(body.game, body.action);
-//             }else {
-//                 sendMessageToInterface({
-//                     "status": false,
-//                     "msg": "NOT_READY"
-//                 }, client)
-//             }
-//         } else {
-//             client.send(JSON.stringify({
-//                 "error": "UNAUTHORIZED"
-//             }))
-//         }
-//         break;
-//     case "ended":
-//         sendActionToAllBots(body.game, body.action);
-//         break;
-// }
-
-// sendMessageToInterface({"message": body, "botId": client.id});
-
-// if (body.status && client.role == "bot") {
-//     switch (body.status) {
-//         case "preparing":
-//             setAttributeToClient("status", body.status, client)
-//             break;
-//         case "preparing_game":
-//         case "ready":
-//         case "in_game":
-//         case "finished":
-//             // update client status in game
-//             if (games["all"]) {
-//                 games["all"].bots.forEach((bot) => {
-//                     if (bot.id == client.id && bot.status != body.status) {
-//                             bot.status = body.status
-//                             // send games to admins
-//                             sendMessageToInterface({
-//                                 "games": games["all"]
-//                             })
-//                     }
-
-//                 })
-//             }
-//             // update client status
-//             setAttributeToClient("status", body.status, client)
-//             break;
-//     }
-
-//     // wss.clients.forEach(function each(client) {
-//     //     if (client.role == "bot") {}
-//     // });
-// }
-
-// if (body.error) {
-//     sendMessageToInterface({
-//         "status": true,
-//         "game": games
-//     })
-// }
