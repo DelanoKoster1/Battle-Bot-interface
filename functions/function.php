@@ -1374,25 +1374,33 @@ function changeTeamInfo() {
     $botInfo = stmtExec($sql, 0, $_SESSION['username']);
     $returnForm = '';
 
-    $returnForm .= '<form method="post" action="editTeamInfo.php" enctype="multipart/form-data">';
-        $returnForm .= '<div class="form-group">';
-            $returnForm .= '<input type="hidden" name="botId" id="botId" class="form-control mt-3" value="'. $botInfo['bot.id'][0] .'"/>';
-            $returnForm .= '<label for="teamName" class="mt-3">Team naam</label>';
-            $returnForm .= '<input type="text" name="teamName" id="teamName" class="form-control mt-3" value="'. $botInfo['team.name'][0] .'" placeholder="'. $botInfo['team.name'][0] .'" />';
-            $returnForm .= '<label for="botName" class="mt-3">Robot naam</label>';
-            $returnForm .= '<input type="text" name="botName" id="botName" class="form-control mt-3" value="'. $botInfo['bot.name'][0] .'" placeholder="'. $botInfo['bot.name'][0] .'" />';
-            $returnForm .= '<label for="botDescription" class="mt-3">Robot omschrijving</label>';
-            $returnForm .= '<input type="text" name="botDescription" id="botDescription" class="form-control mt-3" value="'. $botInfo['bot.description'][0] .'" placeholder="'. $botInfo['bot.description'][0] .'" />';
-            $returnForm .= '<label for="botImagePath" class="mt-3">Robot foto</label>';
-            $returnForm .= '<img src="..'.$botInfo['bot.imagePath'][0].'" height="100" width="100">';
-            $returnForm .= '<input type="file" id="botImagePath" name="botTeamImage" class="form-control mt-3"/>';
-            $returnForm .= '<label for="specsBoard" class="mt-3">Specificatie board</label>';
-            $returnForm .= '<input type="text" name="specsBoard" id="specsBoard" class="form-control mt-3" value="'. $botInfo['specs.board'][0] .'" placeholder="'. $botInfo['specs.board'][0] .'" />';
-            $returnForm .= '<label for="specsInterface" class="mt-3">Specificatie interface</label>';
-            $returnForm .= '<input type="text" name="specsInterface" id="specsInterface" class="form-control mt-3" value="'. $botInfo['specs.interface'][0] .'" placeholder="'. $botInfo['specs.interface'][0] .'" />';
-            $returnForm .= '<input type="submit" class="btn btn-primary mt-3" value="Opslaan" name="playerInfoChange">';
+    if (is_array($botInfo)) {
+        $returnForm .= '<form method="post" action="editTeamInfo.php" enctype="multipart/form-data">';
+            $returnForm .= '<div class="form-group">';
+                $returnForm .= '<input type="hidden" name="botId" id="botId" class="form-control mt-3" value="'. $botInfo['bot.id'][0] .'"/>';
+                $returnForm .= '<label for="teamName" class="mt-3">Team naam</label>';
+                $returnForm .= '<input type="text" name="teamName" id="teamName" class="form-control mt-3" value="'. $botInfo['team.name'][0] .'" placeholder="'. $botInfo['team.name'][0] .'" />';
+                $returnForm .= '<label for="botName" class="mt-3">Robot naam</label>';
+                $returnForm .= '<input type="text" name="botName" id="botName" class="form-control mt-3" value="'. $botInfo['bot.name'][0] .'" placeholder="'. $botInfo['bot.name'][0] .'" />';
+                $returnForm .= '<label for="botDescription" class="mt-3">Robot omschrijving</label>';
+                $returnForm .= '<input type="text" name="botDescription" id="botDescription" class="form-control mt-3" value="'. $botInfo['bot.description'][0] .'" placeholder="'. $botInfo['bot.description'][0] .'" />';
+                $returnForm .= '<label for="botImagePath" class="mt-3">Robot foto</label>';
+                $returnForm .= '<img src="..'.$botInfo['bot.imagePath'][0].'" height="100" width="100">';
+                $returnForm .= '<input type="file" id="botImagePath" name="botTeamImage" class="form-control mt-3"/>';
+                $returnForm .= '<label for="specsBoard" class="mt-3">Specificatie board</label>';
+                $returnForm .= '<input type="text" name="specsBoard" id="specsBoard" class="form-control mt-3" value="'. $botInfo['specs.board'][0] .'" placeholder="'. $botInfo['specs.board'][0] .'" />';
+                $returnForm .= '<label for="specsInterface" class="mt-3">Specificatie interface</label>';
+                $returnForm .= '<input type="text" name="specsInterface" id="specsInterface" class="form-control mt-3" value="'. $botInfo['specs.interface'][0] .'" placeholder="'. $botInfo['specs.interface'][0] .'" />';
+                $returnForm .= '<input type="submit" class="btn btn-primary mt-3" value="Opslaan" name="playerInfoChange">';
+            $returnForm .= '</div>';
+        $returnForm .= '</form>';
+    } else {
+        $returnForm .= '<div class="col-md-12 p-0">';
+        $returnForm .= '<div class="alert alert-danger text-center text-black fw-bold p-4 mt-3 mb-3 rounded" role="alert">';
+        $returnForm .= "<li>You don't have a team right now</li>";
         $returnForm .= '</div>';
-    $returnForm .= '</form>';
+        $returnForm .= '</div>';
+    }    
 
     return $returnForm;
 }
