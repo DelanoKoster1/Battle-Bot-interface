@@ -63,8 +63,13 @@ switch (true) {
         break;
 
     case isset($_GET['addStream']);
-        $headerTitle = 'Stream toevoegen';
+        $headerTitle = 'Oude Stream toevoegen';
         $content = "../components/admin/addStreamToEvent.php";
+        break;
+    
+    case isset($_GET['addStreamCode']);
+        $headerTitle = 'Livestream toevoegen';
+        $content = "../components/admin/addLiveStreamcode.php";
         break;
 
     default:
@@ -498,7 +503,10 @@ if (isset($_POST['stopEvent'])) {
                             <a class="nav-link text-white" href="admin.php?createTeam">Team aanmaken</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?addStream">Stream toevoegen</a>
+                            <a class="nav-link text-white" href="admin.php?addStream">Oude Stream toevoegen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?addStreamCode">Livestream code toevoegen</a>
                         </li>
                     </ul>
                 </nav>
