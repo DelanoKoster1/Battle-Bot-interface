@@ -61,6 +61,9 @@ wss.on('connection', (client, req) => {
                     }
                     sendActionToBot(req);
                     break;
+                case "delete_games": 
+                    games = [];
+                    break
             }
 
             switch (req.status) {

@@ -60,29 +60,29 @@ ws.addEventListener("open", () => {
             createGameCard(data.games);
             
             // send game action to bots
-            document.addEventListener('click',function(e){
-                action = e.target.value
-                for (let index = 0; index < data.games.length; index++) {
-                    if (data.games[index].id == e.target.id) {
-                        action = e.target.value;
-                        game = data.games[index].game;
+            // document.addEventListener('click',function(e){
+            //     action = e.target.value
+            //     for (let index = 0; index < data.games.length; index++) {
+            //         if (data.games[index].id == e.target.id) {
+            //             action = e.target.value;
+            //             game = data.games[index].game;
                         
-                        robots = data.games[index].bots
-                        robotadres = [];
-                        robots.forEach(robot => {
-                            robotadres.push(robot.botId);
-                        });
+            //             robots = data.games[index].bots
+            //             robotadres = [];
+            //             robots.forEach(robot => {
+            //                 robotadres.push(robot.botId);
+            //             });
 
-                        sendAction({
-                            "action": action,
-                            "game": selectGame,
-                            "gameId": e.target.id,
-                            "for" : robotadres
-                        })
-                    }
+            //             sendAction({
+            //                 "action": action,
+            //                 "game": selectedGame,
+            //                 "gameId": e.target.id,
+            //                 "for" : robotadres
+            //             })
+            //         }
                     
-                }
-             });
+            //     }
+            //  });
         }
 
         
@@ -122,6 +122,30 @@ function createGameCard(game){
         buttonStart.setAttribute('id', game[index].id);
         buttonStart.setAttribute('value', "start");
         buttonStart.innerHTML = "Start";
+
+        buttonStart.addEventListener("click", (e) => {
+            action = e.target.value
+            for (let index = 0; index < game.length; index++) {
+                if (game[index].id == e.target.id) {
+                    action = e.target.value;
+                   
+                    
+                    robots = game[index].bots
+                    robotadres = [];
+                    robots.forEach(robot => {
+                        robotadres.push(robot.botId);
+                    });
+
+                    sendAction({
+                        "action": action,
+                        "game": selectedGame,
+                        "gameId": e.target.id,
+                        "for" : robotadres
+                    })
+                }
+                
+            }
+        })
 
         let buttonEnd = document.createElement('button');
         buttonEnd.setAttribute('class', 'btn btn-primary mx-2 float-end');
