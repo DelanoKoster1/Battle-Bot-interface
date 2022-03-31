@@ -52,27 +52,22 @@ if (isset($_POST['playerInfoChange'])) {
                     } else {
                         $error[] = "Het geüploade bestand bestaat al!";
                         $_SESSION['ERROR_MESSAGE'] = $error;
-                        echo "1";
                     }
                 } else {
                     $error[] = "Er is iets fout gegaan bij het uploaden van het bestand!";
                     $_SESSION['ERROR_MESSAGE'] = $error;
-                    echo "2";
                 }
             } else {
                 $error[] = "Dit bestandstype wordt niet geaccepteerd!";
                 $_SESSION['ERROR_MESSAGE'] = $error;
-                echo "3";
             }
         } else {
             $error[] = "Het geüploade bestand is te groot!";
             $_SESSION['ERROR_MESSAGE'] = $error;
-            echo "4";
         }
     } else {
-        // $_SESSION['succes'] = "De robot is succesvol toegevoegd!";
-        // $_SESSION['ERROR_MESSAGE'] = $error;
-        echo "5";
+        $_SESSION['succes'] = "De robot is succesvol toegevoegd!";
+        $_SESSION['ERROR_MESSAGE'] = $error;
     }
 }
 ?>

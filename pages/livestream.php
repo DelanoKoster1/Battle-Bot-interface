@@ -99,12 +99,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" form="formBot" name="submitAnswer" class="btn btn-warning btn-lg" value="stem nu!" style="width: 100%;">
+                    <input type="submit" form="formBot" name="submitAnswer" class="btn btn-warning btn-lg w-100" value="stem nu!">
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
     <div class="text-center">
         <h3>Doet de livestream het niet?</h3>

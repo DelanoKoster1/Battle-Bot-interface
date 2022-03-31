@@ -208,7 +208,7 @@ if (isset($_POST['register'])) {
                             <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
                                 <div class="form-group">
                                     <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['username']);} ?>">
-                                    <input class="form-control mt-3" placeholder="E-mail" type="email" name="email" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['email']);} ?>">
+                                    <input class="form-control mt-3" placeholder="E-mailadres" type="email" name="email" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['email']);} ?>">
                                     <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password1">
                                     <input class="form-control mt-3" placeholder="Wachtwoord bevestigen" type="password" name="password2">
                                     <input class="btn btn-danger mt-3" type="submit" name="register" value="Registreren">

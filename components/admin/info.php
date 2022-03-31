@@ -15,7 +15,9 @@ if (isset($_POST['change'])) {
                             if (checkFileType($_FILES['imagePath'])) {
                                 if (makeFolder($botId, "../assets/img/bots/")) {
                                     if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['imagePath']['name'])) {
-                                        $query = "UPDATE `bot` SET imagePath = ? WHERE id = ?";
+                                        $query = "UPDATE    `bot` 
+                                                  SET       imagePath = ? 
+                                                  WHERE     id = ?";
                                         
                                         deleteFile("../assets/img/bots/{$botId}/");
             
@@ -51,7 +53,11 @@ if (isset($_POST['change'])) {
                         }
                     }
 
-                    $sql = "UPDATE bot SET name = ?, description = ?, macAddress = ? WHERE id = ?";
+                    $sql = "UPDATE  bot 
+                            SET     name = ?, 
+                                    description = ?, 
+                                    macAddress = ? 
+                            WHERE   id = ?";
                     
                     if (!stmtExec($sql, 0, $botName, $description, $macAdress, $botId)) {
                         $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
@@ -89,7 +95,9 @@ if (isset($_POST['change2'])) {
         $id = filter_input(INPUT_GET, 'teamId', FILTER_SANITIZE_NUMBER_INT);
         $name = filter_input(INPUT_POST, 'teamName', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $sql = "UPDATE team SET name = ? WHERE id = ?";
+        $sql = "UPDATE  team 
+                SET     name = ? 
+                WHERE   id = ?";
 
         if (!stmtExec($sql, 0, $name, $id)) {
             $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
@@ -124,7 +132,12 @@ if (!empty($error)) {
     <div class="col-md-6">
         <h3>Robot Informatie</h3>
         <?php
-        $sql = "SELECT id, name, description, imagePath, macAddress FROM bot";
+        $sql = "SELECT  id, 
+                        name, 
+                        description, 
+                        imagePath,
+                        macAddress 
+                FROM    bot";
         
         $bots = stmtExec($sql);
         
@@ -169,7 +182,13 @@ if (!empty($error)) {
         if (isset($_GET["botId"])) {
             $id = filter_input(INPUT_GET, "botId", FILTER_VALIDATE_INT);
 
-            $sql = "SELECT id, name, description, imagePath, macAddress FROM bot WHERE id = ?";
+            $sql = "SELECT  id, 
+                            name, 
+                            description, 
+                            imagePath, 
+                            macAddress 
+                    FROM    bot 
+                    WHERE   id = ?";
 
             $bots = stmtExec($sql, 0, $id);
 
@@ -190,7 +209,9 @@ if (!empty($error)) {
     <div class="col-md-6">
         <h3>Team informatie</h3>
         <?php
-        $sql = "SELECT id, name FROM team";
+        $sql = "SELECT  id, 
+                        name 
+                FROM    team";
 
         $teams = stmtExec($sql);
 
@@ -215,7 +236,10 @@ if (!empty($error)) {
 
         if (isset($_GET["teamId"])) {
             $id = $_GET["teamId"];
-            $sql = "SELECT id, name FROM team WHERE id = ?";
+            $sql = "SELECT  id, 
+                            name 
+                    FROM    team
+                    WHERE   id = ?";
 
             $teams = stmtExec($sql, 0, $id);
             
@@ -242,7 +266,7 @@ if (!empty($error)) {
             <p><input type="text" class="form-control mt-3" value="<?= $description; ?>" name="description"></p>
             <h6>Robot MAC adres</h6>
             <p><input type="text" class="form-control mt-3" value="<?= $macAdress; ?>" name="macAdress" id="macAdress"></p>
-            <h6>Robot fotopagina</h6>
+            <h6>Robot foto</h6>
             <p><input type="file" class="form-control mt-3" name="imagePath"></p>
             <input type="submit" name="change" class="btn btn-primary mt-3" value="Wijzigen">
         </form>

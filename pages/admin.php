@@ -539,7 +539,7 @@ if (isset($_POST['stopEvent'])) {
                             <a class="nav-link text-white" href="admin.php?poll">Poll toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?game">Spellen</a>
+                            <a class="nav-link text-white" href="admin.php?game">Games</a>
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?points">Punten toevoegen</a>
