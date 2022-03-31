@@ -598,21 +598,22 @@ if (isset($_POST['stopEvent'])) {
                 }
 
                 if (!empty($_SESSION['ERROR_MESSAGE'])) {
+                    foreach($_SESSION['ERROR_MESSAGE'] as $msg) {
                 ?>
                     <div class="row" id="errorBar">
                         <div class="col-md-12">
                             <div class="alert alert-danger text-black fw-bold p-4 rounded mb-3 alertBox" role="alert">
                                 <ul class="mb-0">
                                     <?php
-                                    echo '<li>' . $_SESSION['ERROR_MESSAGE'] . '</li>';
-                                    
-                                    unset($_SESSION['ERROR_MESSAGE']);
+                                    echo '<li>' . $msg . '</li>';
                                     ?>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 <?php
+                    }
+                    unset($_SESSION['ERROR_MESSAGE']);
                 }
                 ?>
                 <div class="row">
