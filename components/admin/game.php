@@ -20,6 +20,8 @@
                         ?>
                     </select>
                     <button id="selectBotBtn" type="button" name="submitotBtn" class="btn btn-primary">submit</button>
+                    <button id="deleteGames" type="button" name="delete_games" class="btn btn-danger">Verwijder spellen</button>
+                    <button id="sos" type="button" name="sos" class="btn btn-danger">Emergency stop</button>
                     
                 </div>
 
@@ -31,11 +33,7 @@
                        <option value="race">Race</option>
                        <option value="butler">Butler</option>
                     </select>
-                </div>
-                
-                <!-- <input class="btn btn-danger mt-3" type="submit" name="robotEventAnnuleren" value="Annuleren"> -->
-
-            
+                </div>            
         </div>
     </form>
 

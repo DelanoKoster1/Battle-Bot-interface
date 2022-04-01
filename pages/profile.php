@@ -55,9 +55,9 @@ if (isset($_POST['save'])) {
                 if (checkProfilePassword($newPassword, $repeatPassword)) {
                     if (!password_verify($newPassword, $results['password'][0]) && !password_verify($repeatPassword, $results['password'][0])) {
                         $hashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                        $query = "  UPDATE  account
-                                    SET     `password` = ?
-                                    WHERE   id = ?  
+                        $query = "UPDATE  account
+                                  SET     `password` = ?
+                                  WHERE   id = ?  
                                 ";
                         stmtExec($query, 0, $hashPassword, $_SESSION['id']);
                         $success2 = true;

@@ -19,7 +19,13 @@ if (isset($_POST['login'])) {
     //Check form data fields
     if (!checkLoginFields($username, $password)) {
         //SQL query to select all from user where the username is ...
-        $sql = "SELECT id, roleId, username, password, email FROM account WHERE username = ?";
+        $sql = "SELECT  id, 
+                        roleId, 
+                        username, 
+                        password, 
+                        email 
+                FROM    account 
+                WHERE   username = ?";
 
         //Get results from the database
         $results = stmtExec($sql, 0, $username);
@@ -76,14 +82,22 @@ if (isset($_POST['register'])) {
             $teamid = 0;
 
             //SQL Query for inserting into user table
-            $sql = "INSERT INTO account (teamId, roleId, username, password, email) VALUES (?,?,?,?,?)";
+            $sql = "INSERT INTO account (
+                                teamId, 
+                                roleId, 
+                                username, 
+                                password, 
+                                email) 
+                    VALUES      (?,?,?,?,?)";
 
             if (!stmtExec($sql, 0, $teamid, $role, $username, $password, $email)) {
                 $_SESSION['error'] = "Er is iets misgegaan bij het aanmaken van het account, probeer het opnieuw!";
                 header("location: ../components/error.php");
             }
 
-            $sql = "SELECT id FROM account WHERE username = ?";
+            $sql = "SELECT  id 
+                    FROM    account 
+                    WHERE   username = ?";
             $result = stmtExec($sql, 0, $username);
             $lastInsertedID = $result["id"][0];
 
@@ -194,7 +208,7 @@ if (isset($_POST['register'])) {
                             <form class="mb-3" action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="post">
                                 <div class="form-group">
                                     <input class="form-control mt-2" placeholder="Gebruikersnaam" type="text" name="username" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['username']);} ?>">
-                                    <input class="form-control mt-3" placeholder="E-mail" type="email" name="email" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['email']);} ?>">
+                                    <input class="form-control mt-3" placeholder="E-mailadres" type="email" name="email" value="<?php if (isset($_POST['register'])) {echo htmlentities($_POST['email']);} ?>">
                                     <input class="form-control mt-3" placeholder="Wachtwoord" type="password" name="password1">
                                     <input class="form-control mt-3" placeholder="Wachtwoord bevestigen" type="password" name="password2">
                                     <input class="btn btn-danger mt-3" type="submit" name="register" value="Registreren">

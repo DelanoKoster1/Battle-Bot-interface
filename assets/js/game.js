@@ -1,7 +1,9 @@
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 let selectBot = document.querySelector('#selectBot');
 let selectBotBtn = document.querySelector('#selectBotBtn');
+let deleteGamesBtn = document.querySelector('#deleteGames');
+let emergencyStop = document.querySelector('#sos');
 let selectGame = document.querySelector('#selectGame');
 
 let selectBotDiv = document.querySelector('#bot');
@@ -19,7 +21,35 @@ selectBotBtn.addEventListener('click', (ev) => {
     selectGame.value = "";
 })
 
+emergencyStop.addEventListener('click', (ev) => {
+    if (confirm("Weet u zeker dat u alle spellen wilt stoppen") == true) {
+        sendAction({
+            "action": 'ended',
+            "game": 'race',
+            "for": 'all'
+        })
+        sendAction({
+            "action": 'ended',
+            "game": 'butler',
+            "for": 'all'
+        })
+        sendAction({
+            "action": 'ended',
+            "game": 'maze',
+            "for": 'all'
+        })
+        clearGameCard();
+    }
+})
 
+deleteGamesBtn.addEventListener('click', (ev) => {
+    if (confirm("Weet u zeker dat u alle gemaakte spellen wilt verwijderen") == true) {
+        sendAction({
+            "action": "delete_games"
+        });
+        clearGameCard();
+    }
+})
 
 selectGame.addEventListener('change', (ev) => {
     selectedGame = selectGame.value;
@@ -31,17 +61,7 @@ selectGame.addEventListener('change', (ev) => {
         "game": selectedGame,
         "for": result
     })
-    // result.forEach(result => {
-        
-    // });
 })
-
-document.addEventListener('click',function(e){
-    if(e.target && e.target.id == 'preparing_game'){
-        let btn = document.getElementById('preparing_game');
-        btn.setAttribute("disabled", true)
-     }
- });
 
 ws.addEventListener("open", () => {
 
@@ -52,10 +72,9 @@ ws.addEventListener("open", () => {
     }));
 
     ws.addEventListener('message', (message) => {
-        let data = JSON.parse(message.data); 
-        
-        if(data.games && data.games.length != 0){
-            console.log(data.games);
+        let data = JSON.parse(message.data);
+        console.log(data);
+        if (data.games && data.games.length != 0) {
             clearGameCard();
             createGameCard(data.games);
         }
@@ -64,57 +83,113 @@ ws.addEventListener("open", () => {
 });
 
 
-function createGameCard(game){
-    var gameDiv;
-    if(!document.getElementById(`${game.game}`)){
-        gameDiv = document.createElement('div');
-        gameDiv.setAttribute('class','card mb-3');
-    }else { 
-        gameDiv = document.getElementById(`${game.game}`)
-    }
-    
-    let gameBody = document.createElement('div');
-    gameBody.setAttribute('class','card-body')
+function createGameCard(game) {
+    for (let index = 0; index < game.length; index++) {
 
-    let h4 = document.createElement('h4');
-    h4.innerHTML = game.game;
+        var gameDiv;
+        if (!document.getElementById(`${game[index].game}`)) {
+            gameDiv = document.createElement('div');
+            gameDiv.setAttribute('class', 'card mb-3');
+        } else {
+            gameDiv = document.getElementById(`${game[index].game}`)
+        }
 
-    let p = document.createElement('p');
-    p.innerHTML = "Status: " + game.action;
+        let gameBody = document.createElement('div');
+        gameBody.setAttribute('class', 'card-body')
 
-    let button = document.createElement('button');
-    button.setAttribute('class', 'btn btn-primary float-end');
-    
-    if (game.action == "preparing_game") {
-        button.setAttribute('id', 'preparing_game');
-    }else {
-        button.setAttribute('id', 'start');
-    }
+        let h4 = document.createElement('h4');
+        h4.innerHTML = game[index].game;
 
-    button.innerHTML = game.action;
-    let p2 = document.createElement('p');
-    p2.innerHTML = "Bots: ";
+        let pAction = document.createElement('p');
+        pAction.innerHTML = "Actie: " + game[index].action;
 
-    gameBody.appendChild(h4);
-    gameBody.appendChild(p);
-    gameBody.appendChild(p2);
-    console.log(bots);
-    game.bots.forEach(bot => {
         let p = document.createElement('p');
-        p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
-        gameBody.appendChild(p);
-    });
+        p.innerHTML = "Status: " + game[index].status;
 
-    gameBody.appendChild(button);
-    gameDiv.appendChild(gameBody);
-    gamesDiv.appendChild(gameDiv);
+        let buttonStart = document.createElement('button');
+        buttonStart.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonStart.setAttribute('id', game[index].id);
+        buttonStart.setAttribute('value', "start");
+        buttonStart.innerHTML = "Start";
+
+        let buttonEnd = document.createElement('button');
+        buttonEnd.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonEnd.setAttribute('id', game[index].id);
+        buttonEnd.setAttribute('value', "ended");
+        buttonEnd.innerHTML = "End";
+
+        // send game action to bots to start game
+        buttonStart.addEventListener("click", (e) => {
+
+            for (let index = 0; index < game.length; index++) {
+                if (game[index].id == e.target.id) {
+                    action = e.target.value
+                    curruntGame = game[index].game
+                    robots = game[index].bots
+                    robotadres = [];
+                    robots.forEach(robot => {
+                        robotadres.push(robot.botId);
+                    });
+
+                    sendAction({
+                        "action": action,
+                        "game": curruntGame,
+                        "gameId": e.target.id,
+                        "for": robotadres
+                    })
+                }
+
+            }
+        })
+
+        // send game action to bots to end
+        buttonEnd.addEventListener("click", (e) => {
+            for (let index = 0; index < game.length; index++) {
+                if (game[index].id == e.target.id) {
+                    action = e.target.value
+                    curruntGame = game[index].game
+                    robots = game[index].bots
+                    robotadres = [];
+                    robots.forEach(robot => {
+                        robotadres.push(robot.botId);
+                    });
+
+                    sendAction({
+                        "action": action,
+                        "game": curruntGame,
+                        "gameId": e.target.id,
+                        "for": robotadres
+                    })
+                }
+
+            }
+        })
+
+        let p2 = document.createElement('p');
+        p2.innerHTML = "Bots: ";
+
+        gameBody.appendChild(h4);
+        gameBody.appendChild(pAction);
+        gameBody.appendChild(p);
+        gameBody.appendChild(p2);
+        game[index].bots.forEach(bot => {
+            let p = document.createElement('p');
+            p.innerHTML = botAdresToName(bot.botId) + ": " + bot.status;
+            gameBody.appendChild(p);
+        });
+
+        gameBody.appendChild(buttonEnd);
+        gameBody.appendChild(buttonStart);
+        gameDiv.appendChild(gameBody);
+        gamesDiv.appendChild(gameDiv);
+    }
 }
 
 function clearGameCard() {
- document.getElementById('gameContainer').innerHTML = "";
+    document.getElementById('gameContainer').innerHTML = "";
 }
 
-function sendAction(message){
+function sendAction(message) {
     ws.send(JSON.stringify(message));
 }
 
@@ -122,13 +197,13 @@ function getSelectValues(select) {
     var result = [];
     var options = select && select.options;
     var opt;
-  
-    for (let i=0, iLen=options.length; i<iLen; i++) {
-      opt = options[i];
-  
-      if (opt.selected) {
-        result.push(opt.value);
-      }
+
+    for (let i = 0, iLen = options.length; i < iLen; i++) {
+        opt = options[i];
+
+        if (opt.selected) {
+            result.push(opt.value);
+        }
     }
     return result;
 }
@@ -136,7 +211,7 @@ function getSelectValues(select) {
 function botAdresToName(adres) {
     let selectBot = document.querySelector('#selectBot');
 
-    for (i = 0; i < selectBot.length; i++) { 
+    for (i = 0; i < selectBot.length; i++) {
         if (selectBot.options[i].value == adres) {
             return selectBot.options[i].text
         }

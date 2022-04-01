@@ -32,7 +32,7 @@ if (isset($_POST['endPoll'])) {
                 </select>
                 <div id="pollTypes">
                 </div>
-                <input type="submit" name="submitPull" class="btn btn-primary mt-3" value="submit poll" />
+                <input type="submit" name="submitPull" class="btn btn-primary mt-3" value="Submit poll" />
                 <?php echo checkIfPoll(); ?>
             </div>
         </form>
@@ -47,13 +47,26 @@ if (isset($_POST['endPoll'])) {
         </form>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-6">
-        <h5 class="ms-1">Poll Uitslag:</h5>
-        <?php
-        echo pollQuestionAnswer();
-        ?>
-    </div>
-</div>
+<?php
+$sql = "SELECT  active 
+        FROM    poll 
+        WHERE   active = 1";
 
+$polls = stmtExec($sql);
+
+if(is_array($polls) && count($polls["active"]) > 0) {
+    $isActive = $polls["active"][0];
+    ?>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="ms-1">Poll Uitslag:</h5>
+            <?php
+            echo pollQuestionAnswer();
+            ?>
+        </div>
+    </div>
+    <?php
+}
+?>
 <script src="../assets/js/poll.js"></script>

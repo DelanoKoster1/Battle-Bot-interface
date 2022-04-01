@@ -1,35 +1,117 @@
 <?php
-$conn = connectDB();
-
 if (isset($_POST['change'])) {
-    if (!empty($_POST['botName'])) {
-        if (!empty($_POST['description'])) {
+    if(isset($_GET['botId'])) {
+        if (!empty($_POST['botName'])) {
+            if (!empty($_POST['description'])) {
+                if (isset($_FILES['imagePath'])) {
+                    if(!empty($_POST['macAdress'])) {
 
-            $id = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
-            $name = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
-            $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+                        $botId = filter_input(INPUT_GET, 'botId', FILTER_SANITIZE_NUMBER_INT);
+                        $botName = filter_input(INPUT_POST, 'botName', FILTER_SANITIZE_SPECIAL_CHARS);
+                        $description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_SPECIAL_CHARS);
+                        $macAdress = filter_input(INPUT_POST, 'macAdress', FILTER_SANITIZE_SPECIAL_CHARS);
 
-            $sql = "UPDATE bot SET name = ?, description = ? WHERE id = ?";
-            $stmt = mysqli_prepare($conn, $sql) or die(mysqli_error($conn));
+                        if (checkIfFile($_FILES['imagePath'])) {
+                            if (checkFileSize($_FILES['imagePath'])) {
+                                if (checkFileType($_FILES['imagePath'])) {
+                                    if (makeFolder($botId, "../assets/img/bots/")) {
+                                        if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['imagePath']['name'])) {
+                                            $query = "UPDATE    `bot` 
+                                                      SET       imagePath = ? 
+                                                      WHERE     id = ?";
+                                            
+                                            deleteFile("../assets/img/bots/{$botId}/");
+                
+                                            if (!uploadFile($_FILES['imagePath'], $query, $botId, "/assets/img/bots/{$botId}/")) {
+                                                $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                                $_SESSION['ERROR_MESSAGE'] = $error;
+                                                header('location: admin.php?info');
+                                                exit();
+                                            } 
+                                        } else {
+                                            $error[] = "Het geüploade bestand bestaat al!";
+                                            $_SESSION['ERROR_MESSAGE'] = $error;
+                                            header('location: admin.php?info');
+                                            exit();
+                                        }
+                                    } else {
+                                        $error[] = "Er is iets fout gegaan bij  het uploaden van het bestand!";
+                                        $_SESSION['ERROR_MESSAGE'] = $error;
+                                        header('location: admin.php?info');
+                                        exit();
+                                    }
+                                } else {
+                                    $error[] = "Dit bestandstype wordt niet geaccepteerd!";
+                                    $_SESSION['ERROR_MESSAGE'] = $error;
+                                    header('location: admin.php?info');
+                                    exit();
+                                }
+                            } else {
+                                $error[] = "Het geüploade bestand is te groot!";
+                                $_SESSION['ERROR_MESSAGE'] = $error;
+                                header('location: admin.php?info');
+                                exit();
+                            }
+                        }
 
-            mysqli_stmt_bind_param($stmt, "ssi", $name, $description, $id);
+                        $sql = "UPDATE  bot 
+                                SET     name = ?, 
+                                        description = ?, 
+                                        macAddress = ? 
+                                WHERE   id = ?";
+                        
+                        if (!stmtExec($sql, 0, $botName, $description, $macAdress, $botId)) {
+                            $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
+                            header("location: ../components/error.php");
+                            exit();
+                        }
 
-            mysqli_stmt_execute($stmt) or die("<br>unable");
-            ?>
+                        ?>
 
-            <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
-                <?php echo "De informatie is succesvol gewijzigd!" ?>
-            </div>
+                        <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                            <?php echo "De informatie is succesvol gewijzigd!" ?>
+                        </div>
 
-        <?php
-            mysqli_stmt_close($stmt);
+                    <?php
+                    } else {
+                        echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
+                        $error[] = "Het Mac adres mag niet leeg zijn!";
+                    }
+
+                    $sql = "UPDATE  bot 
+                            SET     name = ?, 
+                                    description = ?, 
+                                    macAddress = ? 
+                            WHERE   id = ?";
+                    
+                    if (!stmtExec($sql, 0, $botName, $description, $macAdress, $botId)) {
+                        $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
+                        header("location: ../components/error.php");
+                        exit();
+                    }
+
+                    ?>
+
+                    <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
+                        <?php echo "De informatie is succesvol gewijzigd!" ?>
+                    </div>
+
+                <?php
+                } else {
+                    echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
+                    $error[] = "De robot afbeelding mag niet leeg zijn!";
+                }
+            } else {
+                echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
+                $error[] = "De robot omschrijving mag niet leeg zijn!";
+            }
         } else {
             echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
-            $error[] = "De robot omschrijving mag niet leeg zijn!";
+            $error[] = "De robot naam mag niet leeg zijn!";
         }
     } else {
         echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
-        $error[] = "De robot naam mag niet leeg zijn!";
+        $error[] = "Selecteer een robot!";
     }
 }
 
@@ -38,12 +120,15 @@ if (isset($_POST['change2'])) {
         $id = filter_input(INPUT_GET, 'teamId', FILTER_SANITIZE_NUMBER_INT);
         $name = filter_input(INPUT_POST, 'teamName', FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $sql = "UPDATE team SET name=? WHERE id=?";
-        $stmt = mysqli_prepare($conn, $sql) or die(mysqli_error($conn));
+        $sql = "UPDATE  team 
+                SET     name = ? 
+                WHERE   id = ?";
 
-        mysqli_stmt_bind_param($stmt, "si", $name, $id);
-
-        mysqli_stmt_execute($stmt) or die("<br>unable");
+        if (!stmtExec($sql, 0, $name, $id)) {
+            $_SESSION['ERROR_MESSAGE'] = "Fout met update!";
+            header("location: ../components/error.php");
+            exit();
+        }
         ?>
 
         <div class="alert alert-success text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
@@ -51,7 +136,6 @@ if (isset($_POST['change2'])) {
         </div>
 
     <?php
-        mysqli_stmt_close($stmt);
     } else {
         echo "<a href='admin.php?info'><h6>Ga terug</h6></a>";
         $error[] = "De team naam mag niet leeg zijn!";
@@ -73,25 +157,45 @@ if (!empty($error)) {
     <div class="col-md-6">
         <h3>Robot Informatie</h3>
         <?php
-        $query = "SELECT id, name, description FROM bot";
-        $stmt = mysqli_prepare($conn, $query) or die(mysqli_error($conn));
+        $sql = "SELECT  id, 
+                        name, 
+                        description, 
+                        imagePath,
+                        macAddress 
+                FROM    bot";
+        
+        $bots = stmtExec($sql);
+        
 
-        mysqli_stmt_execute($stmt) or die("Cannot prepare statement");
+        if (is_array($bots) && count($bots["id"]) > 0) {
+            $botIds = $bots["id"];
 
-        mysqli_stmt_bind_result($stmt, $id, $name, $description);
-        mysqli_stmt_store_result($stmt);
-
-        if (mysqli_stmt_num_rows($stmt) > 0) {
             echo "<table class='border border-dark'>";
-            echo "<th class='infotable'>Name</th>
-                 <th class='infotable'>Description</th>
-                 <th class='infotable'>Edit</th>";
+            echo "<th class='infotable'>Naam</th>
+                 <th class='infotable'>Beschrijving</th>
+                 <th class='infotable'>Robot foto</th>
+                 <th class='infotable'>Mac adres</th>
+                 <th class='infotable'></th>";
 
-            while (mysqli_stmt_fetch($stmt)) {
+            for ($i = 0; $i < count($bots["id"]); $i++) {
+                $botId = $bots["id"][$i];
+                $botName = $bots["name"][$i];
+                $description = $bots["description"][$i];
+                $imagePath = $bots['imagePath'][$i];
+                $macAdress = $bots['macAddress'][$i];
+
+                if($imagePath == NULL) {
+                    $imagePath = "No image";
+                } else {
+                    $imagePath = "<img src='..{$imagePath}'>";
+                }
+
                 echo "<tr class='infotable'>";
-                echo "<th class='infotable'>" . $name . "</th>";
+                echo "<th class='infotable'>" . $botName . "</th>";
                 echo "<th class='infotable'>" . $description . "</th>";
-                echo "<th class='infotable'><a href=admin.php?info&botId=" . $id . ">Edit</a></th>";
+                echo "<th class='infotable'>" . $imagePath . "</th>";
+                echo "<th class='infotable'>" . $macAdress . "</th>";
+                echo "<th class='infotable'><a href=admin.php?info&botId=" . $botId . ">Wijzigen</a></th>";
                 echo "</tr>";
             }
             echo "</table>";
@@ -101,51 +205,53 @@ if (!empty($error)) {
         echo "<br>";
 
         if (isset($_GET["botId"])) {
-            $id = $_GET["botId"];
+            $id = filter_input(INPUT_GET, "botId", FILTER_VALIDATE_INT);
 
-            $sql = "SELECT name, description FROM bot WHERE id = ?";
-            $stmt = mysqli_prepare($conn, $sql) or die(mysqli_error($conn));
-            mysqli_stmt_bind_param($stmt, "i", $id);
-            mysqli_stmt_execute($stmt) or die('<br>message');
-            mysqli_stmt_store_result($stmt) or die(mysqli_error($conn));
+            $sql = "SELECT  id, 
+                            name, 
+                            description, 
+                            imagePath, 
+                            macAddress 
+                    FROM    bot 
+                    WHERE   id = ?";
 
-            if (mysqli_stmt_num_rows($stmt) > 0) {
-                mysqli_stmt_bind_result($stmt, $name, $description);
-                mysqli_stmt_fetch($stmt);
-                mysqli_stmt_close($stmt);
-                mysqli_close($conn);
+            $bots = stmtExec($sql, 0, $id);
+
+            if (!is_array($bots)) {
+                $_SESSION['ERROR_MESSAGE'] = "Bot bestaat niet!";
+                header("location: ../components/error.php");
+                exit();
             }
+
+            $botId = $bots["id"][0];
+            $botName = $bots["name"][0];
+            $description = $bots["description"][0];
+            $imagePath = $bots["imagePath"][0];
+            $macAdress = $bots["macAddress"][0];
         }
         ?>
     </div>
     <div class="col-md-6">
         <h3>Team informatie</h3>
         <?php
-        $conn = mysqli_connect("localhost", "root", "")
-            or die("Cannot connect to server");
+        $sql = "SELECT  id, 
+                        name 
+                FROM    team";
 
-        mysqli_select_db($conn, "battlebot")
-            or die("Cannot find<br>");
+        $teams = stmtExec($sql);
 
-        $query = "SELECT id, name FROM team";
-        $stmt = mysqli_prepare($conn, $query)
-            or die(mysqli_error($conn));
-
-        mysqli_stmt_execute($stmt)
-            or die("Cannot prepare statement");
-
-        mysqli_stmt_bind_result($stmt, $id, $name);
-        mysqli_stmt_store_result($stmt);
-
-        if (mysqli_stmt_num_rows($stmt) > 0) {
+        if (is_array($teams) && count($teams["id"]) > 0) {
             echo "<table class='border border-dark'>";
-            echo "<th class='infotable'>Name</th>
-                  <th class='infotable'>Edit</th>";
+            echo "<th class='infotable'>Naam</th>
+                  <th class='infotable'></th>";
 
-            while (mysqli_stmt_fetch($stmt)) {
+            for ($i = 0; $i < count($teams["id"]); $i ++) {
+                $teamId = $teams["id"][$i];
+                $teamName = $teams["name"][$i];
+
                 echo "<tr class='infotable'>";
-                echo "<th class='infotable'>" . $name . "</th>";
-                echo "<th class='infotable'><a href=admin.php?info&teamId=" . $id . ">Edit</a></th>";
+                echo "<th class='infotable'>" . $teamName . "</th>";
+                echo "<th class='infotable'><a href=admin.php?info&teamId=" . $teamId . ">Wijzigen</a></th>";
                 echo "</tr>";
             }
             echo "</table>";
@@ -155,19 +261,21 @@ if (!empty($error)) {
 
         if (isset($_GET["teamId"])) {
             $id = $_GET["teamId"];
-            $sql = "SELECT name FROM team WHERE id = ?";
-            $stmt = mysqli_prepare($conn, $sql) or die(mysqli_error($conn));
+            $sql = "SELECT  id, 
+                            name 
+                    FROM    team
+                    WHERE   id = ?";
 
-            mysqli_stmt_bind_param($stmt, "i", $id);
-
-            mysqli_stmt_execute($stmt) or die('<br>message');
-            mysqli_stmt_store_result($stmt) or die(mysqli_error($conn));
-            if (mysqli_stmt_num_rows($stmt) > 0) {
-                mysqli_stmt_bind_result($stmt, $name);
-                mysqli_stmt_fetch($stmt);
-                mysqli_stmt_close($stmt);
-                mysqli_close($conn);
+            $teams = stmtExec($sql, 0, $id);
+            
+            if (!is_array($teams)) {
+                $_SESSION['ERROR_MESSAGE'] = "Bot bestaat niet!";
+                header("location: ../components/error.php");
+                exit();
             }
+
+            $teamId = $teams["id"][0];
+            $teamName = $teams["name"][0];
         }
         ?>
     </div>
@@ -175,23 +283,27 @@ if (!empty($error)) {
 <div class="row">
     <div class="col-md-6">
         <h3>Robot informatie</h3>
-        <form method="POST" action="">
-            <p><input type="hidden" class="form-control mt-3" value="<?php echo $id; ?>" name="botId" id="id"></p>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <p><input type="hidden" class="form-control mt-3" value="<?= $botId; ?>" name="botId" id="id"></p>
             <h6>Robot naam</h6>
-            <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="botName"></p>
+            <p><input type="text" class="form-control mt-3" value="<?= $botName; ?>" name="botName"></p>
             <h6>Robot beschrijving</h6>
-            <p><input type="text" class="form-control mt-3" value="<?php echo $description; ?>" name="description"></p>
-            <input type="submit" name="change" class="btn btn-primary mt-3" value="Wijzigen">
+            <p><input type="text" class="form-control mt-3" value="<?= $description; ?>" name="description"></p>
+            <h6>Robot MAC adres</h6>
+            <p><input type="text" class="form-control mt-3" value="<?= $macAdress; ?>" name="macAdress" id="macAdress"></p>
+            <h6>Robot foto</h6>
+            <p><input type="file" class="form-control mt-3" name="imagePath"></p>
+            <input type="submit" name="change" class="btn btn-primary mt-3 mb-3" value="Opslaan">
         </form>
     </div>
 
     <div class="col-md-6">
         <h3>Team informatie</h3>
         <form method="POST" action="">
-            <input type="hidden" class="form-control mt-3" value="<?php echo $id; ?>" name="teamId" id="id">
+            <p><input type="hidden" class="form-control mt-3" value="<?= $teamId; ?>" name="teamId" id="id"></p>
             <h6>Team naam</h6>
-            <p><input type="text" class="form-control mt-3" value="<?php echo $name; ?>" name="teamName"></p>
-            <input type="submit" name="change2" class="btn btn-primary mt-3" value="Wijzigen">
+            <p><input type="text" class="form-control mt-3" value="<?= $teamName; ?>" name="teamName"></p>
+            <input type="submit" name="change2" class="btn btn-primary mt-3" value="Opslaan">
         </form>
     </div>
 </div>

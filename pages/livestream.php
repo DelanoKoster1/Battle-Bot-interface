@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="../assets/css/footer.css">
     <link rel="stylesheet" href="../assets/css/robots.css">
 
-    <title>Livestream - Battlebot</title>
+    <title>Livestream - Battlebots</title>
 </head>
 
 <body>
@@ -68,7 +68,7 @@
                                                 </div>
                                             <?php } else { ?>
                                                 <div class="col-12">
-                                                    <p>Login om te kunnen chatten</p>
+                                                    <p>Log in om te kunnen chatten</p>
                                                 </div>
                                             <?php
                                             } ?>
@@ -99,12 +99,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" form="formBot" name="submitAnswer" class="btn btn-warning btn-lg" value="stem nu!" style="width: 100%;">
+                    <input type="submit" form="formBot" name="submitAnswer" class="btn btn-warning btn-lg w-100" value="stem nu!">
                 </div>
             </div>
-            <!-- /.modal-content -->
         </div>
-        <!-- /.modal-dialog -->
     </div>
     <div class="text-center">
         <h3>Doet de livestream het niet?</h3>
