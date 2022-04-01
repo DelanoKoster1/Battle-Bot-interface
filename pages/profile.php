@@ -7,18 +7,25 @@ if (!isset($_SESSION['email'])) {
     header('location: ../components/error.php');
 }
 
+
+
 if (isset($_POST['save'])) {
     $results = getProfileInfo();
     $success = false;
     $success2 = false;
+
+    $curPassword = filter_input(INPUT_POST, 'curpassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $newPassword = filter_input(INPUT_POST, 'newpassword', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $repeatPassword = filter_input(INPUT_POST, 'newpassword2', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
     if ($email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
-        if ($username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_SPECIAL_CHARS)) {
+        if ($username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
             if ($results["username"][0] != $username || $results["email"][0] != $email) {
                 if (!checkUserInDataBase($username, $email, true)) {
-                    $query = "UPDATE account
-                              SET username = ?,
-                                  email = ?
-                              WHERE id = ?  
+                    $query = "UPDATE    account
+                              SET       username = ?,
+                                        email = ?
+                              WHERE     id = ?  
                     ";
                     stmtExec($query, 0, $username, $email, $_SESSION['id']);
                     $success = true;
@@ -31,28 +38,39 @@ if (isset($_POST['save'])) {
         $error[] = 'Dit e-mailadres is ongeldig!';
     }
 
-    if ($curPassword = filter_input(INPUT_POST, 'curpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
-        if (password_verify($curPassword, $results['password'][0])) {
-            if ($newPassword = filter_input(INPUT_POST, 'newpassword', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                if ($repeatPassword = filter_input(INPUT_POST, 'newpassword2', FILTER_SANITIZE_SPECIAL_CHARS)) {
-                    if (checkProfilePassword($newPassword, $repeatPassword)) {
-                        if (!password_verify($newPassword, $results['password'][0]) && !password_verify($repeatPassword, $results['password'][0])) {
-                            $hashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-                            $query = "UPDATE account
-                                      SET `password` = ?
-                                      WHERE id = ?  
-                                ";
-                            stmtExec($query, 0, $hashPassword, $_SESSION['id']);
-                            $success2 = true;
-                        } else {
-                            $error[] = 'Het nieuwe en herhaal wachtwoord mogen niet overeen komen met het huidige wachtwoord!';
-                        }
-                    }
-                }
-            }
-        } else {
-            $error[] = 'Het huidige wachtwoord is incorrect!';
+    if (!empty($curPassword) || !empty($newPassword) || !empty($repeatPassword)) {
+        
+        if(empty($curPassword)) {
+            $error[] = 'Huidige wachtwoord is niet gegeven!';
         }
+        if(empty($newPassword)) {
+            $error[] = 'Nieuwe wachtwoord is niet gegeven!';
+        }
+        if(empty($repeatPassword)) {
+            $error[] = 'Nieuwe wachtwoord wordt niet herhaald!';
+        }
+
+        if(empty($error)) {
+            if (password_verify($curPassword, $results['password'][0])) {
+                if (checkProfilePassword($newPassword, $repeatPassword)) {
+                    if (!password_verify($newPassword, $results['password'][0]) && !password_verify($repeatPassword, $results['password'][0])) {
+                        $hashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                        $query = "  UPDATE  account
+                                    SET     `password` = ?
+                                    WHERE   id = ?  
+                                ";
+                        stmtExec($query, 0, $hashPassword, $_SESSION['id']);
+                        $success2 = true;
+                    } else {
+                        $error[] = 'Het nieuwe en herhaal wachtwoord mogen niet overeen komen met het huidige wachtwoord!';
+                    }
+                } else {
+                    $error[] = 'De wachtwoorden komen niet overeen met elkaar!';
+                }
+            } else {
+                $error[] = 'Het huidige wachtwoord is incorrect!';
+            }
+        } 
     }
 }
 
@@ -140,7 +158,7 @@ $results = getProfileInfo();
                                         <?php echo "Het wachtwoord is succesvol geüpdate!" ?>
                                     </div>
                                 </div>
-                        <?php
+                            <?php
                             }
                         }
                         ?>
