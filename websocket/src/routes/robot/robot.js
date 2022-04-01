@@ -52,7 +52,6 @@ wss.on('connection', (client, req) => {
                 case "ended":
 
                     if (preparingDone()) {
-                        sendActionToBot(req);
                         updateGameStatus(req);
                     } else {
                         sendMessageToClient(client, {
