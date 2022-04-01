@@ -22,7 +22,6 @@ wss.on('connection', (client, req) => {
     client.on('message', message => {
         if (isValidJSONString(message)) {
             let req = JSON.parse(message);
-            console.log(req);
             sendMessageToInterface(req)
             switch (req.action) {
                 case "login":
@@ -52,7 +51,6 @@ wss.on('connection', (client, req) => {
                 case "ended":
 
                     if (preparingDone()) {
-                        sendActionToBot(req);
                         updateGameStatus(req);
                     } else {
                         sendMessageToClient(client, {
