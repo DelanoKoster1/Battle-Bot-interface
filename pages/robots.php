@@ -57,20 +57,18 @@
         </div>
 
         <div class="row ms-4">
-            <div class="col-12">
-                <h1>Team</h1>
-            </div>
             <div class="tab-content">
                 <?php
-                $sql = "SELECT  team.id, team.name, bot.name, bot.id, bot.specsId, specs.board, specs.interface, stats.wins, stats.playedMatches FROM team INNER JOIN bot ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId         ";
-                
+                $sql = "SELECT  team.id, team.name, bot.name, bot.macAddress, bot.id, bot.specsId, specs.board, specs.interface, stats.wins, stats.playedMatches FROM team INNER JOIN bot ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId";
+
                 $dbResults = stmtExec($sql);
-                
+
                 $ids = $dbResults["team.id"];
                 foreach ($ids as $key => $teamId) {
                     $id = $teamId;
                     $botId = $dbResults["bot.id"][$key];
                     $botName = $dbResults["bot.name"][$key];
+                    $botAdres = $dbResults["bot.macAddress"][$key];
                     $teamName = $dbResults["team.name"][$key];
                     $specsBoard = $dbResults["specs.board"][$key];
                     $specsInterface = $dbResults["specs.interface"][$key];
@@ -79,6 +77,13 @@
                     echo ' 
                         <div class="tab-pane" id="' . $botName . '" role="tabpanel" aria-labelledby="' . $botName . '">
                             <div class="row">
+                                
+                                <div class="liveStatus" macAdres =' . $botAdres . '>
+                                
+                                </div>
+                                <div class="col-12">
+                                    <h1>Team</h1>
+                                </div>
                                 <div class="col-lg-2 col-sm-4 col-6 my-3">
                                     <div class="box bg-secondary d-flex justify-content-center">
                                         <div class="row g-0 w-100 text-center">
@@ -159,6 +164,7 @@
     <footer>
         <?php include_once('../components/footer.php') ?>
     </footer>
+    <script src="../assets/js/robotInfo.js"></script>
 </body>
 
 </html>

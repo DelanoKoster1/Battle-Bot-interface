@@ -1,7 +1,8 @@
-const ws = new WebSocket(`ws://${getDomainName()}:33003/websocket/robot`);
+const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 
 let selectBot = document.querySelector('#selectBot');
 let selectBotBtn = document.querySelector('#selectBotBtn');
+let deleteGamesBtn = document.querySelector('#deleteGames');
 let selectGame = document.querySelector('#selectGame');
 
 let selectBotDiv = document.querySelector('#bot');
@@ -19,8 +20,12 @@ selectBotBtn.addEventListener('click', (ev) => {
     selectGame.value = "";
 })
 
-
-
+deleteGamesBtn.addEventListener('click', (ev) => {
+    sendAction({
+        "action": "delete_games"
+    });
+    clearGameCard();
+})
 selectGame.addEventListener('change', (ev) => {
     selectedGame = selectGame.value;
     selectGameDiv.setAttribute('class', 'd-none');
@@ -31,17 +36,7 @@ selectGame.addEventListener('change', (ev) => {
         "game": selectedGame,
         "for": result
     })
-    // result.forEach(result => {
-        
-    // });
 })
-
-document.addEventListener('click',function(e){
-    if(e.target && e.target.id == 'preparing_game'){
-        let btn = document.getElementById('preparing_game');
-        btn.setAttribute("disabled", true)
-     }
- });
 
 ws.addEventListener("open", () => {
 
@@ -53,9 +48,8 @@ ws.addEventListener("open", () => {
 
     ws.addEventListener('message', (message) => {
         let data = JSON.parse(message.data); 
-        
+        console.log(data);
         if(data.games && data.games.length != 0){
-            console.log(data.games);
             clearGameCard();
             createGameCard(data.games);
         }
@@ -65,49 +59,110 @@ ws.addEventListener("open", () => {
 
 
 function createGameCard(game){
-    var gameDiv;
-    if(!document.getElementById(`${game.game}`)){
-        gameDiv = document.createElement('div');
-        gameDiv.setAttribute('class','card mb-3');
-    }else { 
-        gameDiv = document.getElementById(`${game.game}`)
-    }
+    for (let index = 0; index < game.length; index++) {      
     
-    let gameBody = document.createElement('div');
-    gameBody.setAttribute('class','card-body')
+        var gameDiv;
+        if(!document.getElementById(`${game[index].game}`)){
+            gameDiv = document.createElement('div');
+            gameDiv.setAttribute('class','card mb-3');
+        }else { 
+            gameDiv = document.getElementById(`${game[index].game}`)
+        }
+        
+        let gameBody = document.createElement('div');
+        gameBody.setAttribute('class','card-body')
 
-    let h4 = document.createElement('h4');
-    h4.innerHTML = game.game;
+        let h4 = document.createElement('h4');
+        h4.innerHTML = game[index].game;
 
-    let p = document.createElement('p');
-    p.innerHTML = "Status: " + game.action;
+        let pAction = document.createElement('p');
+        pAction.innerHTML = "Actie: " + game[index].action;
 
-    let button = document.createElement('button');
-    button.setAttribute('class', 'btn btn-primary float-end');
-    
-    if (game.action == "preparing_game") {
-        button.setAttribute('id', 'preparing_game');
-    }else {
-        button.setAttribute('id', 'start');
-    }
-
-    button.innerHTML = game.action;
-    let p2 = document.createElement('p');
-    p2.innerHTML = "Bots: ";
-
-    gameBody.appendChild(h4);
-    gameBody.appendChild(p);
-    gameBody.appendChild(p2);
-    console.log(bots);
-    game.bots.forEach(bot => {
         let p = document.createElement('p');
-        p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
-        gameBody.appendChild(p);
-    });
+        p.innerHTML = "Status: " + game[index].status;
+        
+        let buttonStart = document.createElement('button');
+        buttonStart.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonStart.setAttribute('id', game[index].id);
+        buttonStart.setAttribute('value', "start");
+        buttonStart.innerHTML = "Start";
 
-    gameBody.appendChild(button);
-    gameDiv.appendChild(gameBody);
-    gamesDiv.appendChild(gameDiv);
+        let buttonEnd = document.createElement('button');
+        buttonEnd.setAttribute('class', 'btn btn-primary mx-2 float-end');
+        buttonEnd.setAttribute('id', game[index].id);
+        buttonEnd.setAttribute('value', "ended");
+        buttonEnd.innerHTML = "End";
+
+        // send game action to bots to start game
+        buttonStart.addEventListener("click", (e) => {
+            
+            for (let index = 0; index < game.length; index++) {
+                if (game[index].id == e.target.id) {                   
+                    action = e.target.value
+                    curruntGame = game[index].game
+                    robots = game[index].bots
+                    robotadres = [];
+                    robots.forEach(robot => {
+                        robotadres.push(robot.botId);
+                    });
+
+                    sendAction({
+                        "action": action,
+                        "game": curruntGame,
+                        "gameId": e.target.id,
+                        "for" : robotadres
+                    })
+                }
+                
+            }
+        })
+
+         // send game action to bots to end
+        buttonEnd.addEventListener("click", (e) => {
+            for (let index = 0; index < game.length; index++) {
+                if (game[index].id == e.target.id) {
+                    action = e.target.value
+                    curruntGame = game[index].game
+                    robots = game[index].bots
+                    robotadres = [];
+                    robots.forEach(robot => {
+                        robotadres.push(robot.botId);
+                    });
+
+                    sendAction({
+                        "action": action,
+                        "game": curruntGame,
+                        "gameId": e.target.id,
+                        "for" : robotadres
+                    })
+
+                    sendAction({
+                        "action": "delete_games"
+                    })
+                    
+                }
+                
+            }
+        })
+        
+        let p2 = document.createElement('p');
+        p2.innerHTML = "Bots: ";
+
+        gameBody.appendChild(h4);
+        gameBody.appendChild(pAction);
+        gameBody.appendChild(p);
+        gameBody.appendChild(p2);
+        game[index].bots.forEach(bot => {
+            let p = document.createElement('p');
+            p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
+            gameBody.appendChild(p);
+        });
+
+        gameBody.appendChild(buttonEnd);
+        gameBody.appendChild(buttonStart);
+        gameDiv.appendChild(gameBody);
+        gamesDiv.appendChild(gameDiv);
+    }
 }
 
 function clearGameCard() {
