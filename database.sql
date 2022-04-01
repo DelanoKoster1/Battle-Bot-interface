@@ -134,6 +134,7 @@ INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES
 (4, 3, 3, "TeamC", "$2y$10$E1zBeuSmsBHS1Adw8KtDhecRzxOQ7SqgWK9ER142WoL.524F7DcNi", "TeamC@battlebot.nl"), 
 (5, 4, 3, "TeamD", "$2y$10$4j.3Z9S3S9UnQnlJBd4EjeYQHUT1XbbD54byygEIqSpANYmQRG.7C", "TeamD@battlebot.nl"), 
 (6, 5, 3, "TeamE", "$2y$10$lnUNUDZHzDkkvffXBL.MZebc8jzg4AStpRLqCspENhPsLOaVpLPyy", "TeamE@battlebot.nl"); 
+(7, 0, 1, "Gebruiker", "$2y$10$mDrlD0Q76HpVQXymWK49zuYGVGclgFONK4aPxRwbqFjFzUXdwCspi", "Gebruiker@battlebot.nl");
 
 INSERT INTO `event` (id, name, date, description, stream) VALUES 
 (1, "BattleBot Endgame", "2022-04-14 08:30:00", "The BattleBot Endgame!", ""),
