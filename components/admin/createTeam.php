@@ -1,5 +1,9 @@
 <?php
-$sql = "SELECT bot.id FROM `bot` WHERE `id` NOT IN (SELECT team.botId FROM `team`)";
+$sql = "SELECT  bot.id 
+        FROM    `bot` 
+        WHERE   `id` NOT IN (
+                            SELECT  team.botId 
+                            FROM    `team`)";
 $results = stmtExec($sql, 0);
 
 if (!$results) {
@@ -19,12 +23,11 @@ if ($results == 1) {
                 $ids = $results["bot.id"];
                 for ($i = 0; $i < count($ids); $i++) {
 
-                    $sql = "SELECT name, 
-                               id 
-                        FROM bot 
-                        WHERE id = ?";
+                    $sql = "SELECT  name, 
+                                    id 
+                            FROM    bot 
+                            WHERE   id = ?";
                     $result = stmtExec($sql, 0, $results["bot.id"][$i]);
-                    // debug($result);
                     $name = $result['name'][0];
                     $botId = $result['id'][0];
                     echo '

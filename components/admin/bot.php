@@ -1,6 +1,6 @@
 <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data">
     <div class="col-4">
-        <input class="form-control mt-3" placeholder="Bot Naam" name="botName" id="botName" type="text">
+        <input class="form-control mt-3" placeholder="Robot Naam" name="botName" id="botName" type="text">
         <input class="form-control mt-3" placeholder="Omschrijving" name="botDiscription" id="botDiscription" type="text">
         <input class="form-control mt-3" placeholder="Mac adres" name="macAddress" id="macAddress" type="text">
         <input class="form-control mt-3" placeholder="Board" name="board" id="board" type="text">
