@@ -3,6 +3,7 @@ const ws = new WebSocket(`ws://${getDomainName()}:3003/websocket/robot`);
 let selectBot = document.querySelector('#selectBot');
 let selectBotBtn = document.querySelector('#selectBotBtn');
 let deleteGamesBtn = document.querySelector('#deleteGames');
+let emergencyStop = document.querySelector('#sos');
 let selectGame = document.querySelector('#selectGame');
 
 let selectBotDiv = document.querySelector('#bot');
@@ -20,12 +21,36 @@ selectBotBtn.addEventListener('click', (ev) => {
     selectGame.value = "";
 })
 
-deleteGamesBtn.addEventListener('click', (ev) => {
-    sendAction({
-        "action": "delete_games"
-    });
-    clearGameCard();
+emergencyStop.addEventListener('click', (ev) => {
+    if (confirm("Weet u zeker dat u alle spellen wilt stoppen") == true) {
+        sendAction({
+            "action": 'ended',
+            "game": 'race',
+            "for": 'all'
+        })
+        sendAction({
+            "action": 'ended',
+            "game": 'butler',
+            "for": 'all'
+        })
+        sendAction({
+            "action": 'ended',
+            "game": 'maze',
+            "for": 'all'
+        })
+        clearGameCard();
+    }
 })
+
+deleteGamesBtn.addEventListener('click', (ev) => {
+    if (confirm("Weet u zeker dat u alle gemaakte spellen wilt verwijderen") == true) {
+        sendAction({
+            "action": "delete_games"
+        });
+        clearGameCard();
+    }
+})
+
 selectGame.addEventListener('change', (ev) => {
     selectedGame = selectGame.value;
     selectGameDiv.setAttribute('class', 'd-none');
@@ -47,9 +72,9 @@ ws.addEventListener("open", () => {
     }));
 
     ws.addEventListener('message', (message) => {
-        let data = JSON.parse(message.data); 
+        let data = JSON.parse(message.data);
         console.log(data);
-        if(data.games && data.games.length != 0){
+        if (data.games && data.games.length != 0) {
             clearGameCard();
             createGameCard(data.games);
         }
@@ -58,19 +83,19 @@ ws.addEventListener("open", () => {
 });
 
 
-function createGameCard(game){
-    for (let index = 0; index < game.length; index++) {      
-    
+function createGameCard(game) {
+    for (let index = 0; index < game.length; index++) {
+
         var gameDiv;
-        if(!document.getElementById(`${game[index].game}`)){
+        if (!document.getElementById(`${game[index].game}`)) {
             gameDiv = document.createElement('div');
-            gameDiv.setAttribute('class','card mb-3');
-        }else { 
+            gameDiv.setAttribute('class', 'card mb-3');
+        } else {
             gameDiv = document.getElementById(`${game[index].game}`)
         }
-        
+
         let gameBody = document.createElement('div');
-        gameBody.setAttribute('class','card-body')
+        gameBody.setAttribute('class', 'card-body')
 
         let h4 = document.createElement('h4');
         h4.innerHTML = game[index].game;
@@ -80,7 +105,7 @@ function createGameCard(game){
 
         let p = document.createElement('p');
         p.innerHTML = "Status: " + game[index].status;
-        
+
         let buttonStart = document.createElement('button');
         buttonStart.setAttribute('class', 'btn btn-primary mx-2 float-end');
         buttonStart.setAttribute('id', game[index].id);
@@ -95,9 +120,9 @@ function createGameCard(game){
 
         // send game action to bots to start game
         buttonStart.addEventListener("click", (e) => {
-            
+
             for (let index = 0; index < game.length; index++) {
-                if (game[index].id == e.target.id) {                   
+                if (game[index].id == e.target.id) {
                     action = e.target.value
                     curruntGame = game[index].game
                     robots = game[index].bots
@@ -110,14 +135,14 @@ function createGameCard(game){
                         "action": action,
                         "game": curruntGame,
                         "gameId": e.target.id,
-                        "for" : robotadres
+                        "for": robotadres
                     })
                 }
-                
+
             }
         })
 
-         // send game action to bots to end
+        // send game action to bots to end
         buttonEnd.addEventListener("click", (e) => {
             for (let index = 0; index < game.length; index++) {
                 if (game[index].id == e.target.id) {
@@ -133,18 +158,13 @@ function createGameCard(game){
                         "action": action,
                         "game": curruntGame,
                         "gameId": e.target.id,
-                        "for" : robotadres
+                        "for": robotadres
                     })
-
-                    sendAction({
-                        "action": "delete_games"
-                    })
-                    
                 }
-                
+
             }
         })
-        
+
         let p2 = document.createElement('p');
         p2.innerHTML = "Bots: ";
 
@@ -154,7 +174,7 @@ function createGameCard(game){
         gameBody.appendChild(p2);
         game[index].bots.forEach(bot => {
             let p = document.createElement('p');
-            p.innerHTML =  botAdresToName(bot.botId) + ": " + bot.status;
+            p.innerHTML = botAdresToName(bot.botId) + ": " + bot.status;
             gameBody.appendChild(p);
         });
 
@@ -166,10 +186,10 @@ function createGameCard(game){
 }
 
 function clearGameCard() {
- document.getElementById('gameContainer').innerHTML = "";
+    document.getElementById('gameContainer').innerHTML = "";
 }
 
-function sendAction(message){
+function sendAction(message) {
     ws.send(JSON.stringify(message));
 }
 
@@ -177,13 +197,13 @@ function getSelectValues(select) {
     var result = [];
     var options = select && select.options;
     var opt;
-  
-    for (let i=0, iLen=options.length; i<iLen; i++) {
-      opt = options[i];
-  
-      if (opt.selected) {
-        result.push(opt.value);
-      }
+
+    for (let i = 0, iLen = options.length; i < iLen; i++) {
+        opt = options[i];
+
+        if (opt.selected) {
+            result.push(opt.value);
+        }
     }
     return result;
 }
@@ -191,7 +211,7 @@ function getSelectValues(select) {
 function botAdresToName(adres) {
     let selectBot = document.querySelector('#selectBot');
 
-    for (i = 0; i < selectBot.length; i++) { 
+    for (i = 0; i < selectBot.length; i++) {
         if (selectBot.options[i].value == adres) {
             return selectBot.options[i].text
         }

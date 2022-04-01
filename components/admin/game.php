@@ -21,6 +21,7 @@
                     </select>
                     <button id="selectBotBtn" type="button" name="submitotBtn" class="btn btn-primary">submit</button>
                     <button id="deleteGames" type="button" name="delete_games" class="btn btn-danger">Verwijder spellen</button>
+                    <button id="sos" type="button" name="sos" class="btn btn-danger">Emergency stop</button>
                     
                 </div>
 

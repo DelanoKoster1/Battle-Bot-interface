@@ -18,6 +18,7 @@
 ```
 npm install
 cd websocket
+cd src
 npm install
 npm start
 ```
