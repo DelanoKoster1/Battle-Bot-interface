@@ -71,6 +71,11 @@ switch (true) {
         $headerTitle = 'Livestream code toevoegen';
         $content = "../components/admin/addLiveStreamcode.php";
         break;
+    
+    case isset($_GET['addTeamToAccount']);
+        $headerTitle = 'Team toevoegen aan account';
+        $content = "../components/admin/addTeamToAccount.php";
+        break;
 
     default:
         $headerTitle = 'Evenement toevoegen';
@@ -506,6 +511,31 @@ if (isset($_POST['stopEvent'])) {
     $id = filter_input(INPUT_POST, "stopEvent", FILTER_SANITIZE_NUMBER_INT);
     $result = stmtExec($query, 0, $id);
 }
+
+if(isset($_POST['accounts'])) {
+    $userId = filter_input(INPUT_POST, 'accounts', FILTER_SANITIZE_NUMBER_INT);
+    header('location: ../pages/admin.php?addTeamToAccount&setAcc=' . $userId);
+}
+
+if(isset($_POST['teams'])) {
+    $teamId = filter_input(INPUT_POST, 'teams', FILTER_SANITIZE_NUMBER_INT);
+    $userId = filter_input(INPUT_GET, 'setAcc', FILTER_SANITIZE_NUMBER_INT);
+
+    $sql = "UPDATE account
+            SET teamId = ?
+            WHERE account.id = ?";
+
+    $result = stmtExec($sql, 0, $teamId, $userId);
+
+    if(!stmtExec($sql, 0, $teamId, $userId)) {
+        $_SESSION['error'] = "database_error";
+        header("location: ../components/error.php");
+    }
+
+    $_SESSION['succes'] = 'Het team is succesvol aan het account toegevoegd!';
+    header('location: admin.php?addTeamToAccount');
+    exit();
+}
 ?>
 
 <!DOCTYPE html>
@@ -570,6 +600,9 @@ if (isset($_POST['stopEvent'])) {
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="roles.php">Rollen aanpassen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?addTeamToAccount">Team toeveogen aan account</a>
                         </li>
                     </ul>
                 </nav>
