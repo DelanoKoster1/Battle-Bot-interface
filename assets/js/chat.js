@@ -1,4 +1,4 @@
-const ws = new WebSocket(`ws://${getDomainName()}:33002/websocket/client/chat`);
+const ws = new WebSocket(`ws://${getDomainName()}:33002/websocket/client/chat`); // port 3002 for localhost
 let chatInput = document.getElementById('chatMessage');
 let chatButton = document.getElementById('button-addon2');
 let username = document.getElementById('username').value;
