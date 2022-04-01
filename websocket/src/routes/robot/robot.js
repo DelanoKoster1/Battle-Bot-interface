@@ -126,12 +126,13 @@ const heartbeat = (client) => {
     client.isAlive = true;
 }
 
+/**
+ * Set bot stats in a arry
+ * @param {String} clientId client id
+ * @param {Object} stats 
+ */
 function setBotStats(clientId, stats){
     botStats[`${clientId}`] = stats;
-}
-
-function getBotStats(){
-    return this.botStats;
 }
 
 /**
@@ -171,6 +172,10 @@ const interval = setInterval(() => {
     })
 }, 10000)
 
+/**
+ * Updates status of a game
+ * @param {Object} body 
+ */
 function updateGameStatus(body) {
     for(let game of games){
         if(game.id == body.game){
@@ -179,23 +184,26 @@ function updateGameStatus(body) {
     }
 }
 
-function addBotToGame(status, target = "all") {
-    if (target == "all") {
-        wss.clients.forEach((client) => {
-            if (client.role == "bot") {
-                games["all"].bots.push({
-                    "botId": client.id,
-                    "status": status
-                });
+/**
+ * updates bot status in games[]
+ * @param {String} client Client id
+ * @param {String} status 
+ */
+function updateBotStatusInGame(client, status) {
+    games.forEach((game) => {
+        game.bots.forEach((bot) => {
+            if(bot.id == client){
+                bot.stats = status
             }
         })
-    }
+    })
 }
 
-function updateBotStatusInGame(client, status) {
-
-}
-
+/**
+ * check if bots are done with preparing
+ * @param {String} targets bot ids
+ * @returns true || false
+ */
 function preparingDone(targets = "all") {
     let ready = false
     if (targets == "all") {
@@ -225,6 +233,10 @@ function preparingDone(targets = "all") {
     return ready;
 }
 
+/**
+ * Send JSON String to a bot
+ * @param {Object} message 
+ */
 function sendActionToBot(message) {
     let body = {
         "action": message.action,
@@ -333,6 +345,11 @@ function ready(target) {
     return ready;
 }
 
+/**
+ * check if bots exist and loggedin
+ * @param {String} bots botId
+ * @returns true || false
+ */
 function checkIfBotsExist(bots) {
     if (bots != "all") {
         let clients = [];
@@ -356,37 +373,6 @@ function checkIfBotsExist(bots) {
     } else {
         return true;
     }
-}
-
-/**
- * Start game for all bots
- * @param {Sring} game name of the game
- * @param {String} action action: prepare. start OR ended
- */
-function sendActionToAllBots(game, action) {
-    if (action == "prepare") {
-        games["all"] = {
-            "games": game,
-            "action": "preparing_game",
-            "bots": []
-        };
-
-        addBotToGame("preparing_game");
-
-        setAttributeToClient("game", game);
-
-    }
-
-    sendMessageToAllBots({
-        "game": game,
-        "action": action
-    })
-    sendMessageToInterface({
-        "status": true,
-        "action": action,
-        "games": games["all"],
-        "for": "all"
-    })
 }
 
 /**
