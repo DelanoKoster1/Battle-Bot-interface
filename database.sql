@@ -128,12 +128,12 @@ INSERT INTO `team` (`id`, `botId`, `name`) VALUES
 (5, 5, 'INF1E');
 
 INSERT INTO `account` (id, teamId, roleId, username, password, email) VALUES 
-(1, 0, 2, "Admin", "$2y$10$0CG/LGUl/KgxUQFGBzqkUOXHFoNL03jQY9JKbq6KrXGO3R9/vcusC", "admin@battlebot.nl"), --admin123
-(2, 1, 3, "TeamA", "$2y$10$FkF27OUFEM6jLXTM7DKNXOnASu0JhoC8ZPGYcSd6HNrL61o2WzObG", "TeamA@battlebot.nl"), --onbekend
-(3, 2, 3, "TeamB", "$2y$10$kp7QW9GsSzACwdFIMb33ee8ObNkmDQ1DYYGQTg2/2ZbLxX8GtQp2i", "TeamB@battlebot.nl"), --TeamB
-(4, 3, 3, "TeamC", "$2y$10$E1zBeuSmsBHS1Adw8KtDhecRzxOQ7SqgWK9ER142WoL.524F7DcNi", "TeamC@battlebot.nl"), --TeamC
-(5, 4, 3, "TeamD", "$2y$10$4j.3Z9S3S9UnQnlJBd4EjeYQHUT1XbbD54byygEIqSpANYmQRG.7C", "TeamD@battlebot.nl"), --TeamD
-(6, 5, 3, "TeamE", "$2y$10$lnUNUDZHzDkkvffXBL.MZebc8jzg4AStpRLqCspENhPsLOaVpLPyy", "TeamE@battlebot.nl"); --TeamE
+(1, 0, 2, "Admin", "$2y$10$0CG/LGUl/KgxUQFGBzqkUOXHFoNL03jQY9JKbq6KrXGO3R9/vcusC", "admin@battlebot.nl"), 
+(2, 1, 3, "TeamA", "$2y$10$FkF27OUFEM6jLXTM7DKNXOnASu0JhoC8ZPGYcSd6HNrL61o2WzObG", "TeamA@battlebot.nl"), 
+(3, 2, 3, "TeamB", "$2y$10$kp7QW9GsSzACwdFIMb33ee8ObNkmDQ1DYYGQTg2/2ZbLxX8GtQp2i", "TeamB@battlebot.nl"), 
+(4, 3, 3, "TeamC", "$2y$10$E1zBeuSmsBHS1Adw8KtDhecRzxOQ7SqgWK9ER142WoL.524F7DcNi", "TeamC@battlebot.nl"), 
+(5, 4, 3, "TeamD", "$2y$10$4j.3Z9S3S9UnQnlJBd4EjeYQHUT1XbbD54byygEIqSpANYmQRG.7C", "TeamD@battlebot.nl"), 
+(6, 5, 3, "TeamE", "$2y$10$lnUNUDZHzDkkvffXBL.MZebc8jzg4AStpRLqCspENhPsLOaVpLPyy", "TeamE@battlebot.nl"); 
 
 INSERT INTO `event` (id, name, date, description, stream) VALUES 
 (1, "BattleBot Endgame", "2022-04-14 08:30:00", "The BattleBot Endgame!", ""),
