@@ -19,21 +19,26 @@ include_once('../functions/function.php');
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <div class="col-12">
+                <?php
+                $query = "SELECT stream,name FROM event WHERE date < now() AND id = ?";
 
-    <?php
-    $query = "SELECT stream FROM event WHERE date < now() AND id = ?";
-
-    $historyResults = stmtExec($query, 0, $_GET['id']);
-    ?>
-
-    <video width="250" autoplay muted controls id="VideoPlayback">
-        <source src="..<?= $historyResults['stream'][0] ?>" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
-
+                $historyResults = stmtExec($query, 0, $_GET['id']);
+                ?>
+                <h1 class="my-4 px-2"><?= $historyResults['name'][0] ?></h1>
+                <div class="ratio ratio-16x9">
+                    <video controls id="VideoPlayback" autoplay>
+                        <source src="..<?= $historyResults['stream'][0] ?>" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
     <footer class="navbar">
         <?php include_once('../components/footer.php') ?>
     </footer>
 </body>
-
 </html>

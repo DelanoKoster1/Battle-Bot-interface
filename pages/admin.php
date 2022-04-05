@@ -547,6 +547,33 @@ if(isset($_POST['teams'])) {
     header('location: admin.php?addTeamToAccount');
     exit();
 }
+
+if (isset($_POST["addStreamCode"])) {
+    if (isset($_POST["stream"])) {
+        $query = "SELECT    name 
+          FROM      `event` 
+          WHERE     `active` = 1";
+        $results = stmtExec($query);
+        $stream = filter_input(INPUT_POST, "stream", FILTER_SANITIZE_SPECIAL_CHARS);
+        $event = $results["name"][0];
+
+        if ($stream) {
+            $query = "UPDATE    event 
+                      SET       stream = ? 
+                      WHERE     name = ?";
+            stmtExec($query, 0, $stream, $event);
+            $_SESSION['succes'] = 'De streamcode is succesvol toegevoegd!';
+            
+        } else {
+            $_SESSION['ERROR_MESSAGE'] = 'Dit is geen valide streamcode!';
+            header('location: admin.php?addStreamCode');
+        }
+    } else {
+        $_SESSION['ERROR_MESSAGE'] = 'Er is geen streamcode geüpload!';
+        header('location: admin.php?addStreamCode');
+    }
+    header('location: admin.php?addStreamCode');
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -629,12 +656,13 @@ if(isset($_POST['teams'])) {
 
                 <?php
                 if (!empty($_SESSION['succes'])) {
+                   $message = $_SESSION['succes']
                 ?>
                     <div class="col-md-12 p-0">
                         <div class="alert alert-success text-black fw-bold p-4 rounded-0" role="alert">
                             <ul class="mb-0">
                                 <?php
-                                echo '<li>' . $_SESSION['succes'] . '</li>';
+                                echo '<li>' . $message . '</li>';
                                 $_SESSION['succes'] = '';
                                 ?>
                             </ul>
@@ -642,7 +670,6 @@ if(isset($_POST['teams'])) {
                     </div>
                 <?php
                 }
-
                 if (!empty($_SESSION['ERROR_MESSAGE'])) {
                     foreach($_SESSION['ERROR_MESSAGE'] as $msg) {
                 ?>
@@ -660,6 +687,7 @@ if(isset($_POST['teams'])) {
                 <?php
                     }
                     unset($_SESSION['ERROR_MESSAGE']);
+                    
                 }
                 ?>
                 <div class="row">

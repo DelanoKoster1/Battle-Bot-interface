@@ -693,7 +693,7 @@ function eventTimeDescent() {
  * @return HTML
  */
 function getLivestream() {
-    $query = "SELECT    name
+    $query = "SELECT    stream
               FROM      `event`
               WHERE     active = 1";
     $results = stmtExec($query, 0);
@@ -702,10 +702,11 @@ function getLivestream() {
                   <div class="alert alert-danger text-center text-black fw-bold p-4 mb-3 rounded" role="alert">
                       Er is op het moment geen livestream actief!
                   </div>
-              </div>';
+              </div>
+        ';
     } else {
         return '
-        <iframe src="https://www.youtube.com/embed/m1sHe1gfIKE" frameborder="0" autoplay="1" allowfullscreen></iframe>';
+        <iframe src="https://www.youtube.com/embed/'.$results['stream'][0].'" frameborder="0" autoplay="1" allowfullscreen></iframe>';
     }
 }
 
