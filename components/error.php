@@ -53,13 +53,6 @@ switch (isset($_SESSION['error'])) {
                         <i class="fas fa-robot fs10em"></i>
                         <span class="display-1 d-block text-uppercase"><?php echo $errormessage; ?></span>
                         <div class="mb-4 lead">Neem contact op met de beheerder.</div>
-                        <?php
-                        if (isset($_SESSION['error'])) {
-                            echo '<a href="../index.php" class="btn btn-link">Terug naar de homepagina</a>';
-                        } else {
-                            echo '<a href="index.php" class="btn btn-link">Terug naar de homepagina</a>';
-                        }
-                        ?>
                     </div>
                 </div>
             </div>
