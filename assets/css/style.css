@@ -38,7 +38,7 @@ h6,
 header {
   font-family: "Aviano Future Bold", "Roboto", sans-serif;
 }
-.nav-link {
+.nav-link, .nav-head {
   font-family: "Aviano Future Bold", "Roboto", sans-serif;
 }
 header .img-fluid.logo {
