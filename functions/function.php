@@ -1404,3 +1404,17 @@ function changeTeamInfo() {
 
     return $returnForm;
 }
+
+function userPoints() {
+
+    $userPoints = "SELECT   points
+                   FROM     account
+                   WHERE    username = ? 
+                  ";
+
+    $results = stmtExec($userPoints, 0, $_SESSION['username']);
+    
+    if (!empty($results)) {
+        return $results['points'][0];
+    }
+}
