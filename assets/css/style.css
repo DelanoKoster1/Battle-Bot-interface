@@ -255,6 +255,9 @@ header .menu,
   .img-fluid.scoreImg {
     height: 60px;
   }
+  .eventsCard {
+    width: 175px;
+  }
 }
 @media (max-width: 1332px) {
   header .nav-link {
@@ -266,7 +269,17 @@ header .menu,
     height: 80%;
   }
   #bots .card-title {
-    font-size: 11px;
+    font-size: 10px;
+  }
+}
+@media (max-width: 428px) {
+  #bots .card-title {
+    font-size: 12px;
+  }
+  #bots .card {
+    height: 80%;
+    width: 40%;
+    margin: 0;
   }
 }
 

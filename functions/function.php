@@ -643,7 +643,7 @@ function showEvents(bool $limit = false, bool $admin = false, $start = false) {
                 ';
             } else {
                 echo '
-                <div class="col-sm-3 mb-4">
+                <div class="col-sm-4 mb-4">
                 <div class="card eventsCard">
                     <div class="card-body">
                         <span class="calendarDate d-block text-lowercase">' . formatdate($eventDate) . '</span>

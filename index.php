@@ -88,7 +88,7 @@
                 </div>
             </div>
 
-            <div class="row m-auto eventShowBox">
+            <div class="row m-auto col-sm-8 eventShowBox">
                 <?php showEvents();
                 ?>
             </div>
