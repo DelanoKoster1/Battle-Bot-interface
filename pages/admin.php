@@ -604,38 +604,29 @@ if (isset($_POST["addStreamCode"])) {
             <div class="col-md-2 sidebar">
                 <nav class="navbar">
                     <ul class="nav w-100 nav-fill pt-2">
+                        <li class="w-100 text-center text-white">
+                            <p class="nav-head m-0 fs-5 fw-bold"><i class="fas fa-plus"></i> Toevoegen</p>
+                        </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php">Evenement toevoegen</a>
-                        </li>
-                        <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?poll">Poll toevoegen</a>
-                        </li>
-                        <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?game">Games</a>
-                        </li>
-                        <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?points">Punten toevoegen</a>
-                        </li>
-                        <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?director">Regisseur pagina</a>
-                        </li>
-                        <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?bot">Robot toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addTeamToEvent">Team toevoegen aan evenement</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?startEvent">Evenement starten</a>
+                            <a class="nav-link text-white" href="admin.php?createTeam">Team toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?info">Informatie robot en team</a>
+                            <a class="nav-link text-white" href="admin.php?addTeamToAccount">Team toevoegen aan account</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?createTeam">Team aanmaken</a>
+                            <a class="nav-link text-white" href="admin.php?poll">Poll toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?test">Test</a>
+                            <a class="nav-link text-white" href="admin.php?points">Punten toevoegen</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?bot">Robot toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addStream">Oude Stream toevoegen</a>
@@ -643,12 +634,35 @@ if (isset($_POST["addStreamCode"])) {
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addStreamCode">Livestream code toevoegen</a>
                         </li>
+
+
+                        <li class="w-100 text-center text-white">
+                            <p class="nav-head m-0 fs-5 fw-bold"><i class="fas fa-play"></i> Starten</p>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?startEvent">Evenement starten</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?game">Games starten</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?test">TEST</a>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?director">Regisseur pagina</a>
+                        </li>
+
+
+                        <li class="w-100 text-center text-white">
+                            <p class="nav-head m-0 fs-5 fw-bold"><i class="fa fa-edit"></i> Bewerken</p>
+                        </li>
+                        <li class="nav-item w-100">
+                            <a class="nav-link text-white" href="admin.php?info">Robot en team informatie wijzigen</a>
+                        </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?roles">Rollen aanpassen</a>
                         </li>
-                        <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="admin.php?addTeamToAccount">Team toeveogen aan account</a>
-                        </li>
+
                     </ul>
                 </nav>
             </div>
