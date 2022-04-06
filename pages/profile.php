@@ -104,18 +104,6 @@ $results = getProfileInfo();
                         <h1 class="text-center bg-white w-100 pt-5 mb-3">Welkom, <?= $results['username'][0] ?></h1>
                     </div>
                     <?php
-                    if ($_SESSION['role'] == 2) {
-                    ?>
-                        <div class="col-12 text-center mb-3">
-                            <span>
-                                <a class="text-body" href="./roles.php">
-                                    <span class="material-icons align-middle">add</span>
-                                    Rol Aanpassen
-                                </a>
-                            </span>
-                        </div>
-                    <?php
-                    }
                     if ($_SESSION['role'] == 3) {
                     ?>
                         <div class="col-12 text-center mb-3">

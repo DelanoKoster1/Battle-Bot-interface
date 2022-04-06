@@ -68,7 +68,7 @@ if (isset($_POST['toTeam'])) {
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
-    <div class="container bg-white w-50 height py-4">
+    <div class="container bg-white w-100 height py-4">
         <div class="row">
             <?php
             if (!empty($_SESSION['succes'])) {
@@ -107,7 +107,6 @@ if (isset($_POST['toTeam'])) {
             ?>
             <div class="col-md-2"></div>
             <form class="col-md-12 col-12 bg-white" method="post">
-                <h1 class="text-center">Rol aanpassen</h1>
                 <div class="table-responsive">
                     <table class="table">
                         <thead>
@@ -162,9 +161,6 @@ if (isset($_POST['toTeam'])) {
                 </div>
             </form>
         </div>
-    </div>
-    <div>
-        <?php include_once("../components/footer.php"); ?>
     </div>
 </body>
 

@@ -76,6 +76,11 @@ switch (true) {
         $content = "../components/admin/addLiveStreamcode.php";
         break;
     
+    case isset($_GET['roles']);
+        $headerTitle = 'Rollen aanpassen';
+        $content = "../components/admin/roles.php";
+        break;
+    
     case isset($_GET['addTeamToAccount']);
         $headerTitle = 'Team toevoegen aan account';
         $content = "../components/admin/addTeamToAccount.php";
@@ -532,9 +537,9 @@ if(isset($_POST['teams'])) {
     $teamId = filter_input(INPUT_POST, 'teams', FILTER_SANITIZE_NUMBER_INT);
     $userId = filter_input(INPUT_GET, 'setAcc', FILTER_SANITIZE_NUMBER_INT);
 
-    $sql = "UPDATE account
-            SET teamId = ?
-            WHERE account.id = ?";
+    $sql = "UPDATE  account
+            SET     teamId = ?
+            WHERE   account.id = ?";
 
     $result = stmtExec($sql, 0, $teamId, $userId);
 
@@ -551,8 +556,8 @@ if(isset($_POST['teams'])) {
 if (isset($_POST["addStreamCode"])) {
     if (isset($_POST["stream"])) {
         $query = "SELECT    name 
-          FROM      `event` 
-          WHERE     `active` = 1";
+                  FROM      `event` 
+                  WHERE     `active` = 1";
         $results = stmtExec($query);
         $stream = filter_input(INPUT_POST, "stream", FILTER_SANITIZE_SPECIAL_CHARS);
         $event = $results["name"][0];
@@ -639,7 +644,7 @@ if (isset($_POST["addStreamCode"])) {
                             <a class="nav-link text-white" href="admin.php?addStreamCode">Livestream code toevoegen</a>
                         </li>
                         <li class="nav-item w-100">
-                            <a class="nav-link text-white" href="roles.php">Rollen aanpassen</a>
+                            <a class="nav-link text-white" href="admin.php?roles">Rollen aanpassen</a>
                         </li>
                         <li class="nav-item w-100">
                             <a class="nav-link text-white" href="admin.php?addTeamToAccount">Team toeveogen aan account</a>
