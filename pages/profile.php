@@ -7,8 +7,6 @@ if (!isset($_SESSION['email'])) {
     header('location: ../components/error.php');
 }
 
-
-
 if (isset($_POST['save'])) {
     $results = getProfileInfo();
     $success = false;
@@ -19,20 +17,30 @@ if (isset($_POST['save'])) {
     $repeatPassword = filter_input(INPUT_POST, 'newpassword2', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 
     if ($email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL)) {
-        if ($username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
-            if ($results["username"][0] != $username || $results["email"][0] != $email) {
-                if (!checkUserInDataBase($username, $email, true)) {
-                    $query = "UPDATE    account
-                              SET       username = ?,
-                                        email = ?
-                              WHERE     id = ?  
-                    ";
-                    stmtExec($query, 0, $username, $email, $_SESSION['id']);
-                    $success = true;
+        if (preg_match("/^[^\s]+[\S+][^\s]{6}$/", $email)) {
+            if ($username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS)) {
+                if (preg_match("/^[^\s]+[\S+][^\s]{1}$/", $username)) {
+                    if ($results["username"][0] != $username || $results["email"][0] != $email) {
+                        if (!checkUserInDataBase($username, $email, true)) {
+                            $query = "UPDATE    account
+                                      SET       username = ?,
+                                                email = ?
+                                      WHERE     id = ?  
+                            ";
+                            stmtExec($query, 0, $username, $email, $_SESSION['id']);
+                            $success = true;
+                        } else {
+                            $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam of dit e-mailadres!';
+                        }
+                    }
+                } else {
+                    $error[] = 'Deze gebruikersnaam is ongeldig!';
                 }
+            } else {
+                $error[] = 'Deze gebruikersnaam is ongeldig!';
             }
         } else {
-            $error[] = 'Deze gebruikersnaam is ongeldig!';
+            $error[] = 'Dit e-mailadres is ongeldig!';
         }
     } else {
         $error[] = 'Dit e-mailadres is ongeldig!';
@@ -40,14 +48,20 @@ if (isset($_POST['save'])) {
 
     if (!empty($curPassword) || !empty($newPassword) || !empty($repeatPassword)) {
         
+        if (!password_verify($curPassword, $results['password'][0])) {
+            $error[] = 'Het huidige wachtwoord is incorrect!';
+        } elseif (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,254}$/', $newPassword)) {
+            $error[] = 'Het nieuwe wachtwoord is ongeldig!';
+        } elseif (!preg_match('/^[A-Za-z][A-Za-z0-9]{0,254}$/', $repeatPassword)) {
+            $error[] = 'Het herhaal wachtwoord is ongeldig!';
+        }
+
         if(empty($curPassword)) {
-            $error[] = 'Huidige wachtwoord is niet gegeven!';
-        }
-        if(empty($newPassword)) {
-            $error[] = 'Nieuwe wachtwoord is niet gegeven!';
-        }
-        if(empty($repeatPassword)) {
-            $error[] = 'Nieuwe wachtwoord wordt niet herhaald!';
+            $error[] = 'Het huidige wachtwoord is niet gegeven!';
+        } elseif (empty($newPassword)) {
+            $error[] = 'Het nieuwe wachtwoord is niet gegeven!';
+        } elseif (empty($repeatPassword)) {
+            $error[] = 'Het herhaal wachtwoord is niet gegeven!';
         }
 
         if(empty($error)) {
@@ -56,8 +70,8 @@ if (isset($_POST['save'])) {
                     if (!password_verify($newPassword, $results['password'][0]) && !password_verify($repeatPassword, $results['password'][0])) {
                         $hashPassword = password_hash($newPassword, PASSWORD_DEFAULT);
                         $query = "UPDATE  account
-                                  SET     `password` = ?
-                                  WHERE   id = ?  
+                                SET     `password` = ?
+                                WHERE   id = ?  
                                 ";
                         stmtExec($query, 0, $hashPassword, $_SESSION['id']);
                         $success2 = true;
@@ -91,7 +105,7 @@ $results = getProfileInfo();
     <title>Profiel - Battlebots</title>
 </head>
 
-<body class="bg-light">
+<body>
     <section id="header">
         <?php includeHeader('page'); ?>
     </section>
@@ -122,8 +136,8 @@ $results = getProfileInfo();
                         if (isset($_POST['save']) && !empty($error)) {
                             foreach ($error as $errorMsg) { ?>
                                 <div class="col-md-12 p-0">
-                                    <div class="alert alert-danger text-center text-black fw-bold p-4 mt-3 mb-3 rounded" role="alert">
-                                        <?php echo $errorMsg ?>
+                                    <div class="alert alert-danger text-center text-start text-black fw-bold p-4 mt-3 mb-3 rounded" role="alert">
+                                        <?php echo "<li>" . $errorMsg . "</li>"?>
                                     </div>
                                 </div>
                             <?php

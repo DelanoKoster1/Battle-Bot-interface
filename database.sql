@@ -185,7 +185,7 @@ VALUES (
         'INF1D',
         'Robot INF1D',
         '/assets/img/bots/9/Robot_INF1D.png',
-        '24:0A:C4:61:A6:88'
+        '58:BF:25:37:A0:CC'
     ),
     (
         5,

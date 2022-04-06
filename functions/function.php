@@ -456,13 +456,13 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
                         email 
                 FROM    account 
                 WHERE   username = ? 
-                AND     email = ?";
+                OR      email = ?";
     } else {
         $sql = "SELECT  username, 
                         email 
                 FROM    account 
                 WHERE   username = ? 
-                OR      email = ?";
+                AND     email = ?";
     }
 
     $results = stmtExec($sql, 0, $username, $email);
@@ -484,7 +484,6 @@ function checkUserInDataBase(string $username, string $email, $profile = false) 
                 $error[] = 'Er bestaat al een gebruiker met deze gebruikersnaam!';
             }
         }
-
         return $_SESSION['ERROR_MESSAGE'] = $error;
     } else {
         return false;
