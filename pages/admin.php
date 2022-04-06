@@ -305,7 +305,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
     $teams = array();
     $eventIds = array();
     $teamPoints = array();
-    $eventId = $_GET['eventId'];
+    $eventId = filter_input(INPUT_GET, 'eventId', FILTER_SANITIZE_NUMBER_INT);
 
     foreach ($_POST as $radioTeamId => $assignedPoints) {
         if (isset($_POST[$radioTeamId]) && !isset($_POST[$radioTeamId . 'submit'])) {
@@ -316,7 +316,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
                             SET     points = points + ?, 
                                     wins = wins + 1, 
                                     playedMatches = playedMatches + 1 
-                            WHERE   `team-event`.teamId = ?";
+                            WHERE   `team-event`.teamId = ? AND `team-event`.eventId = ?";
                     break;
 
                 default:
@@ -324,7 +324,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
                             JOIN    stats ON    `team-event`.teamId = stats.id 
                             SET     points = points + ?, 
                                     playedMatches = playedMatches + 1 
-                            WHERE   `team-event`.teamId = ?";
+                            WHERE   `team-event`.teamId = ? AND `team-event`.eventId = ?";
                     break;
             }
         }
@@ -339,13 +339,13 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
                                 SET     points = ?, 
                                         wins = (CASE WHEN (wins > 0) THEN wins - 1 ELSE (wins)END), 
                                         playedMatches = (CASE WHEN (playedMatches > 0) THEN playedMatches - 1 ELSE (playedMatches)END) 
-                                WHERE   `team-event`.teamId = ?";
+                                WHERE   `team-event`.teamId = ? AND `team-event`.eventId = ?";
                         break;
 
                     default:
                         $sql = "UPDATE  `team-event` 
                                 SET     points = ? 
-                                WHERE   teamId = ?";
+                                WHERE   teamId = ? AND `team-event`.eventId = ?";
                         break;
                 }
             } else {
@@ -354,7 +354,7 @@ if (isset($_GET['points']) && isset($_GET['eventId'])) {
         }
 
         if (isset($sql)) {
-            if (!stmtExec($sql, 0, $assignedPoints, $radioTeamId)) {
+            if (!stmtExec($sql, 0, $assignedPoints, $radioTeamId, $eventId)) {
                 header("location: ../components/error.php");
             }
         }
