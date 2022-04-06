@@ -49,14 +49,14 @@ wss.on('connection', (client, req) => {
                 case "start":
                 case "ended":
 
-                    if (preparingDone()) {
+//                     if (preparingDone()) {
                         updateGameStatus(req);
                         sendActionToBot(req);
-                    } else {
-                        sendMessageToClient(client, {
-                            "error": "NOT_READY"
-                        })
-                    }
+//                     } else {
+//                         sendMessageToClient(client, {
+//                             "error": "NOT_READY"
+//                         })
+//                     }
                    
                     break;
                 case "delete_games": 
