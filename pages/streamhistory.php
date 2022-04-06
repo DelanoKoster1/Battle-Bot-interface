@@ -29,7 +29,13 @@ include_once('../functions/function.php');
 
         <div class="row m-auto eventShowBox">
             <?php
-            $query = "SELECT id, name, description, date, stream FROM event WHERE date < now()";
+            $query = "SELECT    id, 
+                                name, 
+                                description, 
+                                date, 
+                                stream 
+                      FROM      event 
+                      WHERE     date < now()";
 
             $historyResults = stmtExec($query);
 
@@ -52,7 +58,7 @@ include_once('../functions/function.php');
                                         <a class="stretched-link" href="watchback.php?id=' . $id . '">' . $name . '</a>
                                         <span class="calendarInfo d-block">' . $description . '</span>
                                         </span>
-                                        <div class="btn text-white text-decoration-underline float-end mt-3">klik hier</div>
+                                        <div class="btn text-white text-decoration-underline float-end mt-3">Klik hier</div>
                                 </div>
                             </div>
                         </div>';

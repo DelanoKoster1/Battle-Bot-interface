@@ -21,7 +21,13 @@
     <div class="container-fluid">
         <div class="row my-5 nav nav-tabs justify-content-evenly" role="tablist">
             <?php
-            $query = "SELECT bot.id, bot.name, bot.imagePath FROM bot INNER JOIN team ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId";
+            $query = "SELECT    bot.id, 
+                                bot.name, 
+                                bot.imagePath 
+                      FROM      bot 
+                      INNER JOIN team ON team.botId = bot.id 
+                      INNER JOIN specs ON specs.id = bot.specsId 
+                      INNER JOIN stats ON stats.id = bot.statsId";
 
             $results = stmtExec($query);
 
@@ -37,7 +43,7 @@
                 if ($botimagePath == NULL) $botimagePath = "/assets/img/bot.svg";
 
                 echo ' 
-                    <div class="col-lg-2 col-sm-4 col-6" data-bs-toggle="tab" data-bs-target="#' . $botName . '" type="button" role="tab" aria-controls="' . $botName . '" aria-selected="false">
+                    <div class="col-lg-2 col-sm-4 col-6 mb-2" data-bs-toggle="tab" data-bs-target="#' . $botName . '" type="button" role="tab" aria-controls="' . $botName . '" aria-selected="false">
                         <div class="box bg-secondary d-flex justify-content-center">
                             <div class="row g-0 w-100 text-center">
                                 <div class="col-12 my-auto pt-1">
@@ -59,7 +65,20 @@
         <div class="row ms-4">
             <div class="tab-content">
                 <?php
-                $sql = "SELECT  team.id, team.name, bot.name, bot.macAddress, bot.id, bot.specsId, specs.board, specs.interface, stats.wins, stats.playedMatches FROM team INNER JOIN bot ON team.botId = bot.id INNER JOIN specs ON specs.id = bot.specsId INNER JOIN stats ON stats.id = bot.statsId";
+                $sql = "SELECT  team.id, 
+                                team.name, 
+                                bot.name, 
+                                bot.macAddress, 
+                                bot.id, 
+                                bot.specsId, 
+                                specs.board, 
+                                specs.interface, 
+                                stats.wins, 
+                                stats.playedMatches 
+                        FROM    team 
+                        INNER JOIN bot ON team.botId = bot.id 
+                        INNER JOIN specs ON specs.id = bot.specsId 
+                        INNER JOIN stats ON stats.id = bot.statsId";
 
                 $dbResults = stmtExec($sql);
 
