@@ -22,7 +22,6 @@ wss.on('connection', (client, req) => {
     client.on('message', message => {
         if (isValidJSONString(message)) {
             let req = JSON.parse(message);
-            sendMessageToInterface(req)
             switch (req.action) {
                 case "login":
                     login(client, req);
@@ -52,18 +51,19 @@ wss.on('connection', (client, req) => {
 
                     if (preparingDone()) {
                         updateGameStatus(req);
+                        sendActionToBot(req);
                     } else {
                         sendMessageToClient(client, {
                             "error": "NOT_READY"
                         })
                     }
-                    sendActionToBot(req);
+                   
                     break;
                 case "delete_games": 
                     games = [];
                     break
             }
-
+            sendMessageToInterface({"req": req, "clientId": client.id});
             switch (req.status) {
                 case true:
                     setAttributeToClient("preparing", true, client);
