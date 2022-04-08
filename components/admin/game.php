@@ -8,18 +8,18 @@
     <form action="<?= htmlentities($_SERVER['PHP_SELF']); ?>" method="POST">
         <div class="form-group">
                 <div id="bot">
-                    <span class="d-block">Selecteer een bot</span>
+                    <span class="d-block">Selecteer een robot</span>
                     <i>Bij het selecteren van een keuze wordt er een nieuw menu getoond.</i>
                     <select id="selectBot" class="form-select mb-3" size="8" multiple name="selectBot[]">
                         <option value="" disabled>Kies een bot</option>
-                        <option value="all">All bots</option>
+                        <option value="all">Alle robots</option>
                         <?php
                         foreach ($robots as $bot) {
                             echo '<option value="'. $bot['macAddress'] .'">' . $bot['name'] . '</option>';
                         }
                         ?>
                     </select>
-                    <button id="selectBotBtn" type="button" name="submitotBtn" class="btn btn-primary">submit</button>
+                    <button id="selectBotBtn" type="button" name="submitotBtn" class="btn btn-primary">Submit</button>
                     <button id="deleteGames" type="button" name="delete_games" class="btn btn-danger">Verwijder spellen</button>
                     <button id="sos" type="button" name="sos" class="btn btn-danger">Emergency stop</button>
                     

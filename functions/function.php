@@ -1392,7 +1392,7 @@ function getActiveEvent() {
  * @return HTML $returnForm
  */
 function changeTeamInfo() {
-    $sql = "SELECT  bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
+    $sql = "SELECT  bot.id, bot.name, bot.description, bot.imagePath, specs.board, specs.interface, team.name
             FROM    `bot`
             JOIN    `specs`     ON specs.id = bot.specsId
             JOIN    `team`      ON team.botId = bot.id  

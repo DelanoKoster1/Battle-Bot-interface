@@ -7,18 +7,18 @@
             </div>
 
             <div class="mt-3">
-                <label for="name">Voer een event naam in</label>
+                <label for="name">Voer een evenement naam in</label>
                 <input id="name" class="form-control" type="text" name="eventNaam"  placeholder="Evenement naam" value="<?php if (isset($_POST['event'])) {echo htmlentities($_POST['eventNaam']);} ?>">
             </div>
 
             <div class="mt-3">
-                <label for="desc">Voer een event omschrijving in</label>
+                <label for="desc">Voer een evenement omschrijving in</label>
                 <textarea id="desc" class="form-control" name="eventOmschrijving" placeholder="Evenement omschrijving"><?php if (isset($_POST['event'])) {echo htmlentities($_POST['eventOmschrijving']);} ?></textarea>
             </div>
 
 
             <div class="mt-3">
-                <span >Is het event privé of openbaar?</span>
+                <span >Is het evenement privé of openbaar?</span>
 
                 <div class="form-check">
                     <input class="form-check-input" type="radio" value="private" name="eventType" id="eventType1">

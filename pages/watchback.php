@@ -31,7 +31,7 @@ include_once('../functions/function.php');
                 <div class="ratio ratio-16x9">
                     <video controls id="VideoPlayback" autoplay>
                         <source src="..<?= $historyResults['stream'][0] ?>" type="video/mp4">
-                        Your browser does not support the video tag.
+                        Jouw browser ondersteunt de videotag niet.
                     </video>
                 </div>
             </div>

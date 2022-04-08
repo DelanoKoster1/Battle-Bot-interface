@@ -7,7 +7,7 @@ if (!isset($_SESSION['email'])) {
     header('location: ../components/error.php');
 }
 
-if ($_SESSION['role'] == 1 || $_SESSION['role'] == 3) {
+if ($_SESSION['role'] !== 2) {
     header('location: ../components/error.php');
 }
 
@@ -20,7 +20,7 @@ if (isset($_POST['toAdmin'])) {
         $_SESSION['succes'] = "De rol is succesvol aangepast naar Admin!";
     } else {
         $_SESSION['ERROR_MESSAGE'] = "De rol kon niet aangepast worden, probeer het opnieuw!";
-    }
+    }   
 }
 
 if (isset($_POST['toUser'])) {
@@ -95,7 +95,6 @@ if (isset($_POST['toTeam'])) {
                                 foreach ($_SESSION['ERROR_MESSAGE'] as $errorMsg) {
                                     echo '<li>' . $errorMsg . '</li>';
                                 }
-
                                 unset($_SESSION['ERROR_MESSAGE']);
                                 ?>
                             </ul>
@@ -124,8 +123,8 @@ if (isset($_POST['toTeam'])) {
                             $query = "SELECT    id, 
                                                 username, 
                                                 roleId 
-                                      FROM        account 
-                                      WHERE       roleId
+                                      FROM      account 
+                                      WHERE     id NOT IN (" . $_SESSION['id'] . ")
                                      ";
                             $results = stmtExec($query);
                             $ids = $results['id'];

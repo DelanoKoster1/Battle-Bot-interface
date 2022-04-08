@@ -10,9 +10,9 @@ $events = getAllEvents();
             if (!isset($_SESSION['selectedEvent'])) {
             ?>
             <div>
-                <span>Selecteer een event</span>
+                <span>Selecteer een evenement</span>
                 <select onchange="this.form.submit()" class="form-select" name="selectedEventForStream">
-                    <option value="" disabled selected>Kies een event</option>
+                    <option value="" disabled selected>Kies een evenement</option>
                     <?php
                         foreach ($events as $event) {
                             echo '<option value="' . $event['id'] . '">' . $event['name'] . '</option>';
@@ -29,7 +29,7 @@ $events = getAllEvents();
             if (isset($_SESSION['selectedEvent'])) {
             ?>
             <div>
-                <span>Selecteer een event</span>
+                <span>Selecteer een evenement</span>
                 <input type="file" name="file">
                 <input class="btn btn-success mt-3" type="submit" name="uploadStream" value="Uploaden">
                 <input class="btn btn-danger mt-3" type="submit" name="streamAnnuleren" value="Annuleren">

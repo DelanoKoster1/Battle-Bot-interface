@@ -35,10 +35,10 @@ if (isset($_POST['playerInfoChange'])) {
             if (checkFileType($_FILES['botTeamImage'])) {
                 if (makeFolder($botId, "../assets/img/bots/")) {         
                     if (!checkFileExist("../assets/img/bots/" . $botId . "/", $_FILES['botTeamImage']['name'])) {
-                        $query = "  UPDATE  `bot`
-                                        SET     imagePath = ?
-                                        WHERE   id = ?
-                                    ";
+                        $query = "UPDATE  `bot`
+                                  SET     imagePath = ?
+                                  WHERE   id = ?
+                                ";
 
                         deleteFile("../assets/img/bots/{$botId}/");
 

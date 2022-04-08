@@ -21,7 +21,7 @@ if (is_array($results)) {
     </div>
     <?php
 } else {
-    $error[] = 'Er is momenteel geen stream actief! Activeer eerst de stream!';
+    $error[] = 'Activeer eerst de livestream om een code toe te kunnen voegen!';
 }
 if (!empty($error)) {
     foreach ($error as $errorMsg) { ?>

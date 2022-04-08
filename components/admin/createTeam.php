@@ -12,7 +12,7 @@ if (!$results) {
 }
 
 if ($results == 1) {
-    echo '<div> <a class="text-decoration-none nav-link" href="admin.php?bot">Er zijn geen bots beschikbaar. Klik hier om een bot toe te voegen!</a></div>';
+    echo '<div> <a class="text-decoration-none nav-link" href="admin.php?bot">Er zijn geen robots beschikbaar. Klik hier om een robot toe te voegen!</a></div>';
 } else {
     echo "Kies een robot";
 ?>
